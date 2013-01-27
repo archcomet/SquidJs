@@ -1,0 +1,128 @@
+(function (global) {
+    "use strict";
+
+    global.app = global.app || {};
+
+    global.app.Canvas = (function () {
+
+        /**
+         * curveThroughPoints
+         * Utility function for drawing quadraticCurves through a series of points.
+         * @param points
+         */
+
+        global.CanvasRenderingContext2D.prototype.curveThroughPoints = function (points) {
+            var i, n, a, b, x, y;
+            this.lineJoin = 'round';
+            for (i = 1, n = points.length - 2; i < n; i++) {
+                a = points[i];
+                b = points[i + 1];
+                x = (a.x + b.x) * 0.5;
+                y = (a.y + b.y) * 0.5;
+                this.quadraticCurveTo(a.x, a.y, x, y);
+            }
+            a = points[i];
+            b = points[i + 1];
+            this.quadraticCurveTo(a.x, a.y, b.x, b.y);
+        };
+
+        /**
+         * Canvas
+         * Wrapper for HTML5 canvas
+         * @param options
+         * @return {*}
+         * @constructor
+         */
+
+        function Canvas(options) {
+            return Canvas.alloc(this, arguments);
+        }
+        app.inherit(app.BaseObj, Canvas);
+
+        Canvas.prototype.init = function (options) {
+            var self = this;
+            _.defaults(this, options, {
+                autoclear: true,
+                fullscreen: true,
+                context: '2d',
+                container: undefined,
+                interval: 1,
+                zIndex: 0,
+                engine: undefined,
+                width: 0,
+                height: 0,
+                cameraRate: 0
+            });
+
+            this.center = {
+                x: 0,
+                y: 0
+            };
+
+            this.canvas = document.createElement('canvas');
+            this.ctx = this.canvas.getContext(this.context);
+            this.rootNode = new app.DrawNode();
+
+            if (this.fullscreen) {
+                this.width = this.ctx.width = this.canvas.width = window.innerWidth;
+                this.height = this.ctx.height = this.canvas.height = window.innerHeight;
+
+                $(window).resize(function () {
+                    self.width = self.ctx.width = self.canvas.width = window.innerWidth;
+                    self.height = self.ctx.height = self.canvas.height = window.innerHeight;
+                });
+            } else {
+                this.ctx.width = this.canvas.width = this.width;
+                this.ctx.height = this.canvas.height = this.height;
+            }
+
+            if (this.zIndex !== 0) {
+                $(this.canvas).css('z-index', this.zIndex);
+            }
+
+            if (this.cameraRate !== 0) {
+                this.engine.bindEvent('cameraSet', this, this.setCenter);
+            }
+
+            if (this.container) {
+                $(this.canvas).appendTo(this.container);
+            }
+
+            return this;
+        };
+
+        Canvas.prototype.addChild = function (child) {
+            this.rootNode.addChild(child);
+        };
+
+        Canvas.prototype.removeChild = function (child) {
+            this.rootNode.removeChild(child);
+        };
+
+        Canvas.prototype.draw = function () {
+            var x = -1 * this.center.x + this.width / 2,
+                y = -1 * this.center.y + this.height / 2;
+
+            this.ctx.clearRect(0, 0, this.ctx.width, this.ctx.height);
+            this.ctx.save();
+            this.ctx.translate(x, y);
+            this.rootNode.draw(this.ctx);
+            this.ctx.restore();
+        };
+
+        Canvas.prototype.setCenter = function (position) {
+            this.center.x = position.x * this.cameraRate;
+            this.center.y = position.y * this.cameraRate;
+        };
+
+        Canvas.prototype.getOffset = function () {
+            var x = this.center.x - this.width / 2,
+                y = this.center.y - this.height / 2;
+            return { x: x, y: y };
+        };
+
+        return Canvas;
+
+    }());
+
+}(window));
