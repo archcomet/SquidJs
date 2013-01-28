@@ -32,7 +32,7 @@
                         density: 0.5,
                         friction: 0.5,
                         restitution: 0.5,
-                        filter: b2.makeFilterData(0x0000, 0x0000, 0),
+                        //filter: b2.makeFilterData(0x0000, 0x0000, 0),
                         shape: b2.makeShape({
                             type: 'circle',
                             radius: radius + thickness
@@ -83,7 +83,7 @@
                 segmentLength: random(5, 11),
                 radius: random(10, 19),
                 thickness: random(1, 5),
-                velocity: random(13, 16),
+                velocity: random(20, 25),
                 force: random(300, 600),
                 sprint: 2
             });
@@ -107,9 +107,6 @@
 
 }(window));
 
-//todo refactor entity creation into factories
-//todo refactor event systems (spawn, de-spawn), creation separate
-//todo add scene management
 //todo sprite system
 //todo rock renderer
 //todo collision response

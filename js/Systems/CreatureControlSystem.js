@@ -64,16 +64,17 @@
         CreatureControlSystem.prototype.updateModel = function (model) {
             var steering, position, offset;
             steering = model.steering;
-            steering.behavior = 'seek';
             offset = this.engine.canvas.getOffset();
 
             if (this.mouseData.active) {
+                steering.behavior = 'seek';
                 steering.target.x = this.mouseData.position.x + offset.x;
                 steering.target.y = this.mouseData.position.y + offset.y;
                 steering.sprinting = this.mouseData.leftDown;
                 steering.drift = false;
             } else {
                 position = model.position;
+                steering.behavior = 'approach';
                 steering.target.x = position.x;
                 steering.target.y = position.y;
                 steering.sprinting = false;

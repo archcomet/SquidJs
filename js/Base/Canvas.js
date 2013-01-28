@@ -63,25 +63,15 @@
             this.ctx = this.canvas.getContext(this.context);
             this.rootNode = new app.DrawNode();
 
-            if (this.fullscreen) {
-                this.width = this.ctx.width = this.canvas.width = window.innerWidth;
-                this.height = this.ctx.height = this.canvas.height = window.innerHeight;
-
-                $(window).resize(function () {
-                    self.width = self.ctx.width = self.canvas.width = window.innerWidth;
-                    self.height = self.ctx.height = self.canvas.height = window.innerHeight;
-                });
-            } else {
-                this.ctx.width = this.canvas.width = this.width;
-                this.ctx.height = this.canvas.height = this.height;
-            }
+            this.resize();
+            this.engine.bindEvent('resize', this, this.resize);
 
             if (this.zIndex !== 0) {
                 $(this.canvas).css('z-index', this.zIndex);
             }
 
             if (this.cameraRate !== 0) {
-                this.engine.bindEvent('cameraSet', this, this.setCenter);
+                this.engine.bindEvent('cameraSet', this, this.cameraSet);
             }
 
             if (this.container) {
@@ -110,7 +100,7 @@
             this.ctx.restore();
         };
 
-        Canvas.prototype.setCenter = function (position) {
+        Canvas.prototype.cameraSet = function (position) {
             this.center.x = position.x * this.cameraRate;
             this.center.y = position.y * this.cameraRate;
         };
@@ -119,6 +109,16 @@
             var x = this.center.x - this.width / 2,
                 y = this.center.y - this.height / 2;
             return { x: x, y: y };
+        };
+
+        Canvas.prototype.resize = function () {
+            if (this.fullscreen) {
+                this.width = this.ctx.width = this.canvas.width = window.innerWidth;
+                this.height = this.ctx.height = this.canvas.height = window.innerHeight;
+            } else {
+                this.ctx.width = this.canvas.width = this.width;
+                this.ctx.height = this.canvas.height = this.height;
+            }
         };
 
         return Canvas;

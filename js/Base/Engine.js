@@ -54,6 +54,10 @@
                 self.triggerEvent('draw');
             }, 0, 1);
 
+            $(window).resize(function () {
+                self.triggerEvent('resize');
+            });
+
             return this;
         };
 

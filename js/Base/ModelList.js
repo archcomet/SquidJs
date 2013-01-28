@@ -9,7 +9,9 @@
          * ModelList
          * A data structure for models.
          * A model an entity type defined by a combination of Components.
+         * @param name
          * @param componentMap
+         * @param engine
          * @return {*}
          * @constructor
          */

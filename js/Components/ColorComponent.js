@@ -26,10 +26,15 @@
                 dark: true
             });
 
-            var strokeV = (this.dark) ? this.v + 30 : this.v - 30;
-            this.hslFill = 'hsl(' + this.h + ', ' + this.s + '%, ' + this.v + '%)';
-            this.hslStroke = 'hsl(' + this.h + ', ' + this.s + '%, ' + strokeV + '%)';
+            this.setShade(1);
             return this;
+        };
+
+        ColorComponent.prototype.setShade = function (shade) {
+            var strokeV = (this.dark) ? this.v + 30 : this.v - 30;
+            this.shade = shade;
+            this.hslFill = 'hsl(' + this.h + ', ' + this.s * shade + '%, ' + this.v * shade + '%)';
+            this.hslStroke = 'hsl(' + this.h + ', ' + this.s * shade + '%, ' + strokeV * shade + '%)';
         };
 
         return ColorComponent;

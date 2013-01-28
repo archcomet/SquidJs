@@ -128,8 +128,8 @@
 
             color = this.model.color;
             h = color.h * this.shade;
-            s = color.s * this.shade;
-            v = color.v * this.shade;
+            s = color.s * this.shade * this.model.color.shade;
+            v = color.v * this.shade * this.model.color.shade;
 
             ctx.fillStyle = 'hsl(' + h + ', ' + s + '%, ' + v + '%)';
             ctx.fill();

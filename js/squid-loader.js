@@ -6,7 +6,7 @@
 
     var files = {
         debug: [
-            'resource!images/background.png',
+            'resource!images/backgroundNoise.png',
             'js/3rdParty/jquery.js',
             'js/3rdParty/underscore.js',
             'js/3rdParty/Box2dWeb-2.1.a.3.js',
