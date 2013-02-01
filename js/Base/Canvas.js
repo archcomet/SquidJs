@@ -13,7 +13,7 @@
 
         global.CanvasRenderingContext2D.prototype.curveThroughPoints = function (points) {
             var i, n, a, b, x, y;
-            this.lineJoin = 'round';
+            this.lineJoin = 'mitter';
             for (i = 1, n = points.length - 2; i < n; i++) {
                 a = points[i];
                 b = points[i + 1];
@@ -64,14 +64,14 @@
             this.rootNode = new app.DrawNode();
 
             this.resize();
-            this.engine.bindEvent('resize', this, this.resize);
+            this.engine.bindEvent('resize', this);
 
             if (this.zIndex !== 0) {
                 $(this.canvas).css('z-index', this.zIndex);
             }
 
             if (this.cameraRate !== 0) {
-                this.engine.bindEvent('cameraSet', this, this.cameraSet);
+                this.engine.bindEvent('cameraSet', this);
             }
 
             if (this.container) {

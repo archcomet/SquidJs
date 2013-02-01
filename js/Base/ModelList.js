@@ -26,8 +26,8 @@
             this.componentMap = componentMap;
             this.models = [];
             this.engine = engine;
-            this.engine.bindEvent('componentAdded', this, this.componentAdded);
-            this.engine.bindEvent('componentRemoved', this, this.componentRemoved);
+            this.engine.bindEvent('componentAdded', this);
+            this.engine.bindEvent('componentRemoved', this);
             return this;
         };
 

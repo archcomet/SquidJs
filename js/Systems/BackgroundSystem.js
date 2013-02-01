@@ -75,10 +75,10 @@
                 engine: this.engine
             });
 
-            this.engine.bindEvent('update', this, this.update);
-            this.engine.bindEvent('draw', this, this.draw);
-            this.engine.bindEvent('cameraSet', this, this.cameraSet);
-            this.engine.bindEvent('resize', this, this.resize);
+            this.engine.bindEvent('update', this);
+            this.engine.bindEvent('draw', this);
+            this.engine.bindEvent('cameraSet', this);
+            this.engine.bindEvent('resize', this);
         };
 
         BackgroundSystem.prototype.drawNoiseBuffer = function () {

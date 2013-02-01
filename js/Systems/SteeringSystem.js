@@ -23,7 +23,7 @@
                 steering: 'SteeringComponent',
                 physics: 'PhysicsComponent'
             });
-            this.engine.bindEvent('update', this, this.update);
+            this.engine.bindEvent('update', this);
             return this;
         };
 

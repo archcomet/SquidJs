@@ -17,7 +17,7 @@
         app.inherit(app.System, CameraSystem);
 
         CameraSystem.prototype.init = function () {
-            this.engine.bindEvent('update', this, this.update);
+            this.engine.bindEvent('update', this);
             this.targetEntity = undefined;
             this.camera = undefined;
             return this;

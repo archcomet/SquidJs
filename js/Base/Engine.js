@@ -36,7 +36,7 @@
                 cameraRate: 1
             });
 
-            this.bindEvent('draw', this.canvas, this.canvas.draw);
+            this.bindEvent('draw', this.canvas);
 
             if (_.isArray(options.systems)) {
                 for (i = 0, n = options.systems.length; i < n; i++) {
@@ -131,18 +131,18 @@
 
         /*** Events ***/
 
-        Engine.prototype.bindEvent = function (event, target, callback, priority) {
+        Engine.prototype.bindEvent = function (event, target, priority) {
             var listener, listeners = this.eventListeners[event];
             if (!listeners) {
                 this.eventListeners[event] = listeners = [];
             }
 
-            listener = callback.bind(target);
+            listener = target[event].bind(target);
             listener.target = target;
             listener.priority = priority || target.priority || Infinity;
             listeners.push(listener);
 
-            _.sortBy(listeners, function (callback) { return callback.priority; });
+            _.sortBy(listeners, function (listener) { return listener.priority; });
         };
 
         Engine.prototype.unbindEvent = function (event, target) {

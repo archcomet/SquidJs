@@ -37,6 +37,15 @@
         }
     });
 
+    global.app = global.app || {};
+
+    global.app.assert = function (condition, message) {
+        if (!condition) {
+            message = (message) ? 'Assert failed: ' + message : 'Assert failed';
+            throw new Error(message);
+        }
+    };
+
     /**
      * b2 Utility
      * ShortCuts and Helpers for using box2DWeb

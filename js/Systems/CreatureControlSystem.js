@@ -25,9 +25,9 @@
                 position: 'PositionComponent'
             });
             this.mouseData = {};
-            this.engine.bindEvent('update', this, this.update);
-            this.engine.bindEvent('mouseUpdate', this, this.mouseUpdate);
-            this.engine.bindEvent('playerControlAdded', this, this.playerControlAdded);
+            this.engine.bindEvent('update', this);
+            this.engine.bindEvent('mouseUpdate', this);
+            this.engine.bindEvent('playerControlAdded', this);
             return this;
         };
 

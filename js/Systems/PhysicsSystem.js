@@ -24,9 +24,9 @@
                 position: 'PositionComponent'
             });
 
-            this.engine.bindEvent('physicsBodyAdded', this, this.physicsBodyAdded);
-            this.engine.bindEvent('physicsBodyRemoved', this, this.physicsBodyRemoved);
-            this.engine.bindEvent('update', this, this.update);
+            this.engine.bindEvent('physicsBodyAdded', this);
+            this.engine.bindEvent('physicsBodyRemoved', this);
+            this.engine.bindEvent('update', this);
             return this;
         };
 

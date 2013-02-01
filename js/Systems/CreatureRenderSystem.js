@@ -165,9 +165,9 @@
                 position: 'PositionComponent'
             });
 
-            this.engine.bindEvent('creatureRenderAdded', this, this.creatureAdded);
-            this.engine.bindEvent('creatureRenderRemoved', this, this.creatureRemoved);
-            this.engine.bindEvent('update', this, this.update);
+            this.engine.bindEvent('creatureRenderAdded', this);
+            this.engine.bindEvent('creatureRenderRemoved', this);
+            this.engine.bindEvent('update', this);
         };
 
         CreatureRenderSystem.prototype.deinit = function () {
@@ -177,7 +177,7 @@
             this.engine.destroyModelList(this.modelList.name);
         };
 
-        CreatureRenderSystem.prototype.creatureAdded = function (model) {
+        CreatureRenderSystem.prototype.creatureRenderAdded = function (model) {
             var i, n, bodyDrawNode, tentacleDrawNode;
 
             model.tentacleArray  = [];
@@ -191,7 +191,7 @@
             this.engine.canvas.addChild(bodyDrawNode);
         };
 
-        CreatureRenderSystem.prototype.creatureRemoved = function (model) {
+        CreatureRenderSystem.prototype.creatureRenderRemoved = function (model) {
             model.tentacleArray.length = 0;
         };
 
