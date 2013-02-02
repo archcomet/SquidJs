@@ -50,13 +50,6 @@
 
         BackgroundSystem.prototype.createCanvases = function () {
 
-            this.noiseBuffer = new app.Canvas({
-                engine: this.engine,
-                width: this.image.width,
-                height: this.image.height,
-                fullscreen: false
-            });
-
             this.noiseLayer = new app.Canvas({
                 container: this.engine.container,
                 zIndex: -1,
@@ -75,31 +68,35 @@
                 engine: this.engine
             });
 
+            this.noisePattern = this.noiseLayer.ctx.createPattern(this.image, 'repeat');
+
             this.engine.bindEvent('update', this);
             this.engine.bindEvent('draw', this);
             this.engine.bindEvent('cameraSet', this);
             this.engine.bindEvent('resize', this);
         };
 
-        BackgroundSystem.prototype.drawNoiseBuffer = function () {
-            var w = this.image.width,
-                h = this.image.height,
-                ctx = this.noiseBuffer.ctx;
-            ctx.clearRect(0, 0, ctx.width, ctx.height);
-            ctx.drawImage(this.image, this.position.ox, this.position.oy);
-            ctx.drawImage(this.image, this.position.ox + w, this.position.oy);
-            ctx.drawImage(this.image, this.position.ox + w, this.position.oy + h);
-            ctx.drawImage(this.image, this.position.ox, this.position.oy + h);
-        };
-
         BackgroundSystem.prototype.drawNoise = function () {
             if (this.noiseLayerDirty) {
-                this.drawNoiseBuffer();
-                var ctx = this.noiseLayer.ctx;
-                ctx.globalAlpha = 0.9;
+
+                var x1, y1, x2, y2, ctx = this.noiseLayer.ctx;
                 ctx.clearRect(0, 0, ctx.width, ctx.height);
-                ctx.fillStyle = ctx.createPattern(this.noiseBuffer.ctx.canvas, 'repeat');
-                ctx.fillRect(0, 0, ctx.width, ctx.height);
+                ctx.fillStyle = this.noisePattern;
+
+                x1 = this.position.ox * 0.5;
+                y1 = this.position.oy * 0.5;
+                ctx.globalAlpha = 1.0;
+                ctx.translate(x1, y1);
+                ctx.fillRect(-x1, -y1, ctx.width, ctx.height);
+                ctx.translate(-x1, -y1);
+
+                x2 = this.position.ox * 0.3;
+                y2 = this.position.oy * 0.3;
+                ctx.globalAlpha = 0.5;
+                ctx.translate(x2, y2);
+                ctx.fillRect(-x2, -y2, ctx.width, ctx.height);
+                ctx.translate(-x2, -y2);
+
                 this.noiseLayerDirty = false;
             }
         };
@@ -127,7 +124,7 @@
         BackgroundSystem.prototype.drawLights = function () {
             if (this.lightLayerDirty) {
                 this.drawLight({
-                    x1: 80,
+                    x1: 30,
                     y1: 0,
                     x2: 400,
                     y2: 1000,
@@ -136,7 +133,7 @@
                 });
 
                 this.drawLight({
-                    x1: 160,
+                    x1: 110,
                     y1: 0,
                     x2: 800,
                     y2: 900,
@@ -145,7 +142,7 @@
                 });
 
                 this.drawLight({
-                    x1: 250,
+                    x1: 200,
                     y1: 0,
                     x2: 1200,
                     y2: 800,
@@ -203,16 +200,14 @@
         };
 
         BackgroundSystem.prototype.cameraSet = function (position) {
-            var x = position.x * 0.4,
-                y = position.y * 0.4,
-                w = this.image.width,
-                h = this.image.height;
+            var x = position.x,
+                y = position.y;
 
             if (this.position.x !== x || this.position.y !== y) {
                 this.position.x = x;
                 this.position.y = y;
-                this.position.ox = (x - Math.floor(x / w) * w) * -1;
-                this.position.oy = (y - Math.floor(y / h) * h) * -1;
+                this.position.ox = x * -1;
+                this.position.oy = y * -1;
                 this.noiseLayerDirty = true;
             }
         };
