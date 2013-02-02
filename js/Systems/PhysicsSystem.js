@@ -19,28 +19,20 @@
 
         PhysicsSystem.prototype.init = function () {
             this.world = new b2.World(new b2.Vec2(0, 0), true);
-            this.modelList = this.engine.createModelList('physicsBody', {
-                physics: 'PhysicsComponent',
-                position: 'PositionComponent'
-            });
-
-            this.engine.bindEvent('physicsBodyAdded', this);
-            this.engine.bindEvent('physicsBodyRemoved', this);
+            this.createModel(['PhysicsComponent', 'PositionComponent'], this.entityAdded, this.entityRemoved);
             this.engine.bindEvent('update', this);
             return this;
         };
 
         PhysicsSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
-            this.engine.unbindEvent('physicsBodyAdded', this);
-            this.engine.unbindEvent('physicsBodyRemoved', this);
-            this.engine.destroyModelList(this.modelList.name);
+            this.destroyModel();
             this.world = undefined;
         };
 
-        PhysicsSystem.prototype.physicsBodyAdded = function (model) {
-            var physics = model.physics,
-                position = model.position;
+        PhysicsSystem.prototype.entityAdded = function (entity) {
+            var physics = entity.PhysicsComponent,
+                position = entity.PositionComponent;
 
             physics.bodyDef.position.x = b2.toWorld(position.x);
             physics.bodyDef.position.y = b2.toWorld(position.y);
@@ -48,26 +40,28 @@
             physics.fixture = physics.body.CreateFixture(physics.fixtureDef);
         };
 
-        PhysicsSystem.prototype.physicsBodyRemoved = function (model) {
-            var physics = model.physics;
+        PhysicsSystem.prototype.entityRemoved = function (entity) {
+            var physics = entity.PhysicsComponent;
             physics.body.DestroyFixture(physics.fixture);
             this.world.DestroyBody(physics.body);
         };
 
-        PhysicsSystem.prototype.update = function (dt) {
-            var i, n, model, models, position, velocity;
+        PhysicsSystem.prototype.update = function () {
+            var i, n, physics, position, pos, vel;
             this.world.Step(b2.INTERVAL, b2.VELOCITY_ITERATIONS, b2.POSITION_ITERATIONS);
             this.world.ClearForces();
 
-            models = this.modelList.models;
-            for (i = 0, n = models.length; i < n; i++) {
-                model = models[i];
-                position = model.physics.body.GetPosition();
-                velocity = model.physics.body.GetLinearVelocity();
-                model.position.x = b2.toPixels(position.x);
-                model.position.y = b2.toPixels(position.y);
-                model.position.dx = b2.toPixels(velocity.x);
-                model.position.dy = b2.toPixels(velocity.y);
+            for (i = 0, n = this.model.entities.length; i < n; i++) {
+                physics = this.model.entities[i].PhysicsComponent;
+                position = this.model.entities[i].PositionComponent;
+
+                pos = physics.body.GetPosition();
+                vel = physics.body.GetLinearVelocity();
+
+                position.x = b2.toPixels(pos.x);
+                position.y = b2.toPixels(pos.y);
+                position.dx = b2.toPixels(vel.x);
+                position.dy = b2.toPixels(vel.y);
             }
         };
 

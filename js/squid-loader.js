@@ -19,7 +19,7 @@
             'js/Base/Engine.js',
             'js/Base/Entity.js',
             'js/Base/System.js',
-            'js/Base/ModelList.js',
+            'js/Base/Model.js',
             'js/Base/Timer.js',
             'js/Components/BodyComponent.js',
             'js/Components/ColorComponent.js',

@@ -81,7 +81,7 @@
         Engine.prototype.destroyEntity = function (entityId) {
             var entity = this.entities[entityId];
             delete this.entities[entityId];
-            app.Entity.destroy(entity);
+            entity.destroy();
         };
 
         Engine.prototype.entityForTag = function (entityId) {
@@ -105,7 +105,7 @@
         Engine.prototype.destroyModelList = function (modelName) {
             var modelList = this.modelLists[modelName];
             delete this.modelLists[modelName];
-            app.ModelList.destroy(modelList);
+            modelList.destory();
         };
 
         /*** System Management ****/
@@ -125,7 +125,7 @@
             var system = this.systems[systemName];
             if (system) {
                 delete this.systems[systemName];
-                app.System[systemName].destroy(system);
+                system.destroy();
             }
         };
 

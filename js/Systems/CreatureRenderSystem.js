@@ -29,22 +29,22 @@
         /**
          * Tentacle
          * ViewModel for a tentacle using inverse kinematics.
-         * @param model
+         * @param entity
          * @constructor
          */
 
-        function Tentacle(model) {
+        function Tentacle(entity) {
             var i, n, p, variance;
-            variance = model.tentacleData.variance;
+            variance = entity.TentaclesComponent.variance;
 
-            this.model = model;
+            this.entity = entity;
             this.variance = random(-variance, variance);
             this.shade = random(0.85, 1.1);
             this.nodes = [];
             this.outer = [];
             this.inner = [];
 
-            for (i = 0, n = model.tentacleData.segmentCount, p = model.position; i < n; i++) {
+            for (i = 0, n = entity.TentaclesComponent.segmentCount, p = entity.PositionComponent; i < n; i++) {
                 this.nodes.push(new Node(p.x, p.y));
             }
         }
@@ -67,9 +67,9 @@
             var i, j, n, dx, dy, da, px, py, s, c, node, prev,
                 segmentLength, friction, radius, step;
 
-            segmentLength = this.model.tentacleData.segmentLength;
-            friction = (this.model.tentacleData.friction - this.variance) * (1 - settings.friction);
-            radius = this.model.tentacleData.radius;
+            segmentLength = this.entity.TentaclesComponent.segmentLength;
+            friction = (this.entity.TentaclesComponent.friction - this.variance) * (1 - settings.friction);
+            radius = this.entity.TentaclesComponent.radius;
             step = radius / (this.nodes.length - 1);
             prev = this.nodes[0];
 
@@ -126,16 +126,16 @@
             ctx.lineTo(i.x, i.y);
             ctx.closePath();
 
-            color = this.model.color;
+            color = this.entity.ColorComponent;
             h = color.h * this.shade;
-            s = color.s * this.shade * this.model.color.shade;
-            v = color.v * this.shade * this.model.color.shade;
+            s = color.s * this.shade * color.shade;
+            v = color.v * this.shade * color.shade;
 
             ctx.fillStyle = 'hsl(' + h + ', ' + s + '%, ' + v + '%)';
             ctx.fill();
 
-            if (this.model.tentacleData.radius > 2) {
-                ctx.strokeStyle = this.model.color.hslStroke;
+            if (this.entity.TentaclesComponent.radius > 2) {
+                ctx.strokeStyle = this.entity.ColorComponent.hslStroke;
                 ctx.lineWidth = 1;
                 ctx.stroke();
             }
@@ -157,131 +157,134 @@
 
 
         CreatureRenderSystem.prototype.init = function () {
-            this.modelList = this.engine.createModelList('creatureRender', {
-                tentacleData: 'TentaclesComponent',
-                body: 'BodyComponent',
-                color: 'ColorComponent',
-                steering: 'SteeringComponent',
-                position: 'PositionComponent'
-            });
-
-            this.engine.bindEvent('creatureRenderAdded', this);
-            this.engine.bindEvent('creatureRenderRemoved', this);
+            this.createModel([
+                'TentaclesComponent',
+                'BodyComponent',
+                'ColorComponent',
+                'SteeringComponent',
+                'PositionComponent'
+            ], this.entityAdded, this.entityRemoved);
             this.engine.bindEvent('update', this);
         };
 
         CreatureRenderSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
-            this.engine.unbindEvent('creatureRenderRemoved', this);
-            this.engine.unbindEvent('creatureRenderAdded', this);
-            this.engine.destroyModelList(this.modelList.name);
+            this.destroyModel();
         };
 
-        CreatureRenderSystem.prototype.creatureRenderAdded = function (model) {
-            var i, n, bodyDrawNode, tentacleDrawNode;
+        CreatureRenderSystem.prototype.entityAdded = function (entity) {
+            var i, n, bodyDrawNode, tentacleDrawNode,
+                tentacles = entity.TentaclesComponent.tentacles  = [];
 
-            model.tentacleArray  = [];
-            for (i = 0, n = model.tentacleData.count; i < n; i++) {
-                model.tentacleArray.push(new Tentacle(model));
+            for (i = 0, n = entity.TentaclesComponent.count; i < n; i++) {
+                tentacles.push(new Tentacle(entity));
             }
 
-            bodyDrawNode = new app.DrawNode(model, model.position.zOrder, this.drawBody);
-            tentacleDrawNode = new app.DrawNode(model, -1, this.drawTentacles);
+            bodyDrawNode = new app.DrawNode(entity, this.drawBody, entity.PositionComponent.zorder);
+            tentacleDrawNode = new app.DrawNode(entity, this.drawTentacles, -1);
             bodyDrawNode.addChild(tentacleDrawNode);
             this.engine.canvas.addChild(bodyDrawNode);
         };
 
-        CreatureRenderSystem.prototype.creatureRenderRemoved = function (model) {
-            model.tentacleArray.length = 0;
+        CreatureRenderSystem.prototype.entityRemoved = function (entity) {
+            entity.TentaclesComponent.tentacles.length = 0;
         };
 
-        CreatureRenderSystem.prototype.update = function (dt) {
-            var i, n, model, models;
-            models = this.modelList.models;
-            for (i = 0, n = models.length; i < n; i++) {
-                model = models[i];
-                this.updateBody(model);
-                this.updateTentacles(model);
+        CreatureRenderSystem.prototype.update = function () {
+            var i, n, entity;
+            for (i = 0, n = this.model.entities.length; i < n; i++) {
+                entity = this.model.entities[i];
+                this.updateBody(entity);
+                this.updateTentacles(entity);
             }
         };
 
-        CreatureRenderSystem.prototype.updateBody = function (model) {
-            var position, target, vec, maxOffset;
-            position = model.position;
+        CreatureRenderSystem.prototype.updateBody = function (entity) {
+            var target, vec, maxOffset,
+                position = entity.PositionComponent,
+                steering = entity.SteeringComponent,
+                body = entity.BodyComponent;
 
-            if (model.steering.drift) {
-
+            if (steering.drift) {
                 vec = new b2.Vec2(0, 0);
-
             } else {
-
-                target = model.steering.target;
-
+                target = steering.target;
                 vec = new b2.Vec2(
                     target.x - position.x,
                     target.y - position.y
                 );
 
-                maxOffset = model.body.irisRadius * 0.45;
-
+                maxOffset = body.irisRadius * 0.45;
                 if (vec.Length() > maxOffset) {
                     vec.Normalize();
                     vec.Multiply(maxOffset);
                 }
             }
 
-            model.body.irisPosition = {
+            body.irisPosition = {
                 x: position.x + vec.x,
                 y: position.y + vec.y
             };
         };
 
-        CreatureRenderSystem.prototype.updateTentacles = function (model) {
-            var i, n, theta, px, py, step, radius, tentacleArray;
+        CreatureRenderSystem.prototype.updateTentacles = function (entity) {
+            var i, n, t, theta, px, py, step, radius,
+                body = entity.BodyComponent,
+                position = entity.PositionComponent,
+                tentacles = entity.TentaclesComponent.tentacles;
 
-            tentacleArray = model.tentacleArray;
-            n = tentacleArray.length;
+            n = tentacles.length;
+            t = this.engine.timer.counter;
             theta = 0;
             step = TWO_PI / (n + 1);
-            radius = model.tentacleData.radius;
+            radius = entity.TentaclesComponent.radius;
+            radius *= 1.0 + Math.pow(Math.sin(t / body.radius), 12);
 
             for (i = 0; i < n; i++) {
                 theta += step;
                 px = Math.cos(theta) * radius;
                 py = Math.sin(theta) * radius;
 
-                tentacleArray[i].move(model.position.x + px, model.position.y + py);
-                tentacleArray[i].update();
+                tentacles[i].move(position.x + px, position.y + py);
+                tentacles[i].update();
             }
         };
 
-        CreatureRenderSystem.prototype.drawBody = function (ctx, model) {
+        CreatureRenderSystem.prototype.drawBody = function (ctx, entity) {
+            var t, position = entity.PositionComponent,
+                body = entity.BodyComponent,
+                color = entity.ColorComponent,
+                radius = body.radius;
+
+            t = entity.engine.timer.counter;
+            radius *= 1.0 + Math.pow(Math.sin(t / radius), 12) / 10;
+
             ctx.beginPath();
-            ctx.arc(model.position.x, model.position.y, model.body.radius, 0, TWO_PI, false);
-            ctx.lineWidth = model.body.thickness;
-            ctx.fillStyle = model.color.hslFill;
-            ctx.strokeStyle = model.color.hslStroke;
+            ctx.arc(position.x, position.y, radius, 0, TWO_PI, false);
+            ctx.lineWidth = body.thickness;
+            ctx.fillStyle = color.hslFill;
+            ctx.strokeStyle = color.hslStroke;
             ctx.fill();
             ctx.stroke();
 
             ctx.beginPath();
-            ctx.arc(model.position.x, model.position.y, model.body.eyeRadius, 0, TWO_PI, false);
+            ctx.arc(position.x, position.y, body.eyeRadius, 0, TWO_PI, false);
             ctx.lineWidth = 1;
             ctx.fillStyle = 'hsl(0, 0%, 100%)';
-            ctx.strokeStyle = model.color.hslStroke;
+            ctx.strokeStyle = color.hslStroke;
             ctx.fill();
             ctx.stroke();
 
             ctx.beginPath();
-            ctx.arc(model.body.irisPosition.x, model.body.irisPosition.y, model.body.irisRadius, 0, TWO_PI, false);
+            ctx.arc(body.irisPosition.x, body.irisPosition.y, body.irisRadius, 0, TWO_PI, false);
             ctx.fillStyle = 'hsl(0, 0%, 0%)';
             ctx.fill();
         };
 
-        CreatureRenderSystem.prototype.drawTentacles = function (ctx, model) {
-            var i, n = model.tentacleArray.length;
+        CreatureRenderSystem.prototype.drawTentacles = function (ctx, entity) {
+            var i, n = entity.TentaclesComponent.tentacles.length;
             for (i = 0; i < n; i++) {
-                model.tentacleArray[i].draw(ctx);
+                entity.TentaclesComponent.tentacles[i].draw(ctx);
             }
         };
 

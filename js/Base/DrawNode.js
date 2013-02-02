@@ -8,24 +8,28 @@
         /**
          * DrawNode
          * A hierarchical data structure for drawing.
-         * @param model
+         * @param entity
          * @param zOrder
-         * @param drawFunction
+         * @param drawCallback
          * @return {*}
          * @constructor
          */
 
-        function DrawNode(model, zOrder, drawFunction) {
+        function DrawNode(entity, drawCallback, zOrder) {
             return DrawNode.alloc(this, arguments);
         }
         app.inherit(app.BaseObj, DrawNode);
 
-        DrawNode.prototype.init = function (model, zOrder, drawFunction) {
-            this.model = model;
+        DrawNode.prototype.init = function (entity, drawCallback, zOrder) {
+            this.entity = entity;
             this.nodes = [];
-            this.drawFunction = drawFunction;
+            this.drawCallback = drawCallback;
             this.z = zOrder || 0;
             return this;
+        };
+
+        DrawNode.prototype.deinit = function () {
+            this.removeAllChildren(true);
         };
 
         DrawNode.prototype.addChild = function (drawNode) {
@@ -35,7 +39,7 @@
 
         DrawNode.prototype.removeChild = function (drawNode) {
             var i, n;
-            for (i = 0, n < this.nodes.length; i < n; i++) {
+            for (i = 0, n = this.nodes.length; i < n; i++) {
                 if (this.nodes[i] === drawNode) {
                     this.nodes.splice(i, 1);
                     return;
@@ -53,17 +57,6 @@
             this.nodes.length = 0;
         };
 
-        DrawNode.prototype.deleteChildByModel = function (model) {
-            var i, n, node;
-            for (i = 0, n = this.nodes.length; i < n; i++) {
-                if (this.nodes[i].model === model) {
-                    node = this.nodes.splice(i, 1);
-                    node.removeAllChildren(true);
-                    return;
-                }
-            }
-        };
-
         DrawNode.prototype.draw = function (ctx) {
             var node, i, n = this.nodes.length;
             for (i = 0, n < this.nodes.length; i < n; i++) {
@@ -75,8 +68,8 @@
                 }
             }
 
-            if (this.drawFunction) {
-                this.drawFunction(ctx, this.model);
+            if (this.drawCallback) {
+                this.drawCallback(ctx, this.entity);
             }
 
             for (i; i < n; i++) {

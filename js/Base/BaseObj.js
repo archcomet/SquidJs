@@ -35,15 +35,6 @@
             return parent.prototype.constructor.apply(thisArg, argArray);
         };
 
-        target.destroy = function (object) {
-            var property;
-            object.deinit();
-            for (property in object) {
-                if (object.hasOwnProperty(property)) {
-                    delete object[property];
-                }
-            }
-        };
         return target;
     };
 
@@ -68,6 +59,17 @@
         };
 
         BaseObj.prototype.deinit = function () {
+            return this;
+        };
+
+        BaseObj.prototype.destroy = function () {
+            var property;
+            this.deinit();
+            for (property in this) {
+                if (this.hasOwnProperty(property)) {
+                    delete this[property];
+                }
+            }
             return this;
         };
 

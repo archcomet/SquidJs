@@ -19,36 +19,33 @@
         app.inherit(app.System, SteeringSystem);
 
         SteeringSystem.prototype.init = function () {
-            this.modelList = this.engine.createModelList('SteeringModel', {
-                steering: 'SteeringComponent',
-                physics: 'PhysicsComponent'
-            });
+            this.createModel(['SteeringComponent', 'PhysicsComponent']);
             this.engine.bindEvent('update', this);
             return this;
         };
 
         SteeringSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
-            this.engine.destroyModelList(this.modelList.name);
+            this.destroyModel();
         };
 
-        SteeringSystem.prototype.update = function (dt) {
-            var i, n, model, models;
-            models = this.modelList.models;
-            for (i = 0, n = models.length; i < n; i++) {
-                model = models[i];
-                if (model.steering.behavior) {
-                    this[model.steering.behavior](model);
+        SteeringSystem.prototype.update = function () {
+            var i, n, steering, physics, position;
+            for (i = 0, n = this.model.entities.length; i < n; i += 1) {
+                steering = this.model.entities[i].SteeringComponent;
+                physics = this.model.entities[i].PhysicsComponent;
+                position = b2.toPixels(physics.body.GetPosition());
+
+                if (steering.behavior) {
+                    this[steering.behavior](steering, physics);
                 }
             }
         };
 
         /*** Steering Functions ***/
 
-        SteeringSystem.prototype.applyForceForVelocity = function (model, velocity) {
-            var force,
-                steering = model.steering,
-                body = model.physics.body;
+        SteeringSystem.prototype.applyForceForVelocity = function (steering, physics, velocity) {
+            var force, body = physics.body;
 
             force = new b2.Vec2();
             force.SetV(velocity);
@@ -62,10 +59,9 @@
             body.ApplyForce(force, body.GetWorldCenter());
         };
 
-        SteeringSystem.prototype.seek = function (model) {
+        SteeringSystem.prototype.seek = function (steering, physics) {
             var linearVelocity, targetVelocity, steeringVelocity,
-                steering = model.steering,
-                body = model.physics.body,
+                body = physics.body,
                 maxVelocity = steering.maxVelocity;
 
             linearVelocity = body.GetLinearVelocity();
@@ -84,13 +80,12 @@
             steeringVelocity.SetV(targetVelocity);
             steeringVelocity.Subtract(linearVelocity);
 
-            this.applyForceForVelocity(model, steeringVelocity);
+            this.applyForceForVelocity(steering, physics, steeringVelocity);
         };
 
-        SteeringSystem.prototype.approach = function (model) {
+        SteeringSystem.prototype.approach = function (steering, physics) {
             var linearVelocity, targetVelocity, steeringVelocity,
-                steering = model.steering,
-                body = model.physics.body,
+                body = physics.body,
                 maxVelocity = steering.maxVelocity;
 
             linearVelocity = body.GetLinearVelocity();
@@ -107,7 +102,7 @@
             steeringVelocity.SetV(targetVelocity);
             steeringVelocity.Subtract(linearVelocity);
 
-            this.applyForceForVelocity(model, steeringVelocity);
+            this.applyForceForVelocity(steering, physics, steeringVelocity);
         };
 
         return SteeringSystem;

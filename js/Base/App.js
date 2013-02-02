@@ -109,12 +109,12 @@
 
 
 //todo refactor modelList (one modelList per system)
-//todo refactor canvases to a collection on the engine + engine manages canvas attachment
 //todo refactor creature render system into two systems
 
-//todo food renderer
 //todo rock renderer
 //todo collision response
+//todo rock system
+//todo food renderer
 //todo pickups
 //todo hostile creature render (maybe just different color squids)
 //todo AI behavior system

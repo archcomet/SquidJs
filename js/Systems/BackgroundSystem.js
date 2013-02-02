@@ -18,9 +18,7 @@
         app.inherit(app.System, BackgroundSystem);
 
         BackgroundSystem.prototype.init = function () {
-            this.modelList = this.engine.createModelList('colors', {
-                color: 'ColorComponent'
-            });
+            this.createModel(['ColorComponent']);
 
             this.position = {
                 x: 0,
@@ -42,6 +40,7 @@
         };
 
         BackgroundSystem.prototype.deinit = function () {
+            this.destroyModel();
             this.engine.unbindEvent('update', this);
             this.engine.unbindEvent('draw', this);
             this.engine.unbindEvent('cameraSet', this);
@@ -50,21 +49,27 @@
 
         BackgroundSystem.prototype.createCanvases = function () {
 
-            this.noiseLayer = new app.Canvas({
+            this.surfaceLayer = new app.Canvas({
                 container: this.engine.container,
                 zIndex: -1,
                 engine: this.engine
             });
 
-            this.lightLayer = new app.Canvas({
+            this.noiseLayer = new app.Canvas({
                 container: this.engine.container,
                 zIndex: -2,
                 engine: this.engine
             });
 
-            this.gradientLayer = new app.Canvas({
+            this.lightLayer = new app.Canvas({
                 container: this.engine.container,
                 zIndex: -3,
+                engine: this.engine
+            });
+
+            this.gradientLayer = new app.Canvas({
+                container: this.engine.container,
+                zIndex: -4,
                 engine: this.engine
             });
 
@@ -76,6 +81,15 @@
             this.engine.bindEvent('resize', this);
         };
 
+        BackgroundSystem.prototype.drawSurface = function () {
+            var ctx = this.surfaceLayer.ctx;
+            ctx.clearRect(0, 0, ctx.width, ctx.height);
+
+            if (this.position.y < 500) {
+                ctx.fillRect(0, 0, ctx.width, 500 - this.position.y);
+            }
+        };
+
         BackgroundSystem.prototype.drawNoise = function () {
             if (this.noiseLayerDirty) {
 
@@ -85,7 +99,7 @@
 
                 x1 = this.position.ox * 0.5;
                 y1 = this.position.oy * 0.5;
-                ctx.globalAlpha = 1.0;
+                ctx.globalAlpha = 0.7;
                 ctx.translate(x1, y1);
                 ctx.fillRect(-x1, -y1, ctx.width, ctx.height);
                 ctx.translate(-x1, -y1);
@@ -176,6 +190,7 @@
         };
 
         BackgroundSystem.prototype.draw = function () {
+            //this.drawSurface();
             this.drawNoise();
             this.drawLights();
             this.drawGradient();
@@ -183,12 +198,12 @@
 
         BackgroundSystem.prototype.update = function (dt) {
             if (Math.abs(this.gradientLastY - this.position.y) > 100) {
-                var i, n, models = this.modelList.models;
+                var i, n;
                 this.gradientLayerDirty = true;
                 this.gradientModifier = 1 / (this.position.y / 15000 + 1);
 
-                for (i = 0, n = models.length; i < n; i++) {
-                    models[i].color.setShade(this.gradientModifier);
+                for (i = 0, n = this.model.entities.length; i < n; i++) {
+                    this.model.entities[i].ColorComponent.setShade(this.gradientModifier);
                 }
             }
         };

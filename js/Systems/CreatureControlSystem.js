@@ -19,31 +19,24 @@
         /*** Public Methods ***/
 
         CreatureControlSystem.prototype.init = function () {
-            this.modelList = this.engine.createModelList('playerControl', {
-                input: 'InputComponent',
-                steering: 'SteeringComponent',
-                position: 'PositionComponent'
-            });
+            this.createModel(['InputComponent', 'SteeringComponent', 'PositionComponent'], this.entityAdded);
             this.mouseData = {};
             this.engine.bindEvent('update', this);
             this.engine.bindEvent('mouseUpdate', this);
-            this.engine.bindEvent('playerControlAdded', this);
             return this;
         };
 
         CreatureControlSystem.prototype.deinit = function () {
-            this.engine.unbindEvent('playerControlAdded', this);
             this.engine.unbindEvent('mouseUpdate', this);
             this.engine.unbindEvent('update', this);
-            this.engine.destroyModelList(this.modelList.name);
+            this.destroyModel();
         };
 
-        CreatureControlSystem.prototype.playerControlAdded = function (model) {
-            var steering, position;
-            steering = model.steering;
-            steering.behavior = 'seek';
+        CreatureControlSystem.prototype.entityAdded = function (entity) {
+            var steering = entity.SteeringComponent,
+                position = entity.PositionComponent;
 
-            position = model.position;
+            steering.behavior = 'seek';
             steering.target.x = position.x;
             steering.target.y = position.y;
             steering.sprinting = false;
@@ -51,35 +44,32 @@
         };
 
         CreatureControlSystem.prototype.update = function () {
-            var i, n, models = this.modelList.models;
-            for (i = 0, n = models.length; i < n; i++) {
-                this.updateModel(models[i]);
+            var i, n, steering, position,
+                offset = this.engine.canvas.getOffset(),
+                entities = this.model.entities;
+
+            for (i = 0, n = entities.length; i < n; i++) {
+                steering = entities[i].SteeringComponent;
+
+                if (this.mouseData.active) {
+                    steering.behavior = 'seek';
+                    steering.target.x = this.mouseData.position.x + offset.x;
+                    steering.target.y = this.mouseData.position.y + offset.y;
+                    steering.sprinting = this.mouseData.leftDown;
+                    steering.drift = false;
+                } else {
+                    position = entities[i].PositionComponent;
+                    steering.behavior = 'approach';
+                    steering.target.x = position.x;
+                    steering.target.y = position.y;
+                    steering.sprinting = false;
+                    steering.drift = true;
+                }
             }
         };
 
         CreatureControlSystem.prototype.mouseUpdate = function (mouseData) {
             this.mouseData = mouseData;
-        };
-
-        CreatureControlSystem.prototype.updateModel = function (model) {
-            var steering, position, offset;
-            steering = model.steering;
-            offset = this.engine.canvas.getOffset();
-
-            if (this.mouseData.active) {
-                steering.behavior = 'seek';
-                steering.target.x = this.mouseData.position.x + offset.x;
-                steering.target.y = this.mouseData.position.y + offset.y;
-                steering.sprinting = this.mouseData.leftDown;
-                steering.drift = false;
-            } else {
-                position = model.position;
-                steering.behavior = 'approach';
-                steering.target.x = position.x;
-                steering.target.y = position.y;
-                steering.sprinting = false;
-                steering.drift = true;
-            }
         };
 
         return CreatureControlSystem;

@@ -25,7 +25,9 @@
 
         CameraSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
-            this.engine.destroyEntity(this.camera);
+            if (this.camera) {
+                this.engine.destroyEntity(this.camera);
+            }
             this.targetEntity = undefined;
         };
 
@@ -44,8 +46,8 @@
                             maxForce: 800
                         },
                         PositionComponent: {
-                            x: 0,
-                            y: 0
+                            x: x,
+                            y: y
                         },
                         PhysicsComponent: {
                             bodyDef: {
@@ -62,14 +64,14 @@
                         }
                     }
                 });
+            } else {
+                this.camera.PositionComponent.x = x;
+                this.camera.PositionComponent.y = y;
+                this.camera.PhysicsComponent.body.SetPosition({
+                    x: b2.toWorld(x),
+                    y: b2.toWorld(y)
+                });
             }
-
-            this.camera.components.PositionComponent.x = x;
-            this.camera.components.PositionComponent.y = y;
-            this.camera.components.PhysicsComponent.body.SetPosition({
-                x: b2.toWorld(x),
-                y: b2.toWorld(y)
-            });
         };
 
         CameraSystem.prototype.update = function () {
@@ -77,10 +79,10 @@
 
             if (this.targetEntity) {
 
-                targetPosition = this.targetEntity.components.PositionComponent;
-                cameraPosition = this.camera.components.PositionComponent;
+                targetPosition = this.targetEntity.PositionComponent;
+                cameraPosition = this.camera.PositionComponent;
 
-                cameraSteering = this.camera.components.SteeringComponent;
+                cameraSteering = this.camera.SteeringComponent;
                 cameraSteering.behavior = 'approach';
                 cameraSteering.target.x = targetPosition.dx / 6;
                 cameraSteering.target.y = targetPosition.dy / 6;
