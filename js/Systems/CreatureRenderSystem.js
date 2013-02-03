@@ -38,8 +38,8 @@
             variance = entity.TentaclesComponent.variance;
 
             this.entity = entity;
-            this.variance = random(-variance, variance);
-            this.shade = random(0.85, 1.1);
+            this.variance = app.random(-variance, variance);
+            this.shade = app.random(0.85, 1.1);
             this.nodes = [];
             this.outer = [];
             this.inner = [];
@@ -98,8 +98,8 @@
                 node.ox = node.x;
                 node.oy = node.y;
 
-                s = Math.sin(da + HALF_PI);
-                c = Math.cos(da + HALF_PI);
+                s = Math.sin(da + Math.PI * 0.5);
+                c = Math.cos(da + Math.PI * 0.5);
 
                 radius -= step;
 
@@ -184,10 +184,12 @@
                 tentacles.push(new Tentacle(entity));
             }
 
-            bodyDrawNode = new app.DrawNode(entity, this.drawBody, entity.PositionComponent.zorder);
+            bodyDrawNode = new app.DrawNode(entity, this.drawBody, entity.PositionComponent.zOrder);
             tentacleDrawNode = new app.DrawNode(entity, this.drawTentacles, -1);
             bodyDrawNode.addChild(tentacleDrawNode);
+
             this.engine.canvas.addChild(bodyDrawNode);
+            //todo drawnode teardown
         };
 
         CreatureRenderSystem.prototype.entityRemoved = function (entity) {
@@ -240,7 +242,7 @@
             n = tentacles.length;
             t = this.engine.timer.counter;
             theta = 0;
-            step = TWO_PI / (n + 1);
+            step = (Math.PI * 2) / (n + 1);
             radius = entity.TentaclesComponent.radius;
             radius *= 0.6 + Math.pow(Math.sin(t / body.radius), 12);
 
@@ -264,7 +266,7 @@
             radius *= 1.0 + Math.pow(Math.sin(t / radius), 12) / 10;
 
             ctx.beginPath();
-            ctx.arc(position.x, position.y, radius, 0, TWO_PI, false);
+            ctx.arc(position.x, position.y, radius, 0, Math.PI * 2, false);
             ctx.lineWidth = body.thickness;
             ctx.fillStyle = color.hslFill;
             ctx.strokeStyle = color.hslStroke;
@@ -272,7 +274,7 @@
             ctx.stroke();
 
             ctx.beginPath();
-            ctx.arc(position.x, position.y, body.eyeRadius, 0, TWO_PI, false);
+            ctx.arc(position.x, position.y, body.eyeRadius, 0, Math.PI * 2, false);
             ctx.lineWidth = 1;
             ctx.fillStyle = 'hsl(0, 0%, 100%)';
             ctx.strokeStyle = color.hslStroke;
@@ -280,7 +282,7 @@
             ctx.stroke();
 
             ctx.beginPath();
-            ctx.arc(body.irisPosition.x, body.irisPosition.y, body.irisRadius, 0, TWO_PI, false);
+            ctx.arc(body.irisPosition.x, body.irisPosition.y, body.irisRadius, 0, Math.PI * 2, false);
             ctx.fillStyle = 'hsl(0, 0%, 0%)';
             ctx.fill();
         };
