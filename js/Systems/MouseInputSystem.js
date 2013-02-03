@@ -53,8 +53,8 @@
             });
 
             $(container).mousemove(function (event) {
-                self.mousedata.position.x = event.pageX;
-                self.mousedata.position.y = event.pageY;
+                self.mousedata.position.x = event.offsetX;
+                self.mousedata.position.y = event.offsetY;
                 self.engine.triggerEvent('mouseUpdate', self.mousedata);
             });
 

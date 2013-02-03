@@ -26,7 +26,8 @@
                 },
                 PhysicsComponent: {
                     bodyDef: {
-                        type: b2.Body.b2_dynamicBody
+                        type: b2.Body.b2_dynamicBody,
+                        linearDampening: 0.2
                     },
                     fixtureDef: {
                         density: 0.5,
@@ -46,11 +47,11 @@
                     irisRadius: radius * 0.4
                 },
                 TentaclesComponent: {
-                    count: 6,
-                    segmentCount: 8,
+                    count: 5,
+                    segmentCount: 7,
                     segmentLength: segmentLength,
                     radius: (radius + thickness - 2) / 2.2,
-                    friction: 0.95,
+                    friction: 0.88,
                     variance: 0.02
                 },
                 ColorComponent: {
@@ -93,8 +94,8 @@
             segmentLength: 20,
             radius: 25,
             thickness: 3,
-            velocity: 27,
-            force: 800,
+            velocity: 26,
+            force: 700,
             sprint: 2
         });
 

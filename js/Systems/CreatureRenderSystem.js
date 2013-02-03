@@ -7,7 +7,7 @@
 
         var settings = {
             friction: 0.01,
-            wind: 0.00,
+            wind: 0.10,
             gravity: 0.05
         };
 
@@ -68,7 +68,11 @@
                 segmentLength, friction, radius, step;
 
             segmentLength = this.entity.TentaclesComponent.segmentLength;
-            friction = (this.entity.TentaclesComponent.friction - this.variance) * (1 - settings.friction);
+
+            friction = (this.entity.PhysicsComponent.outOfWater) ? 0.99 :
+                    (this.entity.TentaclesComponent.friction - this.variance);
+            friction *= (1 - settings.friction);
+
             radius = this.entity.TentaclesComponent.radius;
             step = radius / (this.nodes.length - 1);
             prev = this.nodes[0];
@@ -238,7 +242,7 @@
             theta = 0;
             step = TWO_PI / (n + 1);
             radius = entity.TentaclesComponent.radius;
-            radius *= 1.0 + Math.pow(Math.sin(t / body.radius), 12);
+            radius *= 0.6 + Math.pow(Math.sin(t / body.radius), 12);
 
             for (i = 0; i < n; i++) {
                 theta += step;

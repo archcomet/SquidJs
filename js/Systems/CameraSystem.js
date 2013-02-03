@@ -50,6 +50,7 @@
                             y: y
                         },
                         PhysicsComponent: {
+                            oceanBound: false,
                             bodyDef: {
                                 type: b2.Body.b2_dynamicBody
                             },

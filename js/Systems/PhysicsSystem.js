@@ -19,6 +19,8 @@
 
         PhysicsSystem.prototype.init = function () {
             this.world = new b2.World(new b2.Vec2(0, 0), true);
+            this.gravity = new b2.Vec2(0, 60);
+            this.current = new b2.Vec2(0.5, 0.1);
             this.createModel(['PhysicsComponent', 'PositionComponent'], this.entityAdded, this.entityRemoved);
             this.engine.bindEvent('update', this);
             return this;
@@ -62,6 +64,16 @@
                 position.y = b2.toPixels(pos.y);
                 position.dx = b2.toPixels(vel.x);
                 position.dy = b2.toPixels(vel.y);
+
+                if (physics.oceanBound) {
+                    if (pos.y < b2.WATERLEVEL) {
+                        physics.body.ApplyForce(this.gravity, physics.body.GetWorldCenter());
+                        physics.outOfWater = true;
+                    } else {
+                        physics.body.ApplyForce(this.current, physics.body.GetWorldCenter());
+                        physics.outOfWater = false;
+                    }
+                }
             }
         };
 

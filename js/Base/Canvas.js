@@ -113,12 +113,17 @@
 
         Canvas.prototype.resize = function () {
             if (this.fullscreen) {
-                this.width = this.ctx.width = this.canvas.width = window.innerWidth;
-                this.height = this.ctx.height = this.canvas.height = window.innerHeight;
+                var x = (window.innerWidth < app.maxWidth) ? window.innerWidth + 2 : app.maxWidth,
+                    y = (window.innerHeight < app.maxHeight) ? window.innerHeight + 2 : app.maxHeight;
+                this.width = this.ctx.width = this.canvas.width = x;
+                this.height = this.ctx.height = this.canvas.height = y;
             } else {
                 this.ctx.width = this.canvas.width = this.width;
                 this.ctx.height = this.canvas.height = this.height;
             }
+
+            $(this.canvas).css('left', Math.floor(-this.canvas.width / 2));
+            $(this.canvas).css('top', Math.floor(-this.canvas.height / 2));
         };
 
         return Canvas;

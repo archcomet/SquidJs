@@ -24,7 +24,8 @@
                 x: 0,
                 y: 0,
                 ox: 0,
-                oy: 0
+                oy: 0,
+                current: 0
             };
 
             this.noiseLayerDirty = true;
@@ -49,7 +50,15 @@
 
         BackgroundSystem.prototype.createCanvases = function () {
 
-            this.surfaceLayer = new app.Canvas({
+            this.waveBuffer = new app.Canvas({
+                fullscreen: false,
+                width: 200,
+                height: 45,
+                zIndex: 1,
+                engine: this.engine
+            });
+
+            this.skyLayer = new app.Canvas({
                 container: this.engine.container,
                 zIndex: -1,
                 engine: this.engine
@@ -73,7 +82,9 @@
                 engine: this.engine
             });
 
-            this.noisePattern = this.noiseLayer.ctx.createPattern(this.image, 'repeat');
+            this.initNoiseLayer();
+            this.initWaveBuffer();
+            this.initSkyLayer();
 
             this.engine.bindEvent('update', this);
             this.engine.bindEvent('draw', this);
@@ -81,32 +92,71 @@
             this.engine.bindEvent('resize', this);
         };
 
-        BackgroundSystem.prototype.drawSurface = function () {
-            var ctx = this.surfaceLayer.ctx;
-            ctx.clearRect(0, 0, ctx.width, ctx.height);
+        BackgroundSystem.prototype.initNoiseLayer = function () {
+            this.noiseLayer.ctx.fillStyle = this.noiseLayer.ctx.createPattern(this.image, 'repeat');
+            this.noiseLayer.ctx.globalALpha = 0.7;
+        };
 
-            if (this.position.y < 500) {
-                ctx.fillRect(0, 0, ctx.width, 500 - this.position.y);
+        BackgroundSystem.prototype.initWaveBuffer = function () {
+            var ctx = this.waveBuffer.ctx;
+            ctx.strokeStyle = 'hsl(197, 100%, 100%)';
+            ctx.fillStyle = 'hsl(197, 100%, 22%)';
+            ctx.lineWidth = 4.0;
+            ctx.beginPath();
+            ctx.moveTo(0, 2);
+            ctx.bezierCurveTo(60, 22, 140, 22, 200, 2);
+            ctx.stroke();
+            ctx.lineTo(200, 22);
+            ctx.bezierCurveTo(140, 42, 60, 42, 0, 22);
+            ctx.stroke();
+            ctx.closePath();
+            ctx.fill();
+            this.wavePattern = ctx.createPattern(this.waveBuffer.ctx.canvas, 'repeat');
+        };
+
+        BackgroundSystem.prototype.initSkyLayer = function () {
+            var ctx = this.skyLayer.ctx;
+            this.skyFill = ctx.createRadialGradient(173, 70, 50, 173, 70, 1400);
+            this.skyFill.addColorStop(0.0, 'hsl(44, 100%, 62%)');
+            this.skyFill.addColorStop(0.004, 'hsl(44, 100%, 92%)');
+            this.skyFill.addColorStop(0.01, 'hsl(26, 74%, 62%)');
+            this.skyFill.addColorStop(1.0, 'hsl(289, 54%, 12%)');
+        };
+
+        BackgroundSystem.prototype.drawSky = function () {
+            var x, ctx = this.skyLayer.ctx,
+                surface = b2.toPixels(b2.WATERLEVEL) + ctx.height / 2,
+                y = surface - this.position.y;
+            ctx.clearRect(0, 0, ctx.width, ctx.height);
+            if (y > 0) {
+                ctx.fillStyle = this.skyFill;
+                ctx.fillRect(0, 0, ctx.width, y);
+            }
+
+            if (y > -20) {
+                x = this.position.ox + this.engine.timer.counter * 0.75;
+                ctx.fillStyle = this.wavePattern;
+                ctx.translate(x, y - 21);
+                ctx.fillRect(-x, 0, ctx.width, 42);
+                ctx.translate(-x, -y + 21);
             }
         };
 
         BackgroundSystem.prototype.drawNoise = function () {
             if (this.noiseLayerDirty) {
+                var x1 = this.position.ox,
+                    y1 = this.position.oy,
+                    x2 = this.position.ox * 0.7,
+                    y2 = this.position.oy * 0.7,
+                    ctx = this.noiseLayer.ctx;
 
-                var x1, y1, x2, y2, ctx = this.noiseLayer.ctx;
                 ctx.clearRect(0, 0, ctx.width, ctx.height);
-                ctx.fillStyle = this.noisePattern;
-
-                x1 = this.position.ox * 0.5;
-                y1 = this.position.oy * 0.5;
-                ctx.globalAlpha = 0.7;
+                ctx.globalALpha = 0.3;
                 ctx.translate(x1, y1);
                 ctx.fillRect(-x1, -y1, ctx.width, ctx.height);
                 ctx.translate(-x1, -y1);
 
-                x2 = this.position.ox * 0.3;
-                y2 = this.position.oy * 0.3;
-                ctx.globalAlpha = 0.5;
+                ctx.globalALpha = 0.5;
                 ctx.translate(x2, y2);
                 ctx.fillRect(-x2, -y2, ctx.width, ctx.height);
                 ctx.translate(-x2, -y2);
@@ -190,13 +240,14 @@
         };
 
         BackgroundSystem.prototype.draw = function () {
-            //this.drawSurface();
+            this.drawSky();
             this.drawNoise();
             this.drawLights();
             this.drawGradient();
         };
 
         BackgroundSystem.prototype.update = function (dt) {
+            this.current += 1;
             if (Math.abs(this.gradientLastY - this.position.y) > 100) {
                 var i, n;
                 this.gradientLayerDirty = true;
@@ -212,6 +263,9 @@
             this.noiseLayerDirty = true;
             this.lightLayerDirty = true;
             this.gradientLayerDirty = true;
+            this.initNoiseLayer();
+            this.initWaveBuffer();
+            this.initSkyLayer();
         };
 
         BackgroundSystem.prototype.cameraSet = function (position) {

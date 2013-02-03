@@ -34,7 +34,10 @@
             for (i = 0, n = this.model.entities.length; i < n; i += 1) {
                 steering = this.model.entities[i].SteeringComponent;
                 physics = this.model.entities[i].PhysicsComponent;
-                position = b2.toPixels(physics.body.GetPosition());
+
+                if (physics.oceanBound && physics.outOfWater) {
+                    return;
+                }
 
                 if (steering.behavior) {
                     this[steering.behavior](steering, physics);

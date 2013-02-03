@@ -46,6 +46,9 @@
         }
     };
 
+    global.app.maxWidth = 1198;
+    global.app.maxHeight = 768;
+
     /**
      * b2 Utility
      * ShortCuts and Helpers for using box2DWeb
@@ -59,6 +62,7 @@
         INTERVAL: 1 / 60,
         POSITION_ITERATIONS: 10,
         VELOCITY_ITERATIONS: 10,
+        WATERLEVEL: 10,
 
         // Box2d Constructors
         World: Box2D.Dynamics.b2World,
