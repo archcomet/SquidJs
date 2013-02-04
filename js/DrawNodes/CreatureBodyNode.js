@@ -19,14 +19,10 @@
 
 
         CreatureBodyNode.prototype.draw = function (ctx) {
-            var t, position = this.entity.PositionComponent,
+            var t = this.entity.engine.timer.counter,
                 body = this.entity.BodyComponent,
                 color = this.entity.ColorComponent,
-                radius = body.radius;
-
-            //todo: move counter into the model
-            t = this.entity.engine.timer.counter;
-            radius *= 1.0 + Math.pow(Math.sin(t / radius), 12) / 10;
+                radius = body.radius * (1.0 + Math.pow(Math.sin(t / body.radius), 12) / 10);
 
             ctx.beginPath();
             ctx.arc(0, 0, radius, 0, Math.PI * 2, false);

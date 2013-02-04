@@ -188,7 +188,7 @@
         BackgroundSystem.prototype.drawLights = function () {
             if (this.lightLayerDirty) {
                 this.drawLight({
-                    x1: 30,
+                    x1: 80,
                     y1: 0,
                     x2: 400,
                     y2: 1000,
@@ -197,7 +197,7 @@
                 });
 
                 this.drawLight({
-                    x1: 110,
+                    x1: 140,
                     y1: 0,
                     x2: 800,
                     y2: 900,
@@ -206,7 +206,7 @@
                 });
 
                 this.drawLight({
-                    x1: 200,
+                    x1: 210,
                     y1: 0,
                     x2: 1200,
                     y2: 800,

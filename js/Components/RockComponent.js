@@ -3,23 +3,23 @@
 
     global.app = global.app || {};
 
-    global.app.Component.CoralComponent = (function () {
+    global.app.Component.RockComponent = (function () {
 
         /**
-         * CoralComponent
+         * RockComponent
          * Provides coral properties to Entity
          * @param options
          * @return {*}
          * @constructor
          */
 
-        function CoralComponent(options) {
-            return CoralComponent.alloc(this, arguments);
+        function RockComponent(options) {
+            return RockComponent.alloc(this, arguments);
         }
 
-        app.inherit(app.Component, CoralComponent);
+        app.inherit(app.Component, RockComponent);
 
-        CoralComponent.prototype.init = function (options) {
+        RockComponent.prototype.init = function (options) {
             _.defaults(this, options, {
                 vertices: []
             });
@@ -27,7 +27,7 @@
             return this;
         };
 
-        return CoralComponent;
+        return RockComponent;
 
     }());
 

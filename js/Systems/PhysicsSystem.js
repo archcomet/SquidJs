@@ -19,7 +19,7 @@
 
         PhysicsSystem.prototype.init = function () {
             this.world = new b2.World(new b2.Vec2(0, 0), true);
-            this.gravity = new b2.Vec2(0, 60);
+            this.gravity = new b2.Vec2(0, 30);
             this.current = new b2.Vec2(0.5, 0.1);
             this.createModel(['PhysicsComponent', 'PositionComponent'], this.entityAdded, this.entityRemoved);
             this.engine.bindEvent('update', this);
@@ -49,7 +49,7 @@
         };
 
         PhysicsSystem.prototype.update = function () {
-            var i, n, physics, position, pos, vel;
+            var i, n, physics, position, pos, vel, gravityForce, mass;
             this.world.Step(b2.INTERVAL, b2.VELOCITY_ITERATIONS, b2.POSITION_ITERATIONS);
             this.world.ClearForces();
 
@@ -64,10 +64,16 @@
                 position.y = b2.toPixels(pos.y);
                 position.dx = b2.toPixels(vel.x);
                 position.dy = b2.toPixels(vel.y);
+                position.angle = physics.body.GetAngle();
 
                 if (physics.oceanBound) {
                     if (pos.y < b2.WATERLEVEL) {
-                        physics.body.ApplyForce(this.gravity, physics.body.GetWorldCenter());
+                        mass = physics.body.GetMass();
+                        gravityForce = new b2.Vec2();
+                        gravityForce.SetV(this.gravity);
+                        gravityForce.Multiply(mass);
+
+                        physics.body.ApplyForce(gravityForce, physics.body.GetWorldCenter());
                         physics.outOfWater = true;
                     } else {
                         physics.body.ApplyForce(this.current, physics.body.GetWorldCenter());

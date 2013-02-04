@@ -23,7 +23,8 @@
                 thickness = options.thickness,
                 velocity = options.velocity,
                 force = options.force,
-                sprint = options.sprint;
+                sprint = options.sprint,
+                tentacleCount = options.tentacleCount || 3;
 
             return this.engine.createEntity({
                 tag: 'creature_',
@@ -41,12 +42,13 @@
                     PhysicsComponent: {
                         bodyDef: {
                             type: b2.Body.b2_dynamicBody,
-                            linearDampening: 0.2
+                            linearDampening: 0.2,
+                            fixedRotation: true
                         },
                         fixtureDef: {
                             density: 0.5,
                             friction: 0.5,
-                            restitution: 0.5,
+                            restitution: 0.2,
                             shape: b2.makeShape({
                                 type: 'circle',
                                 radius: radius + thickness
@@ -60,17 +62,17 @@
                         irisRadius: radius * 0.4
                     },
                     TentaclesComponent: {
-                        count: 5,
+                        count: tentacleCount,
                         segmentCount: 7,
                         segmentLength: segmentLength,
                         radius: (radius + thickness - 2) / 2.2,
-                        friction: 0.88,
+                        friction: 0.94,
                         variance: 0.02
                     },
                     ColorComponent: {
                         h: app.random(0, 360),
                         s: app.random(50, 100),
-                        v: app.random(30, 55)
+                        v: app.random(30, 50)
                     }
                 }
             });

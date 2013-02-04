@@ -76,7 +76,7 @@
         };
 
         DrawNode.prototype.visit = function (ctx) {
-            var node, i, n = this.nodes.length;
+            var node, position, i, n = this.nodes.length;
             for (i = 0, n < this.nodes.length; i < n; i++) {
                 node = this.nodes[i];
                 if (node.zOrder < this.zOrder) {
@@ -87,9 +87,12 @@
             }
 
             if (this.autotransform && this.entity && this.entity.PositionComponent) {
-                ctx.translate(this.entity.PositionComponent.x, this.entity.PositionComponent.y);
+                position = this.entity.PositionComponent;
+                ctx.translate(position.x, position.y);
+                ctx.rotate(position.angle);
                 this.draw(ctx);
-                ctx.translate(-this.entity.PositionComponent.x, -this.entity.PositionComponent.y);
+                ctx.rotate(-position.angle);
+                ctx.translate(-position.x, -position.y);
             } else {
                 this.draw(ctx);
             }

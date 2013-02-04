@@ -53,9 +53,14 @@
         FilterData: Box2D.Dynamics.b2FilterData,
 
         makeShape: function (shape) {
+            var b2Shape;
             switch (shape.type) {
             case 'circle':
                 return new this.CircleShape(this.toWorld(shape.radius));
+            case 'polygon':
+                b2Shape = new this.PolygonShape();
+                b2Shape.SetAsVector(this.toWorld(shape.vertices));
+                return b2Shape;
             }
             return undefined;
         },
@@ -68,18 +73,52 @@
             return data;
         },
 
-        toWorld: function (n) {
-            return (typeof n === 'number') ? n / this.PTM : {
-                x: n.x / this.PTM,
-                y: n.y / this.PTM
-            };
+        toWorld: function (val) {
+            var i, n, result, type = Object.prototype.toString.call(val);
+            if (type === '[object Array]') {
+                result = [];
+                for (i = 0, n = val.length; i < n; i += 1) {
+                    result.push(this.toWorld(val[i]));
+                }
+                return result;
+            }
+
+            if (type === '[object Number]') {
+                return val / this.PTM;
+            }
+
+            if (val.x !== undefined && val.y !== undefined) {
+                return {
+                    x: val.x / this.PTM,
+                    y: val.y / this.PTM
+                };
+            }
+
+            return undefined;
         },
 
-        toPixels: function (n) {
-            return (typeof n === 'number') ? n * this.PTM : {
-                x: n.x * this.PTM,
-                y: n.y * this.PTM
-            };
+        toPixels: function (val) {
+            var i, n, result, type = Object.prototype.toString.call(val);
+            if (type === '[object Array]') {
+                result = [];
+                for (i = 0, n = val.length; i < n; i += 1) {
+                    result.push(this.toWorld(val[i]));
+                }
+                return result;
+            }
+
+            if (type === '[object Number]') {
+                return val * this.PTM;
+            }
+
+            if (val.x !== undefined && val.y !== undefined) {
+                return {
+                    x: val.x * this.PTM,
+                    y: val.y * this.PTM
+                };
+            }
+
+            return undefined;
         }
     };
 

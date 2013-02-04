@@ -3,7 +3,7 @@
 
     global.app = global.app || {};
 
-    global.app.System.CreatureRenderSystem = (function () {
+    global.app.System.CreatureBodySystem = (function () {
 
         var settings = {
             friction: 0.01,
@@ -118,7 +118,7 @@
         };
 
         /**
-         * CreatureRenderSystem
+         * CreatureBodySystem
          * Rendering System for a creature type.
          * Draws the creature's body and tentacles
          * @param engine
@@ -126,13 +126,13 @@
          * @constructor
          */
 
-        function CreatureRenderSystem(engine) {
-            return CreatureRenderSystem.alloc(this, arguments);
+        function CreatureBodySystem(engine) {
+            return CreatureBodySystem.alloc(this, arguments);
         }
-        app.inherit(app.System, CreatureRenderSystem);
+        app.inherit(app.System, CreatureBodySystem);
 
 
-        CreatureRenderSystem.prototype.init = function () {
+        CreatureBodySystem.prototype.init = function () {
             this.createModel([
                 'TentaclesComponent',
                 'BodyComponent',
@@ -143,12 +143,12 @@
             this.engine.bindEvent('update', this);
         };
 
-        CreatureRenderSystem.prototype.deinit = function () {
+        CreatureBodySystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
             this.destroyModel();
         };
 
-        CreatureRenderSystem.prototype.entityAdded = function (entity) {
+        CreatureBodySystem.prototype.entityAdded = function (entity) {
             var i, n, creatureBodyNode, tentaclesNode,
                 tentacles = entity.TentaclesComponent.tentacles  = [];
 
@@ -162,12 +162,12 @@
             this.engine.canvas.addChild(creatureBodyNode);
         };
 
-        CreatureRenderSystem.prototype.entityRemoved = function (entity) {
+        CreatureBodySystem.prototype.entityRemoved = function (entity) {
             this.engine.canvas.removeChildForEntity(entity);
             entity.TentaclesComponent.tentacles.length = 0;
         };
 
-        CreatureRenderSystem.prototype.update = function () {
+        CreatureBodySystem.prototype.update = function () {
             var i, n, entity;
             for (i = 0, n = this.model.entities.length; i < n; i++) {
                 entity = this.model.entities[i];
@@ -176,7 +176,7 @@
             }
         };
 
-        CreatureRenderSystem.prototype.updateBody = function (entity) {
+        CreatureBodySystem.prototype.updateBody = function (entity) {
             var target, vec, maxOffset,
                 position = entity.PositionComponent,
                 steering = entity.SteeringComponent,
@@ -204,7 +204,7 @@
             };
         };
 
-        CreatureRenderSystem.prototype.updateTentacles = function (entity) {
+        CreatureBodySystem.prototype.updateTentacles = function (entity) {
             var i, n, t, theta, px, py, step, radius,
                 body = entity.BodyComponent,
                 position = entity.PositionComponent,
@@ -227,7 +227,7 @@
             }
         };
 
-        return CreatureRenderSystem;
+        return CreatureBodySystem;
 
     }());
 

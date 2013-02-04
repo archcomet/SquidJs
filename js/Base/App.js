@@ -14,17 +14,19 @@
                     'PhysicsSystem',
                     'CameraSystem',
                     'BackgroundSystem',
-                    'CreatureRenderSystem'
+                    'CreatureBodySystem',
+                    'RockSystem'
                 ]
             }),
             creatureFactory = new app.CreatureFactory(engine),
-            coralFactory = new app.CoralFactory(engine);
+            rockFactory = new app.RockFactory(engine);
 
-        coralFactory.makeCoral({
-            minRadius: 5,
-            maxRadius: 30,
-            vertexCount: 7
-        });
+        for (i = 0; i < 3; i++) {
+            rockFactory.makeRock({
+                x: app.random(0, 1500),
+                y: app.random(1000, 1500)
+            });
+        }
 
         for (i = 0; i < 14; i++) {
             creatureFactory.makeCreature({
@@ -38,12 +40,13 @@
         }
 
         entity = creatureFactory.makeCreature({
-            segmentLength: 20,
+            segmentLength: 25,
             radius: 25,
             thickness: 3,
             velocity: 26,
             force: 700,
-            sprint: 2
+            sprint: 2,
+            tentacleCount: 8
         });
 
         engine.systems.CameraSystem.setTargetEntity(entity);
@@ -55,7 +58,6 @@
 }(window));
 
 
-//todo rock renderer
 //todo collision response
 //todo rock system
 //todo food renderer
