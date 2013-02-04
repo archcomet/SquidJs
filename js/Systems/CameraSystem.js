@@ -33,7 +33,7 @@
 
         CameraSystem.prototype.setTargetEntity = function (entity) {
             this.targetEntity = entity;
-            var targetPosition = entity.components.PositionComponent,
+            var targetPosition = entity.PositionComponent,
                 x = targetPosition.x * -1,
                 y = targetPosition.y * -1;
 

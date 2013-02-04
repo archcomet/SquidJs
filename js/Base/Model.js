@@ -74,7 +74,7 @@
         Model.prototype.matchEntity = function (entity) {
             var i, n;
             for (i = 0, n = this.components.length; i < n; i += 1) {
-                if (!entity.components[this.components[i]]) {
+                if (!entity[this.components[i]]) {
                     return false;
                 }
             }

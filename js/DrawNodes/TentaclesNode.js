@@ -1,0 +1,64 @@
+(function (global) {
+    'use strict';
+
+    global.app = global.app || {};
+
+    global.app.TentaclesNode = (function () {
+
+        /**
+         * TentaclesNode
+         * @param entity
+         * @return {*}
+         * @constructor
+         */
+
+        function TentaclesNode(entity) {
+            return TentaclesNode.alloc(this, arguments);
+        }
+        app.inherit(app.DrawNode, TentaclesNode);
+
+        TentaclesNode.prototype.init = function (entity) {
+            TentaclesNode.parent.init.call(this, entity);
+            this.autotransform = false;
+        };
+
+        TentaclesNode.prototype.draw = function (ctx) {
+            var i, n, tentacles = this.entity.TentaclesComponent.tentacles;
+            for (i = 0, n = tentacles.length; i < n; i++) {
+                this.drawTentacle(ctx, tentacles[i]);
+            }
+        };
+
+        TentaclesNode.prototype.drawTentacle = function (ctx, tentacle) {
+            var o, i, color, h, s, v;
+
+            o = tentacle.outer[0];
+            i = tentacle.inner[0];
+
+            ctx.beginPath();
+            ctx.moveTo(o.x, o.y);
+            ctx.curveThroughPoints(tentacle.outer);
+            ctx.curveThroughPoints(tentacle.inner.reverse());
+            ctx.lineTo(i.x, i.y);
+            ctx.closePath();
+
+            color = this.entity.ColorComponent;
+            h = color.h * tentacle.shade;
+            s = color.s * tentacle.shade * color.shade;
+            v = color.v * tentacle.shade * color.shade;
+
+            ctx.fillStyle = 'hsl(' + h + ', ' + s + '%, ' + v + '%)';
+            ctx.fill();
+
+            if (this.entity.TentaclesComponent.radius > 2) {
+                ctx.strokeStyle = this.entity.ColorComponent.hslStroke;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+        };
+
+        return TentaclesNode;
+
+    }());
+
+}(window));

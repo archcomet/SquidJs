@@ -19,7 +19,6 @@
         app.inherit(app.BaseObj, Entity);
 
         Entity.prototype.init = function (tag) {
-            this.components = {}; // dep
             this.id = _.uniqueId(tag || 'entity_');
             return this;
         };
@@ -32,7 +31,6 @@
 
         Entity.prototype.createComponent = function (componentName, options) {
             var component = new app.Component[componentName](options);
-            this.components[componentName] = component; //dep
             this[componentName] = component;
             this.engine.triggerEvent('componentAdded', this);
             return component;
@@ -44,7 +42,6 @@
                 if (components.hasOwnProperty(componentName)) {
                     componentOptions = components[componentName];
                     component = new app.Component[componentName](componentOptions);
-                    this.components[componentName] = component; // dep
                     this[componentName] = component;
                 }
             }
@@ -59,15 +56,7 @@
         };
 
         Entity.prototype.destroyAllComponents = function () {
-            var key, component, componentName;
-            // dep
-            for (componentName in this.components) {
-                if (this.components.hasOwnProperty(componentName)) {
-                    component = this.components[componentName];
-                    delete this.components[componentName];
-                    component.deinit();
-                }
-            }
+            var key;
             for (key in this) {
                 if (this.hasOwnProperty(key) && this[key] instanceof app.Component) {
                     this[key].destroy();

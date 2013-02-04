@@ -9,22 +9,27 @@
          * DrawNode
          * A hierarchical data structure for drawing.
          * @param entity
-         * @param zOrder
-         * @param drawCallback
          * @return {*}
          * @constructor
          */
 
-        function DrawNode(entity, drawCallback, zOrder) {
+        function DrawNode(entity) {
             return DrawNode.alloc(this, arguments);
         }
         app.inherit(app.BaseObj, DrawNode);
 
-        DrawNode.prototype.init = function (entity, drawCallback, zOrder) {
+        DrawNode.prototype.init = function (entity) {
             this.entity = entity;
             this.nodes = [];
-            this.drawCallback = drawCallback;
-            this.z = zOrder || 0;
+            this.zOrder = 0;
+            this.autotransform = true;
+
+            if (entity !== undefined) {
+                if (entity.PositionComponent !== undefined) {
+                    this.zOrder = entity.PositionComponent.zOrder;
+                }
+            }
+
             return this;
         };
 
@@ -32,15 +37,28 @@
             this.removeAllChildren(true);
         };
 
-        DrawNode.prototype.addChild = function (drawNode) {
+        DrawNode.prototype.addChild = function (drawNode, zOrder) {
+            if (zOrder !== undefined) {
+                drawNode.zOrder = zOrder;
+            }
             this.nodes.push(drawNode);
-            _.sortBy(this.nodes, function (node) { return node.z; });
+            _.sortBy(this.nodes, function (node) { return node.zOrder; });
         };
 
         DrawNode.prototype.removeChild = function (drawNode) {
             var i, n;
             for (i = 0, n = this.nodes.length; i < n; i++) {
                 if (this.nodes[i] === drawNode) {
+                    this.nodes.splice(i, 1);
+                    return;
+                }
+            }
+        };
+
+        DrawNode.prototype.removeChildForEntity = function (entity) {
+            var i, n;
+            for (i = 0, n = this.nodes.length; i < n; i++) {
+                if (this.nodes[i].entity === entity) {
                     this.nodes.splice(i, 1);
                     return;
                 }
@@ -57,25 +75,33 @@
             this.nodes.length = 0;
         };
 
-        DrawNode.prototype.draw = function (ctx) {
+        DrawNode.prototype.visit = function (ctx) {
             var node, i, n = this.nodes.length;
             for (i = 0, n < this.nodes.length; i < n; i++) {
                 node = this.nodes[i];
-                if (node.z < this.z) {
-                    node.draw(ctx);
+                if (node.zOrder < this.zOrder) {
+                    node.visit(ctx);
                 } else {
                     break;
                 }
             }
 
-            if (this.drawCallback) {
-                this.drawCallback(ctx, this.entity);
+            if (this.autotransform && this.entity && this.entity.PositionComponent) {
+                ctx.translate(this.entity.PositionComponent.x, this.entity.PositionComponent.y);
+                this.draw(ctx);
+                ctx.translate(-this.entity.PositionComponent.x, -this.entity.PositionComponent.y);
+            } else {
+                this.draw(ctx);
             }
 
             for (i; i < n; i++) {
                 node = this.nodes[i];
-                node.draw(ctx);
+                node.visit(ctx);
             }
+        };
+
+        DrawNode.prototype.draw = function (ctx) {
+
         };
 
         return DrawNode;

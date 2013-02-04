@@ -30,6 +30,8 @@
             'js/Components/PositionComponent.js',
             'js/Components/SteeringComponent.js',
             'js/Components/TentaclesComponent.js',
+            'js/DrawNodes/CreatureBodyNode.js',
+            'js/DrawNodes/TentaclesNode.js',
             'js/Factories/CoralFactory.js',
             'js/Factories/CreatureFactory.js',
             'js/Systems/BackgroundSystem.js',

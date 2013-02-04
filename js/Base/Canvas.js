@@ -89,15 +89,18 @@
             this.rootNode.removeChild(child);
         };
 
+        Canvas.prototype.removeChildForEntity = function (entity) {
+            this.rootNode.removeChildForEntity(entity);
+        };
+
         Canvas.prototype.draw = function () {
             var x = -1 * this.center.x + this.width / 2,
                 y = -1 * this.center.y + this.height / 2;
 
             this.ctx.clearRect(0, 0, this.ctx.width, this.ctx.height);
-            this.ctx.save();
             this.ctx.translate(x, y);
-            this.rootNode.draw(this.ctx);
-            this.ctx.restore();
+            this.rootNode.visit(this.ctx);
+            this.ctx.translate(-x, -y);
         };
 
         Canvas.prototype.cameraSet = function (position) {

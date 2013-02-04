@@ -25,6 +25,8 @@
                 vertexCount: 7
             });
 
+            app.assert(options.vertexCount > 2, 'Coral must have 3 or more vertices');
+
             var i, n, theta, radius,
                 lastStep = 0,
                 vertices = [],

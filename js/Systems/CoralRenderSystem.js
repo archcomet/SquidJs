@@ -32,15 +32,10 @@
         };
 
         CoralRenderSystem.prototype.entityAdded = function (entity) {
-
            // bodyDrawNode = new app.DrawNode(entity, this.drawCoral, entity.PositionComponent.zOrder);
         };
 
         CoralRenderSystem.prototype.entityRemoved = function (entity) {
-
-        };
-
-        CoralRenderSystem.prototype.drawCoral = function (ctx, entity) {
 
         };
 
