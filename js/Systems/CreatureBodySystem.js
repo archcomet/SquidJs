@@ -7,7 +7,7 @@
 
         var settings = {
             friction: 0.01,
-            wind: 0.10,
+            wind: 0.03,
             gravity: 0.05
         };
 

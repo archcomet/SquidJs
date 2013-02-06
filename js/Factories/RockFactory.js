@@ -21,29 +21,14 @@
             options = options || {};
 
             _.defaults(options, {
-                minRadius: 50,
+                minRadius: 60,
                 maxRadius: 75,
-                vertexCount: 7,
+                vertexCount: 5,
                 x: 0,
                 y: 0
             });
 
-            app.assert(options.vertexCount > 2, 'Coral must have 3 or more vertices');
-
-            var i, n, theta, radius,
-                lastStep = 0,
-                vertices = [],
-                step = (Math.PI * 2) / options.vertexCount;
-
-            for (i = 0, n = options.vertexCount; i < n; i += 1) {
-                theta = app.random(lastStep, lastStep + step);
-                radius = app.random(options.minRadius, options.maxRadius);
-                lastStep += step;
-                vertices.push({
-                    x: Math.cos(theta) * radius,
-                    y: Math.sin(theta) * radius
-                });
-            }
+            var vertices = app.randomConvexPolygon(options.vertexCount, options.minRadius, options.maxRadius);
 
             return this.engine.createEntity({
                 tag: 'rock_',
@@ -61,13 +46,14 @@
                         vertices: vertices
                     },
                     PhysicsComponent: {
+                        drag: -0.4,
                         bodyDef: {
                             type: b2.Body.b2_dynamicBody,
-                            linearDampening: 0.2,
-                            angularDampening: 0.2
+                            linearDampening: 0.1,
+                            angularDampening: 0.1
                         },
                         fixtureDef: {
-                            density: 5,
+                            density: 3,
                             friction: 0.5,
                             restitution: 0.1,
                             shape: b2.makeShape({

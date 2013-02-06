@@ -21,14 +21,17 @@
             creatureFactory = new app.CreatureFactory(engine),
             rockFactory = new app.RockFactory(engine);
 
-        for (i = 0; i < 3; i++) {
+        for (i = 0; i < 3; i += 1) {
             rockFactory.makeRock({
                 x: app.random(0, 1500),
-                y: app.random(1000, 1500)
+                y: app.random(1000, 1500),
+                vertexCount: 9,
+                minRadius: 40,
+                maxRadius: 90
             });
         }
 
-        for (i = 0; i < 14; i++) {
+        for (i = 0; i < 14; i += 1) {
             creatureFactory.makeCreature({
                 segmentLength: app.random(5, 11),
                 radius: app.random(10, 19),
@@ -46,7 +49,7 @@
             velocity: 26,
             force: 700,
             sprint: 2,
-            tentacleCount: 8
+            tentacleCount: 5
         });
 
         engine.systems.CameraSystem.setTargetEntity(entity);

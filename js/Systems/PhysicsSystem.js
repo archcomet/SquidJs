@@ -49,7 +49,7 @@
         };
 
         PhysicsSystem.prototype.update = function () {
-            var i, n, physics, position, pos, vel, gravityForce, mass;
+            var i, n, physics, position, pos, vel, torque, force, mass, center;
             this.world.Step(b2.INTERVAL, b2.VELOCITY_ITERATIONS, b2.POSITION_ITERATIONS);
             this.world.ClearForces();
 
@@ -67,16 +67,36 @@
                 position.angle = physics.body.GetAngle();
 
                 if (physics.oceanBound) {
-                    if (pos.y < b2.WATERLEVEL) {
-                        mass = physics.body.GetMass();
-                        gravityForce = new b2.Vec2();
-                        gravityForce.SetV(this.gravity);
-                        gravityForce.Multiply(mass);
+                    mass = physics.body.GetMass();
+                    center = physics.body.GetWorldCenter();
 
-                        physics.body.ApplyForce(gravityForce, physics.body.GetWorldCenter());
+                    if (pos.y < b2.WATERLEVEL) {
+
+                        // Apply Gravity
+                        force = new b2.Vec2();
+                        force.SetV(this.gravity);
+                        force.Multiply(mass);
+                        physics.body.ApplyForce(force, center);
+
                         physics.outOfWater = true;
                     } else {
-                        physics.body.ApplyForce(this.current, physics.body.GetWorldCenter());
+
+
+                        // Apply Drag
+                        if (physics.drag) {
+                            torque = physics.body.GetAngularVelocity();
+                            torque *= physics.drag * mass;
+                            physics.body.ApplyTorque(torque);
+
+                            force = new b2.Vec2();
+                            force.SetV(vel);
+                            force.Multiply(physics.drag);
+                            force.Multiply(mass);
+                            physics.body.ApplyForce(force, center);
+                        }
+
+                        // Apply Current
+                        physics.body.ApplyForce(this.current, center);
                         physics.outOfWater = false;
                     }
                 }

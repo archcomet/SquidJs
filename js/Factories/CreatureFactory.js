@@ -40,9 +40,10 @@
                         y: app.random(this.engine.canvas.height, this.engine.canvas.height * 2)
                     },
                     PhysicsComponent: {
+                        drag: -0.4,
                         bodyDef: {
                             type: b2.Body.b2_dynamicBody,
-                            linearDampening: 0.2,
+                            linearDampening: 0.1,
                             fixedRotation: true
                         },
                         fixtureDef: {

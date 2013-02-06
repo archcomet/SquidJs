@@ -20,6 +20,7 @@
 
         PhysicsComponent.prototype.init = function (options) {
             var key;
+            this.drag = options.drag;
             this.oceanBound = (options.oceanBound !== undefined) ? options.oceanBound : true;
             this.outOfWater = false;
             this.bodyDef = new b2.BodyDef();

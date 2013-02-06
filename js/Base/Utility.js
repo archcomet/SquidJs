@@ -21,7 +21,58 @@
         }
     };
 
+    function crossProduct(prevVertex, currVertex, nextVertex) {
+        var a = {
+            x: currVertex.x - prevVertex.x,
+            y: currVertex.y - prevVertex.y
+        }, b = {
+            x: nextVertex.x - prevVertex.x,
+            y: nextVertex.y - prevVertex.y
+        };
+        return (a.x * b.y - a.y * b.x);
+    }
+
+    function removeNextConcavePoint(vertices) {
+        var i, n, cross, prev, next;
+        for (i = 0, n = vertices.length; i < n; i += 1) {
+
+            prev = (i === 0) ? n - 1 : i - 1;
+            next = (i === n - 1) ? 0 : i + 1;
+
+            cross = crossProduct(vertices[prev], vertices[i], vertices[next]);
+
+            if (cross <= 0) {
+                vertices.splice(i, 1);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    global.app.randomConvexPolygon = function (n, minRadius, maxRadius) {
+        var i, theta, radius, removedConcave,
+            step = (Math.PI * 2) / n,
+            vertices = [];
+
+        for (i = 0; i < n; i += 1) {
+            theta = app.random(step * i, step * i + step);
+            radius = app.random(minRadius, maxRadius);
+            vertices.push({
+                x: Math.cos(theta) * radius,
+                y: Math.sin(theta) * radius
+            });
+        }
+
+        removedConcave = true;
+        while (removedConcave) {
+            removedConcave = removeNextConcavePoint(vertices);
+        }
+
+        return vertices;
+    };
+
     global.app.maxWidth = 1198;
+
     global.app.maxHeight = 768;
 
     /**
