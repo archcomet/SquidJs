@@ -5,7 +5,7 @@
         http = require('http'),
         util = require('util'),
         webroot = './',
-        port = 8080,
+        port = 80,
         file = new (web.Server)(webroot, {
             cache: 600,
             headers: { 'X-Powered-By': 'node-static' }
