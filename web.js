@@ -5,7 +5,7 @@
         http = require('http'),
         util = require('util'),
         webroot = './',
-        port = 80,
+        port = process.env.PORT || 8080,
         file = new (web.Server)(webroot, {
             cache: 600,
             headers: { 'X-Powered-By': 'node-static' }
@@ -29,6 +29,6 @@
         });
     }).listen(port);
 
-    console.log('node-static running at http://localhost:%d', port);
+    console.log('node-static running at port %d', port);
 
 }());
