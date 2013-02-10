@@ -156,10 +156,10 @@
                 ctx.fillRect(-x1, -y1, ctx.width, ctx.height);
                 ctx.translate(-x1, -y1);
 
-                ctx.globalALpha = 0.5;
+                /*ctx.globalALpha = 0.5;
                 ctx.translate(x2, y2);
                 ctx.fillRect(-x2, -y2, ctx.width, ctx.height);
-                ctx.translate(-x2, -y2);
+                ctx.translate(-x2, -y2);*/
 
                 this.noiseLayerDirty = false;
             }
