@@ -1,12 +1,12 @@
 (function () {
     'use strict';
 
-    var app = require('node-static'),
+    var web = require('node-static'),
         http = require('http'),
         util = require('util'),
         webroot = './',
         port = 8080,
-        file = new (app.Server)(webroot, {
+        file = new (web.Server)(webroot, {
             cache: 600,
             headers: { 'X-Powered-By': 'node-static' }
         });
