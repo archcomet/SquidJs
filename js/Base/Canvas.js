@@ -3,6 +3,7 @@
 
     global.app = global.app || {};
 
+
     global.app.Canvas = (function () {
 
         /**
@@ -14,7 +15,7 @@
         global.CanvasRenderingContext2D.prototype.curveThroughPoints = function (points) {
             var i, n, a, b, x, y;
             this.lineJoin = 'mitter';
-            for (i = 1, n = points.length - 2; i < n; i++) {
+            for (i = 1, n = points.length - 2; i < n; i += 1) {
                 a = points[i];
                 b = points[i + 1];
                 x = (a.x + b.x) * 0.5;
@@ -25,6 +26,16 @@
             b = points[i + 1];
             this.quadraticCurveTo(a.x, a.y, b.x, b.y);
         };
+
+        global.CanvasRenderingContext2D.prototype.setCachedFillStyle = (function () {
+            var fillCache = '';
+            return function (fillStyle) {
+                if (fillStyle !== fillCache) {
+                    this.fillStyle = fillStyle;
+                    fillCache = fillStyle;
+                }
+            };
+        }());
 
         /**
          * Canvas
@@ -132,5 +143,4 @@
         return Canvas;
 
     }());
-
 }(window));

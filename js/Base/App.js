@@ -31,7 +31,7 @@
             });
         }
 
-        for (i = 0; i < 14; i += 1) {
+        for (i = 0; i < 10; i += 1) {
             creatureFactory.makeCreature({
                 segmentLength: app.random(5, 11),
                 radius: app.random(10, 19),

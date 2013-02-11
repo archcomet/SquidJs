@@ -64,7 +64,7 @@
                     },
                     TentaclesComponent: {
                         count: tentacleCount,
-                        segmentCount: 7,
+                        segmentCount: 6,
                         segmentLength: segmentLength,
                         radius: (radius + thickness - 2) / 2.2,
                         friction: 0.94,

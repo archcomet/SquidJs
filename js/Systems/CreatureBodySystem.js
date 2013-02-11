@@ -39,7 +39,6 @@
 
             this.entity = entity;
             this.variance = app.random(-variance, variance);
-            this.shade = app.random(0.85, 1.1);
             this.controlPoints = [];
             this.outer = [];
             this.inner = [];

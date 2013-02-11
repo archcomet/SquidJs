@@ -48,12 +48,12 @@
             this.world.DestroyBody(physics.body);
         };
 
-        PhysicsSystem.prototype.update = function () {
+        PhysicsSystem.prototype.update = function (dt) {
             var i, n, physics, position, pos, vel, torque, force, mass, center;
-            this.world.Step(b2.INTERVAL, b2.VELOCITY_ITERATIONS, b2.POSITION_ITERATIONS);
+            this.world.Step(dt, b2.VELOCITY_ITERATIONS, b2.POSITION_ITERATIONS);
             this.world.ClearForces();
 
-            for (i = 0, n = this.model.entities.length; i < n; i++) {
+            for (i = 0, n = this.model.entities.length; i < n; i += 1) {
                 physics = this.model.entities[i].PhysicsComponent;
                 position = this.model.entities[i].PositionComponent;
 

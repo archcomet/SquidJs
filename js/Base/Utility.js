@@ -85,9 +85,8 @@
 
         // Constants
         PTM: 30,
-        INTERVAL: 1 / 60,
-        POSITION_ITERATIONS: 10,
-        VELOCITY_ITERATIONS: 10,
+        POSITION_ITERATIONS: 8,
+        VELOCITY_ITERATIONS: 8,
         WATERLEVEL: 10,
 
         // Box2d Constructors

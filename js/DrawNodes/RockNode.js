@@ -24,7 +24,7 @@
 
             ctx.lineWidth = 10;
             ctx.lineJoin = 'round';
-            ctx.fillStyle = color.hslFill;
+            ctx.setCachedFillStyle(color.hslFill);
             ctx.strokeStyle = color.hslStroke;
 
             ctx.beginPath();

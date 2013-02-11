@@ -27,7 +27,7 @@
             ctx.beginPath();
             ctx.arc(0, 0, radius, 0, Math.PI * 2, false);
             ctx.lineWidth = body.thickness;
-            ctx.fillStyle = color.hslFill;
+            ctx.setCachedFillStyle(color.hslFill);
             ctx.strokeStyle = color.hslStroke;
             ctx.fill();
             ctx.stroke();
@@ -35,14 +35,14 @@
             ctx.beginPath();
             ctx.arc(0, 0, body.eyeRadius, 0, Math.PI * 2, false);
             ctx.lineWidth = 1;
-            ctx.fillStyle = 'hsl(0, 0%, 100%)';
+            ctx.setCachedFillStyle('hsl(0, 0%, 100%)');
             ctx.strokeStyle = color.hslStroke;
             ctx.fill();
             ctx.stroke();
 
             ctx.beginPath();
             ctx.arc(body.irisPosition.x, body.irisPosition.y, body.irisRadius, 0, Math.PI * 2, false);
-            ctx.fillStyle = 'hsl(0, 0%, 0%)';
+            ctx.setCachedFillStyle('hsl(0, 0%, 0%)');
             ctx.fill();
         };
 

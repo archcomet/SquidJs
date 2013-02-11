@@ -36,23 +36,19 @@
                 cameraRate: 1
             });
 
+            this.canvasDirty = false;
             this.bindEvent('draw', this.canvas);
 
             if (_.isArray(options.systems)) {
-                for (i = 0, n = options.systems.length; i < n; i++) {
+                for (i = 0, n = options.systems.length; i < n; i += 1) {
                     this.createSystem(options.systems[i], i);
                 }
             }
 
             this.timer = new app.Timer({
-                autostart: false,
                 engine: this
             });
 
-            this.timer.schedule(function () {
-                self.triggerEvent('update');
-                self.triggerEvent('draw');
-            }, 0, 1);
 
             $(window).resize(function () {
                 self.triggerEvent('resize');
@@ -147,7 +143,7 @@
 
         Engine.prototype.unbindEvent = function (event, target) {
             var i, n, listeners = this.eventListeners[event];
-            for (i = 0, n = listeners.length; i < n; i++) {
+            for (i = 0, n = listeners.length; i < n; i += 1) {
                 if (listeners[i].target === target) {
                     listeners.splice(i, 1);
                     return;
@@ -161,7 +157,7 @@
             if (listeners && listeners.length > 0) {
                 args = Array.prototype.slice.call(arguments);
                 args.splice(0, 1);
-                for (i = 0, n = listeners.length; i < n; i++) {
+                for (i = 0, n = listeners.length; i < n; i += 1) {
                     listener = listeners[i];
                     listener.apply(listener, args);
                 }
@@ -176,6 +172,18 @@
 
         Engine.prototype.stop = function () {
             this.timer.stop();
+        };
+
+        Engine.prototype.update = function (dt) {
+            this.triggerEvent('update', dt);
+            this.canvasDirty = true;
+        };
+
+        Engine.prototype.draw = function () {
+            if (this.canvasDirty) {
+                this.triggerEvent('draw');
+                this.canvasDirty = false;
+            }
         };
 
         return Engine;
