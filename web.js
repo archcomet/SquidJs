@@ -1,32 +1,40 @@
 (function () {
     'use strict';
 
-    var web = require('node-static'),
+    // Settings
+    var webroot = './', // root directory for static files
+        port = process.env.PORT || 8080, // uses environment variable if set, otherwise default to 8080
+
+    // Node Modules
+        web = require('node-static'),
         http = require('http'),
         util = require('util'),
-        webroot = './',
-        port = process.env.PORT || 8080,
+
+    // Create a static file server using node-static module
         file = new (web.Server)(webroot, {
             cache: 600,
             headers: { 'X-Powered-By': 'node-static' }
         });
 
-    http.createServer(function (req, res) {
-        req.addListener('end', function () {
-            file.serve(req, res, function (err, result) {
+    // Create a http server using http module
+    http.createServer(function (request, response) {
+        // Add event listener for request 'end'
+        request.addListener('end', function () {
+            // Serve requested file
+            file.serve(request, response, function (err, result) {
                 if (err) {
-                    console.error('Error serving %s - %s', req.url, err.message);
-                    if (err.status !== 404 && err.status !== 500) {
-                        res.writeHead(err.status, err.headers);
-                        res.end();
-                    }
+                    // Super basic error handling
+                    console.error('Error serving %s - %s', request.url, err.message);
+                    response.writeHead(err.status, err.headers);
+                    response.end();
                 } else {
-                    console.log('%s', req.url);
+                    // Log served file for debugging
+                    console.log('%s', request.url);
                 }
             });
         });
     }).listen(port);
 
-    console.log('node-static running at port %d', port);
+    console.log('node-static running on port %d', port);
 
 }());
