@@ -99,6 +99,7 @@
         PolygonShape: Box2D.Collision.Shapes.b2PolygonShape,
         CircleShape: Box2D.Collision.Shapes.b2CircleShape,
         MassData: Box2D.Collision.Shapes.b2MassData,
+        ContactListener: Box2D.Dynamics.b2ContactListener,
         DebugDraw: Box2D.Dynamics.b2DebugDraw,
         FilterData: Box2D.Dynamics.b2FilterData,
 

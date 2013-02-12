@@ -31,12 +31,12 @@
             });
         }
 
-        for (i = 0; i < 10; i += 1) {
+        for (i = 0; i < 5; i += 1) {
             creatureFactory.makeCreature({
                 segmentLength: app.random(5, 11),
                 radius: app.random(10, 19),
                 thickness: app.random(1, 5),
-                velocity: app.random(20, 25),
+                velocity: app.random(20, 24),
                 force: app.random(300, 600),
                 sprint: 2
             });

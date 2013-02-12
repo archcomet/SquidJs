@@ -80,7 +80,7 @@
         Timer.prototype.step = function () {
 
             var dt = (new Date()).getTime() - this.nextGameTick;
-            this.enableFrameSkip = (dt > this.skipTicks * 2 && dt < 4000);
+            this.enableFrameSkip = (dt > this.skipTicks * 1.25 && dt < 1000);
 
             if (this.enableFrameSkip) {
                 this.loops = 0;

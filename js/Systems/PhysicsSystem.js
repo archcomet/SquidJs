@@ -21,6 +21,14 @@
             this.world = new b2.World(new b2.Vec2(0, 0), true);
             this.gravity = new b2.Vec2(0, 30);
             this.current = new b2.Vec2(0.5, 0.1);
+
+            this.contactListener = new b2.ContactListener();
+            this.contactListener.BeginContact = this.beginContact.bind(this);
+            this.contactListener.EndContact = this.endContact.bind(this);
+            this.contactListener.PreSolve = this.preSolve.bind(this);
+            this.contactListener.PostSolve = this.postSolve.bind(this);
+            this.world.SetContactListener(this.contactListener);
+
             this.createModel(['PhysicsComponent', 'PositionComponent'], this.entityAdded, this.entityRemoved);
             this.engine.bindEvent('update', this);
             return this;
@@ -101,6 +109,22 @@
                     }
                 }
             }
+        };
+
+        PhysicsSystem.prototype.beginContact = function (contact) {
+            this.engine.triggerEvent('beginContact', contact);
+        };
+
+        PhysicsSystem.prototype.endContact = function (contact) {
+            this.engine.triggerEvent('endContact', contact);
+        };
+
+        PhysicsSystem.prototype.preSolve = function (contact, oldManifold) {
+            this.engine.triggerEvent('preSolve', contact, oldManifold);
+        };
+
+        PhysicsSystem.prototype.postSolve = function (contact, impulse) {
+            this.engine.triggerEvent('postSolve', contact, impulse);
         };
 
         return PhysicsSystem;

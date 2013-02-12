@@ -146,8 +146,6 @@
             if (this.noiseLayerDirty) {
                 var x1 = this.position.ox,
                     y1 = this.position.oy,
-                    x2 = this.position.ox * 0.7,
-                    y2 = this.position.oy * 0.7,
                     ctx = this.noiseLayer.ctx;
 
                 ctx.clearRect(0, 0, ctx.width, ctx.height);
@@ -155,11 +153,6 @@
                 ctx.translate(x1, y1);
                 ctx.fillRect(-x1, -y1, ctx.width, ctx.height);
                 ctx.translate(-x1, -y1);
-
-                /*ctx.globalALpha = 0.5;
-                ctx.translate(x2, y2);
-                ctx.fillRect(-x2, -y2, ctx.width, ctx.height);
-                ctx.translate(-x2, -y2);*/
 
                 this.noiseLayerDirty = false;
             }
@@ -174,7 +167,7 @@
             ctx.fillStyle = grd;
             ctx.globalAlpha = 0.5;
 
-            for (i = 1; i < 4; i++) {
+            for (i = 1; i < 4; i += 1) {
                 ctx.beginPath();
                 ctx.moveTo(data.x1 - data.topRadius * i, data.y1);
                 ctx.lineTo(data.x2 - data.bottomRadius * i, data.y2);
@@ -253,7 +246,7 @@
                 this.gradientLayerDirty = true;
                 this.gradientModifier = 1 / (this.position.y / 15000 + 1);
 
-                for (i = 0, n = this.model.entities.length; i < n; i++) {
+                for (i = 0, n = this.model.entities.length; i < n; i += 1) {
                     this.model.entities[i].ColorComponent.setShade(this.gradientModifier);
                 }
             }
