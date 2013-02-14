@@ -35,7 +35,7 @@
             'js/DrawNodes/RockNode.js',
             'js/DrawNodes/TentaclesNode.js',
             'js/Factories/RockFactory.js',
-            'js/Factories/CreatureFactory.js',
+            'js/Factories/SquidFactory.js',
             'js/Systems/BackgroundSystem.js',
             'js/Systems/CameraSystem.js',
             'js/Systems/SquidControlSystem.js',

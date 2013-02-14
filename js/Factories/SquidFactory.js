@@ -3,22 +3,22 @@
 
     global.app = global.app || {};
 
-    global.app.CreatureFactory = (function () {
+    global.app.SquidFactory = (function () {
 
         /**
-         * CreatureFactory
+         * SquidFactory
          * @return {*}
          * @constructor
          */
 
-        function CreatureFactory(engine) {
-            return CreatureFactory.alloc(this, arguments);
+        function SquidFactory(engine) {
+            return SquidFactory.alloc(this, arguments);
         }
 
-        app.inherit(app.Factory, CreatureFactory);
+        app.inherit(app.Factory, SquidFactory);
 
-        CreatureFactory.prototype.makeCreature = function (options) {
-            var segmentLength = options.segmentLength,
+        SquidFactory.prototype.createSquid = function (options) {
+            var entity, segmentLength = options.segmentLength,
                 radius = options.radius,
                 thickness = options.thickness,
                 velocity = options.velocity,
@@ -26,7 +26,7 @@
                 sprint = options.sprint,
                 tentacleCount = options.tentacleCount || 3;
 
-            return this.engine.createEntity({
+            entity = new app.Entity({
                 tag: 'creature_',
                 components: {
                     SquidComponent: {
@@ -77,9 +77,12 @@
                     }
                 }
             });
+
+            this.engine.addEntity(entity);
+            return entity;
         };
 
-        return CreatureFactory;
+        return SquidFactory;
 
     }());
 

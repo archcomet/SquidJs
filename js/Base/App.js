@@ -19,11 +19,11 @@
                 ]
             });
 
-        engine.creatureFactory = new app.CreatureFactory(engine);
+        engine.creatureFactory = new app.SquidFactory(engine);
         engine.rockFactory = new app.RockFactory(engine);
 
         for (i = 0; i < 3; i += 1) {
-            engine.rockFactory.makeRock({
+            engine.rockFactory.createRock({
                 x: app.random(0, 1500),
                 y: app.random(1000, 1500),
                 vertexCount: 9,
@@ -33,7 +33,7 @@
         }
 
         for (i = 0; i < 5; i += 1) {
-            engine.creatureFactory.makeCreature({
+            engine.creatureFactory.createSquid({
                 segmentLength: app.random(5, 11),
                 radius: app.random(10, 19),
                 thickness: app.random(1, 5),
@@ -43,7 +43,7 @@
             });
         }
 
-        entity = engine.creatureFactory.makeCreature({
+        entity = engine.creatureFactory.createSquid({
             segmentLength: 25,
             radius: 25,
             thickness: 3,

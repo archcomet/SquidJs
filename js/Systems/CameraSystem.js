@@ -26,7 +26,8 @@
         CameraSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
             if (this.camera) {
-                this.engine.destroyEntity(this.camera);
+                this.engine.removeEntity(this.camera);
+                this.camera.destroy();
             }
             this.targetEntity = undefined;
         };
@@ -38,7 +39,7 @@
                 y = targetPosition.y * -1;
 
             if (!this.camera) {
-                this.camera = this.engine.createEntity({
+                this.camera = new app.Entity({
                     tag: 'camera_',
                     components: {
                         SteeringComponent: {
@@ -65,6 +66,7 @@
                         }
                     }
                 });
+                this.engine.addEntity(this.camera);
             } else {
                 this.camera.PositionComponent.x = x;
                 this.camera.PositionComponent.y = y;

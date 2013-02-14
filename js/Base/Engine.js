@@ -62,27 +62,16 @@
 
         /*** Entity Management ****/
 
-        Engine.prototype.createEntity = function (options) {
-            options = options || {};
-            options.tag = options.tag || 'entity_';
-            options.components = options.components || {};
-
-            var entity = new app.Entity(options.tag);
+        Engine.prototype.addEntity = function (entity) {
             entity.engine = this;
-            entity.createComponents(options.components);
             this.entities[entity.id] = entity;
             this.triggerEvent('entityAdded', entity);
-            return entity;
+            return this;
         };
 
-        Engine.prototype.destroyEntity = function (entity) {
+        Engine.prototype.removeEntity = function (entity) {
             this.triggerEvent('entityRemoved', entity);
             delete this.entities[entity.id];
-            entity.destroy();
-        };
-
-        Engine.prototype.entityForTag = function (entityId) {
-            return this.entities[entityId];
         };
 
         /*** Model Management ***/

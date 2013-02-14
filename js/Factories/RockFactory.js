@@ -17,7 +17,7 @@
 
         app.inherit(app.Factory, RockFactory);
 
-        RockFactory.prototype.makeRock = function (options) {
+        RockFactory.prototype.createRock = function (options) {
             options = options || {};
 
             _.defaults(options, {
@@ -29,9 +29,9 @@
                 y: 0
             });
 
-            var vertices = app.randomConvexPolygon(options.vertexCount, options.minRadius, options.maxRadius);
+            var entity, vertices = app.randomConvexPolygon(options.vertexCount, options.minRadius, options.maxRadius);
 
-            return this.engine.createEntity({
+            entity = new app.Entity({
                 tag: 'rock_',
                 components: {
                     RockComponent: {
@@ -70,11 +70,14 @@
                     }
                 }
             });
+
+            this.engine.addEntity(entity);
+            return entity;
         };
 
         RockFactory.prototype.destroyRock = function (entity) {
-            //todo assert that the factory made this
-            this.engine.destroyEntity(entity);
+            this.engine.removeEntity(entity);
+            entity.destroy();
         };
 
         return RockFactory;

@@ -8,19 +8,20 @@
         /**
          * Entity
          * Basic Game Object. Contains components.
-         * @param tag
+         * @param options
          * @return {*}
          * @constructor
          */
 
-        function Entity(tag) {
+        function Entity(options) {
             return Entity.alloc(this, arguments);
         }
         app.inherit(app.BaseObj, Entity);
 
-        Entity.prototype.init = function (tag) {
-            this.id = _.uniqueId(tag || 'entity_');
+        Entity.prototype.init = function (options) {
+            this.id = _.uniqueId(options.tag || 'entity_');
             this.contactListeners = {};
+            this.createComponents(options.components);
             return this;
         };
 

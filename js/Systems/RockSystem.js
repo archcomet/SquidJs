@@ -68,7 +68,7 @@
                 step = app.random(0, rads);
 
                 for (i = 0, n = settings.numberOfFragments; i < n; i += 1) {
-                    fragment = rockFactory.makeRock({
+                    fragment = rockFactory.createRock({
                         x: entity.PositionComponent.x,
                         y: entity.PositionComponent.y,
                         maxHealth: entity.HealthComponent.maxHealth / 2,
