@@ -29,6 +29,12 @@
             return this.engine.createEntity({
                 tag: 'creature_',
                 components: {
+                    SquidComponent: {
+                        radius: radius,
+                        thickness: thickness,
+                        eyeRadius: radius * 0.6,
+                        irisRadius: radius * 0.4
+                    },
                     InputComponent: {},
                     SteeringComponent: {
                         maxVelocity: velocity,
@@ -55,12 +61,6 @@
                                 radius: radius + thickness
                             })
                         }
-                    },
-                    BodyComponent: {
-                        radius: radius,
-                        thickness: thickness,
-                        eyeRadius: radius * 0.6,
-                        irisRadius: radius * 0.4
                     },
                     TentaclesComponent: {
                         count: tentacleCount,

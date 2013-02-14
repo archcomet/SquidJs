@@ -21,7 +21,9 @@
 
         RockComponent.prototype.init = function (options) {
             _.defaults(this, options, {
-                vertices: []
+                vertices: [],
+                minRadius: 60,
+                maxRadius: 75
             });
 
             return this;

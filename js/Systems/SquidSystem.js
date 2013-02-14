@@ -3,7 +3,7 @@
 
     global.app = global.app || {};
 
-    global.app.System.CreatureBodySystem = (function () {
+    global.app.System.SquidSystem = (function () {
 
         var settings = {
             friction: 0.01,
@@ -43,7 +43,7 @@
             this.outer = [];
             this.inner = [];
 
-            for (i = 0, n = entity.TentaclesComponent.segmentCount, p = entity.PositionComponent; i < n; i++) {
+            for (i = 0, n = entity.TentaclesComponent.segmentCount, p = entity.PositionComponent; i < n; i += 1) {
                 this.controlPoints.push(new ControlPoint(p.x, p.y));
             }
         }
@@ -54,7 +54,7 @@
             point.y = y;
 
             if (instant) {
-                for (i = 0, n = this.controlPoints.length; i < n; i++) {
+                for (i = 0, n = this.controlPoints.length; i < n; i += 1) {
                     point = this.controlPoints[i];
                     point.x = x;
                     point.y = y;
@@ -76,7 +76,7 @@
             step = radius / (this.controlPoints.length - 1);
             prev = this.controlPoints[0];
 
-            for (i = 1, j = 0, n = this.controlPoints.length; i < n; i++, j++) {
+            for (i = 1, j = 0, n = this.controlPoints.length; i < n; i += 1, j += 1) {
                 controlPoint = this.controlPoints[i];
                 controlPoint.x += controlPoint.vx;
                 controlPoint.y += controlPoint.vy;
@@ -117,7 +117,7 @@
         };
 
         /**
-         * CreatureBodySystem
+         * SquidSystem
          * Rendering System for a creature type.
          * Draws the creature's body and tentacles
          * @param engine
@@ -125,16 +125,17 @@
          * @constructor
          */
 
-        function CreatureBodySystem(engine) {
-            return CreatureBodySystem.alloc(this, arguments);
+        function SquidSystem(engine) {
+            return SquidSystem.alloc(this, arguments);
         }
-        app.inherit(app.System, CreatureBodySystem);
+
+        app.inherit(app.System, SquidSystem);
 
 
-        CreatureBodySystem.prototype.init = function () {
+        SquidSystem.prototype.init = function () {
             this.createModel([
                 'TentaclesComponent',
-                'BodyComponent',
+                'SquidComponent',
                 'ColorComponent',
                 'SteeringComponent',
                 'PositionComponent'
@@ -142,16 +143,16 @@
             this.engine.bindEvent('update', this);
         };
 
-        CreatureBodySystem.prototype.deinit = function () {
+        SquidSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
             this.destroyModel();
         };
 
-        CreatureBodySystem.prototype.entityAdded = function (entity) {
+        SquidSystem.prototype.entityAdded = function (entity) {
             var i, n, creatureBodyNode, tentaclesNode,
-                tentacles = entity.TentaclesComponent.tentacles  = [];
+                tentacles = entity.TentaclesComponent.tentacles = [];
 
-            for (i = 0, n = entity.TentaclesComponent.count; i < n; i++) {
+            for (i = 0, n = entity.TentaclesComponent.count; i < n; i += 1) {
                 tentacles.push(new Tentacle(entity));
             }
 
@@ -161,25 +162,25 @@
             this.engine.canvas.addChild(creatureBodyNode);
         };
 
-        CreatureBodySystem.prototype.entityRemoved = function (entity) {
+        SquidSystem.prototype.entityRemoved = function (entity) {
             this.engine.canvas.removeChildForEntity(entity);
             entity.TentaclesComponent.tentacles.length = 0;
         };
 
-        CreatureBodySystem.prototype.update = function () {
+        SquidSystem.prototype.update = function () {
             var i, n, entity;
-            for (i = 0, n = this.model.entities.length; i < n; i++) {
+            for (i = 0, n = this.model.entities.length; i < n; i += 1) {
                 entity = this.model.entities[i];
                 this.updateBody(entity);
                 this.updateTentacles(entity);
             }
         };
 
-        CreatureBodySystem.prototype.updateBody = function (entity) {
+        SquidSystem.prototype.updateBody = function (entity) {
             var target, vec, maxOffset,
                 position = entity.PositionComponent,
                 steering = entity.SteeringComponent,
-                body = entity.BodyComponent;
+                body = entity.SquidComponent;
 
             if (steering.drift) {
                 vec = new b2.Vec2(0, 0);
@@ -203,9 +204,9 @@
             };
         };
 
-        CreatureBodySystem.prototype.updateTentacles = function (entity) {
+        SquidSystem.prototype.updateTentacles = function (entity) {
             var i, n, t, theta, px, py, step, radius,
-                body = entity.BodyComponent,
+                body = entity.SquidComponent,
                 position = entity.PositionComponent,
                 tentacles = entity.TentaclesComponent.tentacles;
 
@@ -216,7 +217,7 @@
             radius = entity.TentaclesComponent.radius;
             radius *= 0.6 + Math.pow(Math.sin(t / body.radius), 12);
 
-            for (i = 0; i < n; i++) {
+            for (i = 0; i < n; i += 1) {
                 theta += step;
                 px = Math.cos(theta) * radius;
                 py = Math.sin(theta) * radius;
@@ -226,7 +227,7 @@
             }
         };
 
-        return CreatureBodySystem;
+        return SquidSystem;
 
     }());
 

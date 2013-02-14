@@ -47,12 +47,14 @@
             physics.bodyDef.position.x = b2.toWorld(position.x);
             physics.bodyDef.position.y = b2.toWorld(position.y);
             physics.body = this.world.CreateBody(physics.bodyDef);
+            physics.body.SetUserData(entity);
             physics.fixture = physics.body.CreateFixture(physics.fixtureDef);
         };
 
         PhysicsSystem.prototype.entityRemoved = function (entity) {
             var physics = entity.PhysicsComponent;
             physics.body.DestroyFixture(physics.fixture);
+            physics.body.SetUserData(null);
             this.world.DestroyBody(physics.body);
         };
 
@@ -89,7 +91,6 @@
                         physics.outOfWater = true;
                     } else {
 
-
                         // Apply Drag
                         if (physics.drag) {
                             torque = physics.body.GetAngularVelocity();
@@ -112,19 +113,29 @@
         };
 
         PhysicsSystem.prototype.beginContact = function (contact) {
-            this.engine.triggerEvent('beginContact', contact);
+            this.triggerContact('beginContact', contact);
         };
 
         PhysicsSystem.prototype.endContact = function (contact) {
-            this.engine.triggerEvent('endContact', contact);
+            this.triggerContact('endContact', contact);
         };
 
         PhysicsSystem.prototype.preSolve = function (contact, oldManifold) {
-            this.engine.triggerEvent('preSolve', contact, oldManifold);
+            this.triggerContact('preSolve', contact, oldManifold);
         };
 
         PhysicsSystem.prototype.postSolve = function (contact, impulse) {
-            this.engine.triggerEvent('postSolve', contact, impulse);
+            this.triggerContact('postSolve', contact, impulse);
+        };
+
+        PhysicsSystem.prototype.triggerContact = function () {
+            var args = Array.prototype.slice.call(arguments),
+                event = args[0],
+                contact = args[1],
+                entityA = contact.GetFixtureA().GetBody().GetUserData(),
+                entityB = contact.GetFixtureB().GetBody().GetUserData();
+            entityA.triggerContactEvent(event, entityA, entityB, contact, args[2]);
+            entityB.triggerContactEvent(event, entityB, entityA, contact, args[2]);
         };
 
         return PhysicsSystem;

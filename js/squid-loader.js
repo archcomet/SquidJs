@@ -22,12 +22,13 @@
             'js/Base/System.js',
             'js/Base/Model.js',
             'js/Base/Timer.js',
-            'js/Components/BodyComponent.js',
             'js/Components/ColorComponent.js',
+            'js/Components/HealthComponent.js',
             'js/Components/RockComponent.js',
             'js/Components/InputComponent.js',
             'js/Components/PhysicsComponent.js',
             'js/Components/PositionComponent.js',
+            'js/Components/SquidComponent.js',
             'js/Components/SteeringComponent.js',
             'js/Components/TentaclesComponent.js',
             'js/DrawNodes/CreatureBodyNode.js',
@@ -37,8 +38,8 @@
             'js/Factories/CreatureFactory.js',
             'js/Systems/BackgroundSystem.js',
             'js/Systems/CameraSystem.js',
-            'js/Systems/CreatureControlSystem.js',
-            'js/Systems/CreatureBodySystem.js',
+            'js/Systems/SquidControlSystem.js',
+            'js/Systems/SquidSystem.js',
             'js/Systems/MouseInputSystem.js',
             'js/Systems/PhysicsSystem.js',
             'js/Systems/RockSystem.js',
@@ -53,7 +54,7 @@
         ]
     };
     yepnope.addPrefix(
-        "resource",
+        'resource',
         function (resourceObj) {
             resourceObj.noexec = true;
             return resourceObj;

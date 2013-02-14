@@ -23,6 +23,7 @@
             _.defaults(options, {
                 minRadius: 60,
                 maxRadius: 75,
+                maxHealth: 70,
                 vertexCount: 5,
                 x: 0,
                 y: 0
@@ -33,6 +34,14 @@
             return this.engine.createEntity({
                 tag: 'rock_',
                 components: {
+                    RockComponent: {
+                        vertices: vertices,
+                        minRadius: options.minRadius,
+                        maxRadius: options.maxRadius
+                    },
+                    HealthComponent: {
+                        health: options.maxHealth
+                    },
                     PositionComponent: {
                         x: options.x,
                         y: options.y
@@ -41,9 +50,6 @@
                         h: 228,
                         s: 50,
                         v: 30
-                    },
-                    RockComponent: {
-                        vertices: vertices
                     },
                     PhysicsComponent: {
                         drag: -0.4,
@@ -65,6 +71,12 @@
                 }
             });
         };
+
+        RockFactory.prototype.destroyRock = function (entity) {
+            //todo assert that the factory made this
+            this.engine.destroyEntity(entity);
+        };
+
         return RockFactory;
 
     }());

@@ -3,22 +3,22 @@
 
     global.app = global.app || {};
 
-    global.app.Component.BodyComponent = (function () {
+    global.app.Component.SquidComponent = (function () {
 
         /**
-         * BodyComponent
+         * SquidComponent
          * Provides body shape data to Entity
          * @param options
          * @return {*}
          * @constructor
          */
 
-        function BodyComponent(options) {
-            return BodyComponent.alloc(this, arguments);
+        function SquidComponent(options) {
+            return SquidComponent.alloc(this, arguments);
         }
-        app.inherit(app.Component, BodyComponent);
+        app.inherit(app.Component, SquidComponent);
 
-        BodyComponent.prototype.init = function (options) {
+        SquidComponent.prototype.init = function (options) {
             _.defaults(this, options, {
                 radius: 10.0,
                 thickness: 5.0,
@@ -28,7 +28,7 @@
             return this;
         };
 
-        return BodyComponent;
+        return SquidComponent;
 
     }());
 

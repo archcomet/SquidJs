@@ -9,20 +9,21 @@
                 container: $('#container')[0],
                 systems: [
                     'MouseInputSystem',
-                    'CreatureControlSystem',
+                    'SquidControlSystem',
                     'SteeringSystem',
                     'PhysicsSystem',
                     'CameraSystem',
-                    'BackgroundSystem',
-                    'CreatureBodySystem',
-                    'RockSystem'
+                    'RockSystem',
+                    'SquidSystem',
+                    'BackgroundSystem'
                 ]
-            }),
-            creatureFactory = new app.CreatureFactory(engine),
-            rockFactory = new app.RockFactory(engine);
+            });
+
+        engine.creatureFactory = new app.CreatureFactory(engine);
+        engine.rockFactory = new app.RockFactory(engine);
 
         for (i = 0; i < 3; i += 1) {
-            rockFactory.makeRock({
+            engine.rockFactory.makeRock({
                 x: app.random(0, 1500),
                 y: app.random(1000, 1500),
                 vertexCount: 9,
@@ -32,7 +33,7 @@
         }
 
         for (i = 0; i < 5; i += 1) {
-            creatureFactory.makeCreature({
+            engine.creatureFactory.makeCreature({
                 segmentLength: app.random(5, 11),
                 radius: app.random(10, 19),
                 thickness: app.random(1, 5),
@@ -42,7 +43,7 @@
             });
         }
 
-        entity = creatureFactory.makeCreature({
+        entity = engine.creatureFactory.makeCreature({
             segmentLength: 25,
             radius: 25,
             thickness: 3,

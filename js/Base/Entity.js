@@ -20,21 +20,16 @@
 
         Entity.prototype.init = function (tag) {
             this.id = _.uniqueId(tag || 'entity_');
+            this.contactListeners = {};
             return this;
         };
 
         Entity.prototype.deinit = function () {
+            this.unbindAllContactEvents();
             this.destroyAllComponents();
         };
 
         /**** Component Management ****/
-
-        Entity.prototype.createComponent = function (componentName, options) {
-            var component = new app.Component[componentName](options);
-            this[componentName] = component;
-            this.engine.triggerEvent('componentAdded', this);
-            return component;
-        };
 
         Entity.prototype.createComponents = function (components) {
             var component, componentName, componentOptions;
@@ -45,14 +40,6 @@
                     this[componentName] = component;
                 }
             }
-            this.engine.triggerEvent('componentAdded', this);
-        };
-
-        Entity.prototype.destroyComponent = function (componentName) {
-            var component = this.components[componentName];
-            delete this.components[componentName];
-            this.engine.triggerEvent('componentRemoved', this);
-            component.destroy();
         };
 
         Entity.prototype.destroyAllComponents = function () {
@@ -63,7 +50,51 @@
                     delete this[key];
                 }
             }
-            this.engine.triggerEvent('componentRemoved', this);
+        };
+
+        /*** Contact Listener Management ***/
+
+        Entity.prototype.bindContactEvent = function (event, target) {
+            var listener, listeners = this.contactListeners[event];
+            if (!listeners) {
+                this.contactListeners[event] = listeners = [];
+            }
+
+            listener = target[event].bind(target);
+            listener.target = target;
+            listeners.push(listener);
+        };
+
+        Entity.prototype.unbindContactEvent = function (event, target) {
+            var i, n, listeners = this.contactListeners[event];
+            for (i = 0, n = listeners.length; i < n; i += 1) {
+                if (listeners[i].target === target) {
+                    listeners.splice(i, 1);
+                    return;
+                }
+            }
+        };
+
+        Entity.prototype.unbindAllContactEvents = function () {
+            var key;
+            for (key in this.contactListeners) {
+                if (this.contactListeners.hasOwnProperty(key)) {
+                    this.contactListeners[key].length = 0;
+                }
+            }
+        };
+
+        Entity.prototype.triggerContactEvent = function (event) {
+            var i, n, listener, listeners, args;
+            listeners = this.contactListeners[event];
+            if (listeners !== undefined && listeners.length > 0) {
+                args = Array.prototype.slice.call(arguments);
+                args.splice(0, 1);
+                for (i = 0, n = listeners.length; i < n; i += 1) {
+                    listener = listeners[i];
+                    listener.apply(listener, args);
+                }
+            }
         };
 
         return Entity;

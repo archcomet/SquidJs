@@ -30,7 +30,7 @@
         };
 
         SteeringSystem.prototype.update = function () {
-            var i, n, steering, physics, position;
+            var i, n, steering, physics;
             for (i = 0, n = this.model.entities.length; i < n; i += 1) {
                 steering = this.model.entities[i].SteeringComponent;
                 physics = this.model.entities[i].PhysicsComponent;

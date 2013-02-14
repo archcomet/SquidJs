@@ -20,7 +20,7 @@
 
         CreatureBodyNode.prototype.draw = function (ctx) {
             var t = this.entity.engine.timer.counter,
-                body = this.entity.BodyComponent,
+                body = this.entity.SquidComponent,
                 color = this.entity.ColorComponent,
                 radius = body.radius * (1.0 + Math.pow(Math.sin(t / body.radius), 12) / 10);
 

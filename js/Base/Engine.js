@@ -71,12 +71,13 @@
             entity.engine = this;
             entity.createComponents(options.components);
             this.entities[entity.id] = entity;
+            this.triggerEvent('entityAdded', entity);
             return entity;
         };
 
-        Engine.prototype.destroyEntity = function (entityId) {
-            var entity = this.entities[entityId];
-            delete this.entities[entityId];
+        Engine.prototype.destroyEntity = function (entity) {
+            this.triggerEvent('entityRemoved', entity);
+            delete this.entities[entity.id];
             entity.destroy();
         };
 
@@ -107,8 +108,7 @@
         /*** System Management ****/
 
         Engine.prototype.createSystem = function (systemName, priority) {
-            var self = this,
-                system = this.systems[systemName];
+            var system = this.systems[systemName];
             if (!system) {
                 system = new app.System[systemName](this);
                 system.priority = priority;
@@ -154,7 +154,7 @@
         Engine.prototype.triggerEvent = function (event) {
             var i, n, listener, listeners, args;
             listeners = this.eventListeners[event];
-            if (listeners && listeners.length > 0) {
+            if (listeners !== undefined && listeners.length > 0) {
                 args = Array.prototype.slice.call(arguments);
                 args.splice(0, 1);
                 for (i = 0, n = listeners.length; i < n; i += 1) {

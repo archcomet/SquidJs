@@ -26,19 +26,19 @@
             this.components = components;
             this.addedCallback = addedCallback;
             this.removedCallback = removedCallback;
-            this.system.engine.bindEvent('componentAdded', this);
-            this.system.engine.bindEvent('componentRemoved', this);
+            this.system.engine.bindEvent('entityAdded', this);
+            this.system.engine.bindEvent('entityRemoved', this);
             this.entities = [];
             return this;
         };
 
         Model.prototype.deinit = function () {
             this.entities.length = 0;
-            this.system.engine.unbindEvent('componentAdded', this);
-            this.system.engine.unbindEvent('componentRemoved', this);
+            this.system.engine.unbindEvent('entityAdded', this);
+            this.system.engine.unbindEvent('entityRemoved', this);
         };
 
-        Model.prototype.componentAdded = function (entity) {
+        Model.prototype.entityAdded = function (entity) {
             if (this.matchEntity(entity)) {
                 if (this.indexOfEntity(entity) === -1) {
                     this.entities.push(entity);
@@ -49,11 +49,11 @@
             }
         };
 
-        Model.prototype.componentRemoved = function (entity) {
+        Model.prototype.entityRemoved = function (entity) {
             var i =  this.indexOfEntity(entity);
             if (i > -1) {
-                if (!this.matchEntity(entity)) {
-                    this.splice(i, 1);
+                if (this.matchEntity(entity)) {
+                    this.entities.splice(i, 1);
                     if (this.removedCallback) {
                         this.removedCallback.call(this.system, entity);
                     }

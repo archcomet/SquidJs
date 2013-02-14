@@ -3,7 +3,7 @@
 
     global.app = global.app || {};
 
-    global.app.System.CreatureControlSystem = (function () {
+    global.app.System.SquidControlSystem = (function () {
 
         /**
          * PlayerControlSystem
@@ -11,14 +11,14 @@
          * @return {*}
          * @constructor
          */
-        function CreatureControlSystem(engine) {
-            return CreatureControlSystem.alloc(this, arguments);
+        function SquidControlSystem(engine) {
+            return SquidControlSystem.alloc(this, arguments);
         }
-        app.inherit(app.System, CreatureControlSystem);
+        app.inherit(app.System, SquidControlSystem);
 
         /*** Public Methods ***/
 
-        CreatureControlSystem.prototype.init = function () {
+        SquidControlSystem.prototype.init = function () {
             this.createModel(['InputComponent', 'SteeringComponent', 'PositionComponent'], this.entityAdded);
             this.mouseData = {};
             this.engine.bindEvent('update', this);
@@ -26,13 +26,13 @@
             return this;
         };
 
-        CreatureControlSystem.prototype.deinit = function () {
+        SquidControlSystem.prototype.deinit = function () {
             this.engine.unbindEvent('mouseUpdate', this);
             this.engine.unbindEvent('update', this);
             this.destroyModel();
         };
 
-        CreatureControlSystem.prototype.entityAdded = function (entity) {
+        SquidControlSystem.prototype.entityAdded = function (entity) {
             var steering = entity.SteeringComponent,
                 position = entity.PositionComponent;
 
@@ -43,12 +43,12 @@
             steering.drift = true;
         };
 
-        CreatureControlSystem.prototype.update = function () {
+        SquidControlSystem.prototype.update = function () {
             var i, n, steering, position,
                 offset = this.engine.canvas.getOffset(),
                 entities = this.model.entities;
 
-            for (i = 0, n = entities.length; i < n; i++) {
+            for (i = 0, n = entities.length; i < n; i += 1) {
                 steering = entities[i].SteeringComponent;
 
                 if (this.mouseData.active) {
@@ -68,11 +68,11 @@
             }
         };
 
-        CreatureControlSystem.prototype.mouseUpdate = function (mouseData) {
+        SquidControlSystem.prototype.mouseUpdate = function (mouseData) {
             this.mouseData = mouseData;
         };
 
-        return CreatureControlSystem;
+        return SquidControlSystem;
 
     }());
 
