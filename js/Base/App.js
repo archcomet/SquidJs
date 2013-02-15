@@ -14,12 +14,14 @@
                     'PhysicsSystem',
                     'CameraSystem',
                     'RockSystem',
+                    'FoodSystem',
                     'SquidSystem',
                     'BackgroundSystem'
                 ]
             });
 
         engine.creatureFactory = new app.SquidFactory(engine);
+        engine.foodFactory = new app.FoodFactory(engine);
         engine.rockFactory = new app.RockFactory(engine);
 
         for (i = 0; i < 3; i += 1) {
@@ -62,7 +64,6 @@
 }(window));
 
 
-//todo food renderer
 //todo pickups
 //todo hostile creature render (maybe just different color squids)
 //todo AI behavior system

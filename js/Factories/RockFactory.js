@@ -47,9 +47,9 @@
                         y: options.y
                     },
                     ColorComponent: {
-                        h: 228,
-                        s: 50,
-                        v: 30
+                        h: 171,
+                        s: 40,
+                        v: 20
                     },
                     PhysicsComponent: {
                         drag: -0.4,

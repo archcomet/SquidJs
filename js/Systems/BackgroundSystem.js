@@ -130,7 +130,9 @@
 
                 entityArray = this.engine.entitiesForComponent('ColorComponent');
                 for (i = 0, n = entityArray.length; i < n; i += 1) {
-                    entityArray[i].ColorComponent.setShade(this.gradientModifier);
+                    if (entityArray[i].ColorComponent.dark) {
+                        entityArray[i].ColorComponent.setShade(this.gradientModifier);
+                    }
                 }
             }
         };

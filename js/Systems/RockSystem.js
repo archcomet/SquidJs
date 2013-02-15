@@ -8,7 +8,8 @@
         var settings = {
             minImpulseForDamage: 4,
             minRadiusForFragments: 15,
-            numberOfFragments: 3
+            numberOfFragments: 3,
+            foodSpawnRate: 0.2
         };
 
         /**
@@ -86,6 +87,13 @@
                     body.ApplyImpulse(impulse, body.GetWorldCenter());
                     step += rads;
                 }
+            }
+
+            if (app.random(0, 1) < settings.foodSpawnRate) {
+                this.engine.foodFactory.createFood({
+                    x: entity.PositionComponent.x,
+                    y: entity.PositionComponent.y
+                });
             }
 
             rockFactory.destroyRock(entity);
