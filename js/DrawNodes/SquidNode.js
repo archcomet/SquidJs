@@ -3,22 +3,22 @@
 
     global.app = global.app || {};
 
-    global.app.CreatureBodyNode = (function () {
+    global.app.SquidNode = (function () {
 
         /**
-         * CreatureBodyNode
+         * SquidNode
          * @param entity
          * @return {*}
          * @constructor
          */
 
-        function CreatureBodyNode(entity) {
-            return CreatureBodyNode.alloc(this, arguments);
+        function SquidNode(entity) {
+            return SquidNode.alloc(this, arguments);
         }
-        app.inherit(app.DrawNode, CreatureBodyNode);
 
+        app.inherit(app.DrawNode, SquidNode);
 
-        CreatureBodyNode.prototype.draw = function (ctx) {
+        SquidNode.prototype.draw = function (ctx) {
             var t = this.entity.engine.timer.counter,
                 body = this.entity.SquidComponent,
                 color = this.entity.ColorComponent,
@@ -46,7 +46,7 @@
             ctx.fill();
         };
 
-        return CreatureBodyNode;
+        return SquidNode;
 
     }());
 

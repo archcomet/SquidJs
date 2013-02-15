@@ -77,7 +77,7 @@
 
         DrawNode.prototype.visit = function (ctx) {
             var node, position, i, n = this.nodes.length;
-            for (i = 0, n < this.nodes.length; i < n; i++) {
+            for (i = 0, n < this.nodes.length; i < n; i += 1) {
                 node = this.nodes[i];
                 if (node.zOrder < this.zOrder) {
                     node.visit(ctx);

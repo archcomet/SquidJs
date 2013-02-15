@@ -31,7 +31,7 @@
             'js/Components/SquidComponent.js',
             'js/Components/SteeringComponent.js',
             'js/Components/TentaclesComponent.js',
-            'js/DrawNodes/CreatureBodyNode.js',
+            'js/DrawNodes/SquidNode.js',
             'js/DrawNodes/RockNode.js',
             'js/DrawNodes/TentaclesNode.js',
             'js/Factories/RockFactory.js',

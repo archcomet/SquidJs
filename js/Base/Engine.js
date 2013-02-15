@@ -58,6 +58,8 @@
         };
 
         Engine.prototype.deinit = function () {
+            //todo needs clean up
+            return this;
         };
 
         /*** Entity Management ****/
@@ -72,6 +74,7 @@
         Engine.prototype.removeEntity = function (entity) {
             this.triggerEvent('entityRemoved', entity);
             delete this.entities[entity.id];
+            return this;
         };
 
         /*** Model Management ***/
@@ -92,6 +95,7 @@
             var modelList = this.modelLists[modelName];
             delete this.modelLists[modelName];
             modelList.destory();
+            return this;
         };
 
         /*** System Management ****/
@@ -112,6 +116,7 @@
                 delete this.systems[systemName];
                 system.destroy();
             }
+            return this;
         };
 
         /*** Events ***/
@@ -128,6 +133,7 @@
             listeners.push(listener);
 
             _.sortBy(listeners, function (listener) { return listener.priority; });
+            return this;
         };
 
         Engine.prototype.unbindEvent = function (event, target) {
@@ -135,9 +141,10 @@
             for (i = 0, n = listeners.length; i < n; i += 1) {
                 if (listeners[i].target === target) {
                     listeners.splice(i, 1);
-                    return;
+                    return this;
                 }
             }
+            return this;
         };
 
         Engine.prototype.triggerEvent = function (event) {
@@ -151,21 +158,25 @@
                     listener.apply(listener, args);
                 }
             }
+            return this;
         };
 
         /**** Timer ****/
 
         Engine.prototype.start = function () {
             this.timer.start();
+            return this;
         };
 
         Engine.prototype.stop = function () {
             this.timer.stop();
+            return this;
         };
 
         Engine.prototype.update = function (dt) {
             this.triggerEvent('update', dt);
             this.canvasDirty = true;
+            return this;
         };
 
         Engine.prototype.draw = function () {
@@ -173,6 +184,7 @@
                 this.triggerEvent('draw');
                 this.canvasDirty = false;
             }
+            return this;
         };
 
         return Engine;

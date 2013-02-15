@@ -156,7 +156,7 @@
                 tentacles.push(new Tentacle(entity));
             }
 
-            creatureBodyNode = new app.CreatureBodyNode(entity);
+            creatureBodyNode = new app.SquidNode(entity);
             tentaclesNode = new app.TentaclesNode(entity);
             creatureBodyNode.addChild(tentaclesNode, -1);
             this.engine.canvas.addChild(creatureBodyNode);
