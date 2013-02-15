@@ -62,8 +62,6 @@
 }(window));
 
 
-//todo collision response
-//todo rock system
 //todo food renderer
 //todo pickups
 //todo hostile creature render (maybe just different color squids)

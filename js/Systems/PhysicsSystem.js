@@ -29,43 +29,56 @@
             this.contactListener.PostSolve = this.postSolve.bind(this);
             this.world.SetContactListener(this.contactListener);
 
-            this.createModel(['PhysicsComponent', 'PositionComponent'], this.entityAdded, this.entityRemoved);
             this.engine.bindEvent('update', this);
+            this.engine.bindEvent('entityAdded', this);
+            this.engine.bindEvent('entityRemoved', this);
+
             return this;
         };
 
         PhysicsSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
-            this.destroyModel();
+            this.engine.unbindEvent('entityAdded', this);
+            this.engine.unbindEvent('entityRemoved', this);
+
             this.world = undefined;
+            return this;
         };
 
         PhysicsSystem.prototype.entityAdded = function (entity) {
             var physics = entity.PhysicsComponent,
-                position = entity.PositionComponent;
+                position = entity.PositionComponent || { x: 0, y: 0 };
 
-            physics.bodyDef.position.x = b2.toWorld(position.x);
-            physics.bodyDef.position.y = b2.toWorld(position.y);
-            physics.body = this.world.CreateBody(physics.bodyDef);
-            physics.body.SetUserData(entity);
-            physics.fixture = physics.body.CreateFixture(physics.fixtureDef);
+            if (physics !== undefined) {
+                physics.bodyDef.position.x = b2.toWorld(position.x);
+                physics.bodyDef.position.y = b2.toWorld(position.y);
+                physics.body = this.world.CreateBody(physics.bodyDef);
+                physics.body.SetUserData(entity);
+                physics.fixture = physics.body.CreateFixture(physics.fixtureDef);
+            }
         };
 
         PhysicsSystem.prototype.entityRemoved = function (entity) {
             var physics = entity.PhysicsComponent;
-            physics.body.DestroyFixture(physics.fixture);
-            physics.body.SetUserData(null);
-            this.world.DestroyBody(physics.body);
+
+            if (physics !== undefined) {
+                physics.body.DestroyFixture(physics.fixture);
+                physics.body.SetUserData(null);
+                this.world.DestroyBody(physics.body);
+            }
         };
 
         PhysicsSystem.prototype.update = function (dt) {
-            var i, n, physics, position, pos, vel, torque, force, mass, center;
+            var i, n, physics, position, pos, vel, torque, force, mass, center,
+                entityArray;
             this.world.Step(dt, b2.VELOCITY_ITERATIONS, b2.POSITION_ITERATIONS);
             this.world.ClearForces();
 
-            for (i = 0, n = this.model.entities.length; i < n; i += 1) {
-                physics = this.model.entities[i].PhysicsComponent;
-                position = this.model.entities[i].PositionComponent;
+            entityArray = this.engine.entitiesForComponent('PhysicsComponent');
+
+            for (i = 0, n = entityArray.length; i < n; i += 1) {
+                physics = entityArray[i].PhysicsComponent;
+                position = entityArray[i].PositionComponent;
 
                 pos = physics.body.GetPosition();
                 vel = physics.body.GetLinearVelocity();

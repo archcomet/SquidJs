@@ -19,21 +19,20 @@
         app.inherit(app.System, SteeringSystem);
 
         SteeringSystem.prototype.init = function () {
-            this.createModel(['SteeringComponent', 'PhysicsComponent']);
             this.engine.bindEvent('update', this);
             return this;
         };
 
         SteeringSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
-            this.destroyModel();
         };
 
         SteeringSystem.prototype.update = function () {
-            var i, n, steering, physics;
-            for (i = 0, n = this.model.entities.length; i < n; i += 1) {
-                steering = this.model.entities[i].SteeringComponent;
-                physics = this.model.entities[i].PhysicsComponent;
+            var i, n, steering, physics,
+                entityArray = this.engine.entitiesForComponent('SteeringComponent');
+            for (i = 0, n = entityArray.length; i < n; i += 1) {
+                steering = entityArray[i].SteeringComponent;
+                physics = entityArray[i].PhysicsComponent;
 
                 if (physics.oceanBound && physics.outOfWater) {
                     return;

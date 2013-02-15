@@ -19,16 +19,6 @@
         }
         app.inherit(app.BaseObj, System);
 
-        System.prototype.createModel = function (model, addedCallback, removedCallback) {
-            this.model = new app.Model(this, model, addedCallback, removedCallback);
-        };
-
-        System.prototype.destroyModel = function () {
-            if (this.model) {
-                this.model.destroy();
-            }
-        };
-
         return System;
 
     }());

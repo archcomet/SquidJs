@@ -24,6 +24,7 @@
             options = options || {};
 
             this.entities = {};
+            this.componentEntities = {};
             this.modelLists = {};
             this.systems = {};
             this.eventListeners = {};
@@ -68,13 +69,43 @@
             entity.engine = this;
             this.entities[entity.id] = entity;
             this.triggerEvent('entityAdded', entity);
+
+            var key, entityArray;
+            for (key in entity) {
+                if (entity.hasOwnProperty(key) && entity[key] instanceof app.Component) {
+                    entityArray = this.componentEntities[key];
+                    if (entityArray === undefined) {
+                        entityArray = this.componentEntities[key] = [];
+                    }
+                    entityArray.push(entity);
+                }
+            }
+
             return this;
         };
 
         Engine.prototype.removeEntity = function (entity) {
+            var i, n, key, entityArray;
+            for (key in entity) {
+                if (entity.hasOwnProperty(key) && entity[key] instanceof app.Component) {
+                    entityArray = this.componentEntities[key];
+                    for (i = 0, n = entityArray.length; i < n; i += 1) {
+                        if (entityArray[i] === entity) {
+                            entityArray.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+
             this.triggerEvent('entityRemoved', entity);
             delete this.entities[entity.id];
             return this;
+        };
+
+        Engine.prototype.entitiesForComponent = function (componentName) {
+            var entities = this.componentEntities[componentName];
+            return (entities === undefined) ? [] : entities;
         };
 
         /*** Model Management ***/

@@ -15,11 +15,10 @@
         function BackgroundSystem(engine) {
             return BackgroundSystem.alloc(this, arguments);
         }
+
         app.inherit(app.System, BackgroundSystem);
 
         BackgroundSystem.prototype.init = function () {
-            this.createModel(['ColorComponent']);
-
             this.position = {
                 x: 0,
                 y: 0,
@@ -35,20 +34,12 @@
             this.gradientModifier = 1;
             this.image = new Image();
             this.image.src = 'images/backgroundNoise.png';
-            this.image.onload = this.createCanvases.bind(this);
+            this.image.onload = this.initCanvases.bind(this);
 
             return this;
         };
 
-        BackgroundSystem.prototype.deinit = function () {
-            this.destroyModel();
-            this.engine.unbindEvent('update', this);
-            this.engine.unbindEvent('draw', this);
-            this.engine.unbindEvent('cameraSet', this);
-            this.engine.unbindEvent('resize', this);
-        };
-
-        BackgroundSystem.prototype.createCanvases = function () {
+        BackgroundSystem.prototype.initCanvases = function () {
 
             this.waveBuffer = new app.Canvas({
                 fullscreen: false,
@@ -121,6 +112,27 @@
             this.skyFill.addColorStop(0.004, 'hsl(44, 100%, 92%)');
             this.skyFill.addColorStop(0.01, 'hsl(26, 74%, 62%)');
             this.skyFill.addColorStop(1.0, 'hsl(289, 54%, 12%)');
+        };
+
+        BackgroundSystem.prototype.deinit = function () {
+            this.engine.unbindEvent('update', this);
+            this.engine.unbindEvent('draw', this);
+            this.engine.unbindEvent('cameraSet', this);
+            this.engine.unbindEvent('resize', this);
+        };
+
+        BackgroundSystem.prototype.update = function (dt) {
+            this.current += 1;
+            if (Math.abs(this.gradientLastY - this.position.y) > 100) {
+                var i, n, entityArray;
+                this.gradientLayerDirty = true;
+                this.gradientModifier = 1 / (this.position.y / 15000 + 1);
+
+                entityArray = this.engine.entitiesForComponent('ColorComponent');
+                for (i = 0, n = entityArray.length; i < n; i += 1) {
+                    entityArray[i].ColorComponent.setShade(this.gradientModifier);
+                }
+            }
         };
 
         BackgroundSystem.prototype.drawSky = function () {
@@ -237,19 +249,6 @@
             this.drawNoise();
             this.drawLights();
             this.drawGradient();
-        };
-
-        BackgroundSystem.prototype.update = function (dt) {
-            this.current += 1;
-            if (Math.abs(this.gradientLastY - this.position.y) > 100) {
-                var i, n;
-                this.gradientLayerDirty = true;
-                this.gradientModifier = 1 / (this.position.y / 15000 + 1);
-
-                for (i = 0, n = this.model.entities.length; i < n; i += 1) {
-                    this.model.entities[i].ColorComponent.setShade(this.gradientModifier);
-                }
-            }
         };
 
         BackgroundSystem.prototype.resize = function () {

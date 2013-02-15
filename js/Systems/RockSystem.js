@@ -25,27 +25,26 @@
 
 
         RockSystem.prototype.init = function () {
-            this.createModel(
-                ['RockComponent'],
-                this.entityAdded,
-                this.entityRemoved
-            );
             this.engine.bindEvent('update', this);
+            this.engine.bindEvent('entityAdded', this);
+            this.engine.bindEvent('entityRemoved', this);
             return this;
         };
 
         RockSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
+            this.engine.unbindEvent('entityAdded', this);
+            this.engine.unbindEvent('entityRemoved', this);
             this.destroyModel();
         };
 
         RockSystem.prototype.update = function (dt) {
             var i, n, entity,
-                entities = this.model.entities,
+                entityArray = this.engine.entitiesForComponent('RockComponent'),
                 rocksDestroyed = [];
 
-            for (i = 0, n = entities.length; i < n; i += 1) {
-                entity = entities[i];
+            for (i = 0, n = entityArray.length; i < n; i += 1) {
+                entity = entityArray[i];
                 if (entity.HealthComponent !== undefined && entity.HealthComponent.health <= 0) {
                     rocksDestroyed.push(entity.id);
                 }
@@ -93,14 +92,18 @@
         };
 
         RockSystem.prototype.entityAdded = function (entity) {
-            var rockNode = new app.RockNode(entity);
-            this.engine.canvas.addChild(rockNode);
-            entity.bindContactEvent('postSolve', this);
+            if (entity.RockComponent !== undefined) {
+                var rockNode = new app.RockNode(entity);
+                this.engine.canvas.addChild(rockNode);
+                entity.bindContactEvent('postSolve', this);
+            }
         };
 
         RockSystem.prototype.entityRemoved = function (entity) {
-            entity.unbindContactEvent('postSolve', this);
-            this.engine.canvas.removeChildForEntity(entity);
+            if (entity.RockComponent !== undefined) {
+                entity.unbindContactEvent('postSolve', this);
+                this.engine.canvas.removeChildForEntity(entity);
+            }
         };
 
         RockSystem.prototype.postSolve = function (entity, contactee, contact, impulse) {

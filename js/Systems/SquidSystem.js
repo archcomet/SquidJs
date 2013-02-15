@@ -133,44 +133,44 @@
 
 
         SquidSystem.prototype.init = function () {
-            this.createModel([
-                'TentaclesComponent',
-                'SquidComponent',
-                'ColorComponent',
-                'SteeringComponent',
-                'PositionComponent'
-            ], this.entityAdded, this.entityRemoved);
             this.engine.bindEvent('update', this);
+            this.engine.bindEvent('entityAdded', this);
+            this.engine.bindEvent('entityRemoved', this);
         };
 
         SquidSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
-            this.destroyModel();
+            this.engine.unbindEvent('entityAdded', this);
+            this.engine.unbindEvent('entityRemoved', this);
         };
 
         SquidSystem.prototype.entityAdded = function (entity) {
-            var i, n, creatureBodyNode, tentaclesNode,
-                tentacles = entity.TentaclesComponent.tentacles = [];
+            if (entity.SquidComponent !== undefined) {
+                var i, n, creatureBodyNode, tentaclesNode,
+                    tentacles = entity.TentaclesComponent.tentacles = [];
 
-            for (i = 0, n = entity.TentaclesComponent.count; i < n; i += 1) {
-                tentacles.push(new Tentacle(entity));
+                for (i = 0, n = entity.TentaclesComponent.count; i < n; i += 1) {
+                    tentacles.push(new Tentacle(entity));
+                }
+
+                creatureBodyNode = new app.SquidNode(entity);
+                tentaclesNode = new app.TentaclesNode(entity);
+                creatureBodyNode.addChild(tentaclesNode, -1);
+                this.engine.canvas.addChild(creatureBodyNode);
             }
-
-            creatureBodyNode = new app.SquidNode(entity);
-            tentaclesNode = new app.TentaclesNode(entity);
-            creatureBodyNode.addChild(tentaclesNode, -1);
-            this.engine.canvas.addChild(creatureBodyNode);
         };
 
         SquidSystem.prototype.entityRemoved = function (entity) {
-            this.engine.canvas.removeChildForEntity(entity);
-            entity.TentaclesComponent.tentacles.length = 0;
+            if (entity.SquidComponent !== undefined) {
+                this.engine.canvas.removeChildForEntity(entity);
+                entity.TentaclesComponent.tentacles.length = 0;
+            }
         };
 
         SquidSystem.prototype.update = function () {
-            var i, n, entity;
-            for (i = 0, n = this.model.entities.length; i < n; i += 1) {
-                entity = this.model.entities[i];
+            var i, n, entity, entityArray = this.engine.entitiesForComponent('SquidComponent');
+            for (i = 0, n = entityArray.length; i < n; i += 1) {
+                entity = entityArray[i];
                 this.updateBody(entity);
                 this.updateTentacles(entity);
             }

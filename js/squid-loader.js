@@ -20,7 +20,6 @@
             'js/Base/Entity.js',
             'js/Base/Factory.js',
             'js/Base/System.js',
-            'js/Base/Model.js',
             'js/Base/Timer.js',
             'js/Components/ColorComponent.js',
             'js/Components/HealthComponent.js',
