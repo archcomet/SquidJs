@@ -39,8 +39,8 @@
                 segmentLength: app.random(5, 11),
                 radius: app.random(10, 19),
                 thickness: app.random(1, 5),
-                velocity: app.random(20, 24),
-                force: app.random(300, 600),
+                velocity: app.random(30, 32),
+                force: app.random(800, 900),
                 sprint: 2
             });
         }

@@ -27,13 +27,18 @@
             this.quadraticCurveTo(a.x, a.y, b.x, b.y);
         };
 
-        global.CanvasRenderingContext2D.prototype.setCachedFillStyle = (function () {
+        (function () {
             var fillCache = '';
-            return function (fillStyle) {
+
+            global.CanvasRenderingContext2D.prototype.setCachedFillStyle = function (fillStyle) {
                 if (fillStyle !== fillCache) {
                     this.fillStyle = fillStyle;
                     fillCache = fillStyle;
                 }
+            };
+
+            global.CanvasRenderingContext2D.prototype.clearFillCache = function () {
+                fillCache = '';
             };
         }());
 
@@ -109,9 +114,11 @@
                 y = -1 * this.center.y + this.height / 2;
 
             this.ctx.clearRect(0, 0, this.ctx.width, this.ctx.height);
+            this.ctx.save();
             this.ctx.translate(x, y);
             this.rootNode.visit(this.ctx);
-            this.ctx.translate(-x, -y);
+            this.ctx.restore();
+            this.ctx.clearFillCache();
         };
 
         Canvas.prototype.cameraSet = function (position) {

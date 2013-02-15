@@ -9,7 +9,9 @@
             minImpulseForDamage: 4,
             minRadiusForFragments: 15,
             numberOfFragments: 3,
-            foodSpawnRate: 0.2
+            foodSpawnRate: 0.2,
+            minFoodImpulse: 1,
+            maxFoodImpulse: 4
         };
 
         /**
@@ -58,7 +60,7 @@
         };
 
         RockSystem.prototype.destroyRock = function (entity) {
-            var i, n, fragment, rads, step, impulse, impulseNormal, body,
+            var i, n, fragment, food, rads, step, impulse, impulseNormal, body,
                 minRadius = entity.RockComponent.minRadius,
                 maxRadius = entity.RockComponent.maxRadius,
                 rockFactory = this.engine.rockFactory;
@@ -90,10 +92,20 @@
             }
 
             if (app.random(0, 1) < settings.foodSpawnRate) {
-                this.engine.foodFactory.createFood({
+                food = this.engine.foodFactory.createFood({
                     x: entity.PositionComponent.x,
                     y: entity.PositionComponent.y
                 });
+
+                rads = app.random(0, Math.PI * 2);
+                impulseNormal = app.random(settings.minFoodImpulse, settings.maxFoodImpulse);
+                impulse = {
+                    x: Math.cos(rads) * impulseNormal,
+                    y: Math.sin(rads) * impulseNormal
+                };
+
+                body = food.PhysicsComponent.body;
+                body.ApplyImpulse(impulse, body.GetWorldCenter());
             }
 
             rockFactory.destroyRock(entity);

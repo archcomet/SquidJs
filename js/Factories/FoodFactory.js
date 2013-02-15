@@ -47,7 +47,7 @@
                         zOrder: -1
                     },
                     PhysicsComponent: {
-                        drag: -0.05,
+                        drag: -0.2,
                         bodyDef: {
                             type: b2.Body.b2_dynamicBody,
                             linearDampening: 0.1
