@@ -50,6 +50,7 @@
         function Timer(options) {
             return Timer.alloc(this, arguments);
         }
+
         app.inherit(app.BaseObj, Timer);
 
         Timer.prototype.init = function (options) {
@@ -58,18 +59,17 @@
                 fps: 60
             });
 
-            this.enableFrameSkip = false;
             this.interval = 1 / this.fps;
+            this.updatesToPerform = 1;
+            this.lastFrame = 0;
             this.counter = 0;
-            this.loops = 0;
-            this.skipTicks = 1000 / this.fps;
-            this.maxFrameSkip = 10;
-            this.nextGameTick = (new Date()).getTime();
-
             return this;
         };
 
+        /*** Start & Stop ***/
+
         Timer.prototype.start = function () {
+            this.lastFrame = Date.now();
             this.animationFrame = window.requestAnimationFrame(this.step.bind(this));
         };
 
@@ -77,26 +77,80 @@
             window.cancelAnimationFrame(this.animationFrame);
         };
 
+        /*** Step ***/
+
         Timer.prototype.step = function () {
+            this.preUpdate();
 
-            var dt = (new Date()).getTime() - this.nextGameTick;
-            this.enableFrameSkip = (dt > this.skipTicks * 1.25 && dt < 1000);
-
-            if (this.enableFrameSkip) {
-                this.loops = 0;
-                while ((new Date()).getTime() > this.nextGameTick && this.loops < this.maxFrameSkip) {
-                    this.engine.update(this.interval);
-                    this.nextGameTick += this.skipTicks;
-                    this.loops += 1;
-                }
-            } else {
+            while (this.updatesToPerform > 0) {
                 this.engine.update(this.interval);
-                this.nextGameTick = (new Date()).getTime() + this.skipTicks;
+                this.updatesToPerform -= 1;
             }
 
             this.engine.draw();
-            this.counter += 1;
+
+            this.postUpdate();
             this.animationFrame = window.requestAnimationFrame(this.step.bind(this));
+        };
+
+        Timer.prototype.preUpdate = function () {
+            this.dt = Date.now() - this.lastFrame;
+
+            if (this.dt < 18) {
+                this.updatesToPerform = 1;
+            } else if (this.dt < 35) {
+                this.updatesToPerform = 2;
+            } else if (this.dt < 45) {
+                this.updatesToPerform = 3;
+            } else {
+                this.updatesToPerform = 4;
+            }
+
+            if (this.stats !== undefined) {
+                this.stats.end();
+                this.stats.begin();
+            }
+
+            if (this.codeStats !== undefined) {
+                this.codeStats.begin();
+            }
+        };
+
+        Timer.prototype.postUpdate = function () {
+            this.counter += 1;
+
+            if (this.codeStats !== undefined) {
+                this.codeStats.end();
+            }
+
+            this.lastFrame = Date.now();
+        };
+
+        /*** Debug ***/
+
+        Timer.prototype.enableStats = function () {
+            this.stats = new global.Stats();
+            this.stats.setMode(0);
+            this.stats.domElement.style.position = 'absolute';
+            this.stats.domElement.style.left = '0px';
+            this.stats.domElement.style.top = '0px';
+
+            this.codeStats = new global.Stats();
+            this.codeStats.setMode(1);
+            this.codeStats.domElement.style.position = 'absolute';
+            this.codeStats.domElement.style.left = '80px';
+            this.codeStats.domElement.style.top = '0px';
+
+            document.body.appendChild(this.stats.domElement);
+            document.body.appendChild(this.codeStats.domElement);
+        };
+
+        Timer.prototype.disableStats = function () {
+            document.body.removeChild(this.stats.domElement);
+            document.body.removeChild(this.codeStats.domElement);
+
+            this.stats = undefined;
+            this.codeStats = undefined;
         };
 
         return Timer;

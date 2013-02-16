@@ -38,27 +38,15 @@
         };
 
         DrawNode.prototype.addChild = function (drawNode, zOrder) {
-            if (zOrder !== undefined) {
-                drawNode.zOrder = zOrder;
-            }
+            drawNode.zOrder = zOrder || 0;
             this.nodes.push(drawNode);
-            _.sortBy(this.nodes, function (node) { return node.zOrder; });
+            this.nodes.sort(function (a, b) { return a.zOrder - b.zOrder; });
         };
 
         DrawNode.prototype.removeChild = function (drawNode) {
             var i, n;
-            for (i = 0, n = this.nodes.length; i < n; i++) {
+            for (i = 0, n = this.nodes.length; i < n; i += 1) {
                 if (this.nodes[i] === drawNode) {
-                    this.nodes.splice(i, 1);
-                    return;
-                }
-            }
-        };
-
-        DrawNode.prototype.removeChildForEntity = function (entity) {
-            var i, n;
-            for (i = 0, n = this.nodes.length; i < n; i++) {
-                if (this.nodes[i].entity === entity) {
                     this.nodes.splice(i, 1);
                     return;
                 }
@@ -68,7 +56,7 @@
         DrawNode.prototype.removeAllChildren = function (cleanup) {
             var i, n;
             if (cleanup) {
-                for (i = 0, n = this.nodes.length; i < n; i++) {
+                for (i = 0, n = this.nodes.length; i < n; i += 1) {
                     this.nodes[i].removeAllChildren(true);
                 }
             }
@@ -97,14 +85,14 @@
                 this.draw(ctx);
             }
 
-            for (i; i < n; i++) {
+            for (i; i < n; i += 1) {
                 node = this.nodes[i];
                 node.visit(ctx);
             }
         };
 
         DrawNode.prototype.draw = function (ctx) {
-
+            // does nothing
         };
 
         return DrawNode;

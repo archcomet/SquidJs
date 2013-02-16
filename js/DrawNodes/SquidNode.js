@@ -3,7 +3,7 @@
 
     global.app = global.app || {};
 
-    global.app.SquidNode = (function () {
+    global.app.DrawNode.SquidNode = (function () {
 
         /**
          * SquidNode
@@ -28,7 +28,7 @@
             ctx.arc(0, 0, radius, 0, Math.PI * 2, false);
             ctx.lineWidth = body.thickness;
             ctx.setCachedFillStyle(color.hslFill);
-            ctx.strokeStyle = color.hslStroke;
+            ctx.setCachedStrokeStyle(color.hslStroke);
             ctx.fill();
             ctx.stroke();
 
@@ -36,7 +36,7 @@
             ctx.arc(0, 0, body.eyeRadius, 0, Math.PI * 2, false);
             ctx.lineWidth = 1;
             ctx.setCachedFillStyle('hsl(0, 0%, 100%)');
-            ctx.strokeStyle = color.hslStroke;
+            ctx.setCachedStrokeStyle(color.hslStroke);
             ctx.fill();
             ctx.stroke();
 

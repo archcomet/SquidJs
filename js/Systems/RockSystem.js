@@ -113,8 +113,6 @@
 
         RockSystem.prototype.entityAdded = function (entity) {
             if (entity.RockComponent !== undefined) {
-                var rockNode = new app.RockNode(entity);
-                this.engine.canvas.addChild(rockNode);
                 entity.bindContactEvent('postSolve', this);
             }
         };
@@ -122,7 +120,6 @@
         RockSystem.prototype.entityRemoved = function (entity) {
             if (entity.RockComponent !== undefined) {
                 entity.unbindContactEvent('postSolve', this);
-                this.engine.canvas.removeChildForEntity(entity);
             }
         };
 

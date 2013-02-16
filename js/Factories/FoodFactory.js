@@ -47,7 +47,7 @@
                         zOrder: -1
                     },
                     PhysicsComponent: {
-                        drag: -0.2,
+                        drag: -0.4,
                         bodyDef: {
                             type: b2.Body.b2_dynamicBody,
                             linearDampening: 0.1
@@ -61,6 +61,11 @@
                                 radius: radius
                             })
                         }
+                    }
+                },
+                nodes: {
+                    FoodNode: {
+                        zOrder: 0
                     }
                 }
             });

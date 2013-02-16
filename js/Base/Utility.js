@@ -71,9 +71,9 @@
         return vertices;
     };
 
-    global.app.maxWidth = 1198;
+    global.app.maxWidth = 1028;
 
-    global.app.maxHeight = 768;
+    global.app.maxHeight = 652;
 
     /**
      * b2 Utility

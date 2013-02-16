@@ -19,27 +19,22 @@
 
 
         FoodSystem.prototype.init = function () {
-            this.engine.bindEvent('entityAdded', this);
-            this.engine.bindEvent('entityRemoved', this);
+            //this.engine.bindEvent('entityAdded', this);
+            //this.engine.bindEvent('entityRemoved', this);
             return this;
         };
 
         FoodSystem.prototype.deinit = function () {
-            this.engine.unbindEvent('entityAdded', this);
-            this.engine.unbindEvent('entityRemoved', this);
+            //this.engine.unbindEvent('entityAdded', this);
+            //this.engine.unbindEvent('entityRemoved', this);
         };
 
         FoodSystem.prototype.entityAdded = function (entity) {
-            if (entity.FoodComponent !== undefined) {
-                var foodNode = new app.FoodNode(entity);
-                this.engine.canvas.addChild(foodNode);
-            }
+
         };
 
         FoodSystem.prototype.entityRemoved = function (entity) {
-            if (entity.FoodComponent !== undefined) {
-                this.engine.canvas.removeChildForEntity(entity);
-            }
+
         };
 
         return FoodSystem;

@@ -3,7 +3,7 @@
 
     global.app = global.app || {};
 
-    global.app.RockNode = (function () {
+    global.app.DrawNode.RockNode = (function () {
 
         /**
          * RockNode
@@ -25,7 +25,7 @@
             ctx.lineWidth = 10;
             ctx.lineJoin = 'round';
             ctx.setCachedFillStyle(color.hslFill);
-            ctx.strokeStyle = color.hslStroke;
+            ctx.setCachedStrokeStyle(color.hslStroke);
 
             ctx.beginPath();
             ctx.moveTo(rock.vertices[0].x, rock.vertices[0].y);

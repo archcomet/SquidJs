@@ -68,6 +68,11 @@
                             })
                         }
                     }
+                },
+                nodes: {
+                    RockNode: {
+                        zOrder: 0
+                    }
                 }
             });
 

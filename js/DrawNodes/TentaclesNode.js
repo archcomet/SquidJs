@@ -3,7 +3,7 @@
 
     global.app = global.app || {};
 
-    global.app.TentaclesNode = (function () {
+    global.app.DrawNode.TentaclesNode = (function () {
 
         /**
          * TentaclesNode
@@ -26,7 +26,7 @@
             var i, n, tentacles = this.entity.TentaclesComponent.tentacles;
             for (i = 0, n = tentacles.length; i < n; i += 1) {
                 ctx.setCachedFillStyle(this.entity.ColorComponent.hslFill);
-                ctx.strokeStyle = this.entity.ColorComponent.hslStroke;
+                ctx.setCachedStrokeStyle(this.entity.ColorComponent.hslStroke);
                 this.drawTentacle(ctx, tentacles[i]);
             }
         };

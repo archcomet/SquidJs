@@ -3,7 +3,7 @@
 
     global.app = global.app || {};
 
-    global.app.FoodNode = (function () {
+    global.app.DrawNode.FoodNode = (function () {
 
         /**
          * FoodNode
@@ -28,7 +28,7 @@
             ctx.arc(0, 0, radius, 0, Math.PI * 2, false);
             ctx.lineWidth = 1;
             ctx.setCachedFillStyle(color.hslFill);
-            ctx.strokeStyle = color.hslStroke;
+            ctx.setCachedStrokeStyle(color.hslStroke);
             ctx.fill();
             ctx.stroke();
         };

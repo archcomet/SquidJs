@@ -22,15 +22,18 @@
             this.id = _.uniqueId(options.tag || 'entity_');
             this.contactListeners = {};
             this.createComponents(options.components);
+            this.node = this.createNodes(options.nodes);
             return this;
         };
 
         Entity.prototype.deinit = function () {
             this.unbindAllContactEvents();
             this.destroyAllComponents();
+            this.destroyNodes(this.node);
+            return this;
         };
 
-        /**** Component Management ****/
+        /*** Component Management ***/
 
         Entity.prototype.createComponents = function (components) {
             var component, componentName, componentOptions;
@@ -96,6 +99,33 @@
                     listener.apply(listener, args);
                 }
             }
+        };
+
+        /*** Node Management ***/
+
+        Entity.prototype.createNodes = function (nodes, parent) {
+            var key, child, node;
+            if (nodes !== undefined) {
+                if (parent === undefined) {
+                    parent = new app.DrawNode();
+                    parent.autotransform = false;
+                }
+                for (key in nodes) {
+                    if (nodes.hasOwnProperty(key)) {
+                        node = nodes[key];
+                        child = new app.DrawNode[key](this);
+                        parent.addChild(child, node.zOrder);
+                        if (node.nodes !== undefined) {
+                            this.createNodes(node.nodes, child);
+                        }
+                    }
+                }
+            }
+            return parent;
+        };
+
+        Entity.prototype.destroyNodes = function (node) {
+
         };
 
         return Entity;

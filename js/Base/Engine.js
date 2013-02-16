@@ -68,7 +68,6 @@
         Engine.prototype.addEntity = function (entity) {
             entity.engine = this;
             this.entities[entity.id] = entity;
-            this.triggerEvent('entityAdded', entity);
 
             var key, entityArray;
             for (key in entity) {
@@ -81,11 +80,23 @@
                 }
             }
 
+            if (entity.node !== undefined) {
+                this.canvas.addChild(entity.node);
+            }
+
+            this.triggerEvent('entityAdded', entity);
             return this;
         };
 
         Engine.prototype.removeEntity = function (entity) {
             var i, n, key, entityArray;
+
+            this.triggerEvent('entityRemoved', entity);
+
+            if (entity.node !== undefined) {
+                this.canvas.removeChild(entity.node);
+            }
+
             for (key in entity) {
                 if (entity.hasOwnProperty(key) && entity[key] instanceof app.Component) {
                     entityArray = this.componentEntities[key];
@@ -98,7 +109,6 @@
                 }
             }
 
-            this.triggerEvent('entityRemoved', entity);
             delete this.entities[entity.id];
             return this;
         };
@@ -216,6 +226,16 @@
                 this.canvasDirty = false;
             }
             return this;
+        };
+
+        /*** Debug ***/
+
+        Engine.prototype.enableDebug = function () {
+            this.timer.enableStats();
+        };
+
+        Engine.prototype.disableDebug = function () {
+            this.timer.disableStats();
         };
 
         return Engine;

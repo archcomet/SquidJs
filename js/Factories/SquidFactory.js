@@ -75,6 +75,14 @@
                         s: app.random(50, 100),
                         v: app.random(30, 50)
                     }
+                },
+                nodes: {
+                    SquidNode: {
+                        zOrder: 0
+                    },
+                    TentaclesNode: {
+                        zOrder: -1
+                    }
                 }
             });
 

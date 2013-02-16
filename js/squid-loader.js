@@ -10,6 +10,7 @@
             'js/3rdParty/jquery.js',
             'js/3rdParty/underscore.js',
             'js/3rdParty/Box2dWeb-2.1.a.3.js',
+            'js/3rdParty/stats.min.js',
             'js/Base/App.js',
             'js/Base/Utility.js',
             'js/Base/BaseObj.js',
@@ -46,7 +47,8 @@
             'js/Systems/MouseInputSystem.js',
             'js/Systems/PhysicsSystem.js',
             'js/Systems/RockSystem.js',
-            'js/Systems/SteeringSystem.js'
+            'js/Systems/SteeringSystem.js',
+            'js/Systems/TentaclesSystem.js'
         ],
         compiled: [
             'resource!images/background.png',

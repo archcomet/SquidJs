@@ -16,6 +16,7 @@
                     'RockSystem',
                     'FoodSystem',
                     'SquidSystem',
+                    'TentaclesSystem',
                     'BackgroundSystem'
                 ]
             });
@@ -34,13 +35,13 @@
             });
         }
 
-        for (i = 0; i < 5; i += 1) {
+        for (i = 0; i < 7; i += 1) {
             engine.creatureFactory.createSquid({
                 segmentLength: app.random(5, 11),
                 radius: app.random(10, 19),
                 thickness: app.random(1, 5),
-                velocity: app.random(30, 32),
-                force: app.random(800, 900),
+                velocity: app.random(28, 29),
+                force: app.random(700, 800),
                 sprint: 2
             });
         }
@@ -49,8 +50,8 @@
             segmentLength: 25,
             radius: 25,
             thickness: 3,
-            velocity: 26,
-            force: 700,
+            velocity: 22,
+            force: 500,
             sprint: 2,
             tentacleCount: 5
         });
@@ -63,17 +64,31 @@
 
 }(window));
 
+//improvements
+//todo drawNodes to entity creation instead of in systems
+//todo factories to keep handle on their creations
+//todo formalize factory creation in engine
+//todo give drawNodes a namespace
 
-//todo pickups
-//todo hostile creature render (maybe just different color squids)
+//mvp client systems
+//todo pickup logic
+//todo hostile creature node
 //todo AI behavior system
 //todo health system
 //todo environment spawn system
-//todo scoring
+//todo scoring system
+//todo game over screen
+//todo start/restart game command
 //todo start menu
 //todo options
+//todo sign in / authorization
 //todo leader board
-//todo game over screen
+//todo achievements
 
+//mvp server systems
 //todo data service
 //todo database
+
+//bonus
+//todo particle system
+//todo rock damage texture
