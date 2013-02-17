@@ -17,7 +17,12 @@
 
         app.inherit(app.Factory, FoodFactory);
 
-        FoodFactory.prototype.spawnFood = function (options) {
+        FoodFactory.prototype.init = function () {
+            this.engine.setting.spawnFood = this.debugSpawn.bind(this);
+            return this;
+        };
+
+        FoodFactory.prototype.spawn = function (options) {
             var entity, radius;
 
             _.defaults(options, {
@@ -71,12 +76,6 @@
 
             this.engine.addEntity(entity);
             return entity;
-        };
-
-        FoodFactory.prototype.despawnFood = function (entity) {
-            this.engine.removeEntity(entity);
-            entity.destroy();
-            return this;
         };
 
         return FoodFactory;

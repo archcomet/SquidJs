@@ -4,8 +4,7 @@
     global.app = global.app || {};
 
     global.app.start = function start() {
-        var i, entity,
-            engine = new app.Engine({
+        var engine = new app.Engine({
                 container: $('#container')[0],
                 systems: [
                     'MouseInputSystem',
@@ -38,29 +37,25 @@
                         friction: 0.01,
                         wind: 0.03,
                         gravity: 0.05
+                    },
+                    squidletFactory: {
+                        minSegmentLength: 12,
+                        maxSegmentLength: 16,
+                        minRadius: 10,
+                        maxRadius: 19,
+                        minThickness: 1,
+                        maxThickness: 5,
+                        minVelocity: 18,
+                        maxVelocity: 19,
+                        minForce: 400,
+                        maxForce: 500,
+                        sprintMultiplier: 2,
+                        tentacleCount: 3
                     }
                 }
             });
 
-        for (i = 0; i < 3; i += 1) {
-            engine.factories.RockFactory.spawnRock({
-                x: app.random(0, 1500),
-                y: app.random(1000, 1500)
-            });
-        }
-
-        for (i = 0; i < 6; i += 1) {
-            engine.factories.SquidFactory.spawnSquid({
-                segmentLength: app.random(12, 16),
-                radius: app.random(10, 19),
-                thickness: app.random(1, 5),
-                velocity: app.random(18, 19),
-                force: app.random(400, 500),
-                sprint: 2
-            });
-        }
-
-        entity = engine.factories.SquidFactory.spawnSquid({
+        engine.systems.CameraSystem.setTargetEntity(engine.factories.SquidFactory.spawn({
             segmentLength: 28,
             radius: 25,
             thickness: 3,
@@ -69,9 +64,8 @@
             sprint: 2,
             tentacleCount: 7,
             zOrder: 10
-        });
+        }));
 
-        engine.systems.CameraSystem.setTargetEntity(entity);
         engine.start();
 
         global.myEngine = engine;
@@ -80,7 +74,6 @@
 }(window));
 
 //mvp client systems
-//todo squidlet
 //todo hostile creature node
 //todo AI behavior system
 //todo health system

@@ -17,7 +17,12 @@
 
         app.inherit(app.Factory, RockFactory);
 
-        RockFactory.prototype.spawnRock = function (options) {
+        RockFactory.prototype.init = function () {
+            this.engine.setting.spawnRock = this.debugSpawn.bind(this);
+            return this;
+        };
+
+        RockFactory.prototype.spawn = function (options) {
             options = options || {};
 
             _.defaults(options, {
@@ -79,11 +84,6 @@
 
             this.engine.addEntity(entity);
             return entity;
-        };
-
-        RockFactory.prototype.despawnRock = function (entity) {
-            this.engine.removeEntity(entity);
-            entity.destroy();
         };
 
         return RockFactory;

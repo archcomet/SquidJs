@@ -17,7 +17,12 @@
 
         app.inherit(app.Factory, SquidFactory);
 
-        SquidFactory.prototype.spawnSquid = function (options) {
+        SquidFactory.prototype.init = function () {
+            //this.engine.setting.spawnSquid = this.debugSpawn.bind(this);
+            return this;
+        };
+
+        SquidFactory.prototype.spawn = function (options) {
             var entity, segmentLength = options.segmentLength,
                 radius = options.radius,
                 thickness = options.thickness,
@@ -27,7 +32,7 @@
                 tentacleCount = options.tentacleCount || 3;
 
             entity = new app.Entity({
-                tag: 'creature_',
+                tag: 'squid_',
                 components: {
                     SquidComponent: {
                         radius: radius,

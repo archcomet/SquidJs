@@ -62,7 +62,7 @@
                 step = app.random(0, rads);
 
                 for (i = 0, n = this.engine.setting.rockSystem.numberOfFragments; i < n; i += 1) {
-                    fragment = rockFactory.spawnRock({
+                    fragment = rockFactory.spawn({
                         x: entity.PositionComponent.x,
                         y: entity.PositionComponent.y,
                         maxHealth: entity.HealthComponent.maxHealth / 2,
@@ -84,7 +84,7 @@
             }
 
             if (app.random(0, 1) < this.engine.setting.rockSystem.foodSpawnRate) {
-                food = this.engine.factories.FoodFactory.spawnFood({
+                food = this.engine.factories.FoodFactory.spawn({
                     x: entity.PositionComponent.x,
                     y: entity.PositionComponent.y
                 });
@@ -103,7 +103,7 @@
                 body.ApplyImpulse(impulse, body.GetWorldCenter());
             }
 
-            rockFactory.despawnRock(entity);
+            rockFactory.despawn(entity);
         };
 
         /*** Entity Events ***/
