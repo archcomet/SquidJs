@@ -5,15 +5,6 @@
 
     global.app.System.RockSystem = (function () {
 
-        var settings = {
-            minImpulseForDamage: 4,
-            minRadiusForFragments: 15,
-            numberOfFragments: 3,
-            foodSpawnRate: 0.2,
-            minFoodImpulse: 1,
-            maxFoodImpulse: 3
-        };
-
         /**
          * RockSystem
          * @return {RockSystem}
@@ -66,11 +57,11 @@
                 maxRadius = entity.RockComponent.maxRadius,
                 rockFactory = this.engine.rockFactory;
 
-            if (minRadius > settings.minRadiusForFragments) {
+            if (minRadius > this.engine.setting.rockSystem.minRadiusForFragments) {
                 rads = Math.PI * 2 / 3;
                 step = app.random(0, rads);
 
-                for (i = 0, n = settings.numberOfFragments; i < n; i += 1) {
+                for (i = 0, n = this.engine.setting.rockSystem.numberOfFragments; i < n; i += 1) {
                     fragment = rockFactory.createRock({
                         x: entity.PositionComponent.x,
                         y: entity.PositionComponent.y,
@@ -92,14 +83,17 @@
                 }
             }
 
-            if (app.random(0, 1) < settings.foodSpawnRate) {
+            if (app.random(0, 1) < this.engine.setting.rockSystem.foodSpawnRate) {
                 food = this.engine.foodFactory.createFood({
                     x: entity.PositionComponent.x,
                     y: entity.PositionComponent.y
                 });
 
                 rads = app.random(0, Math.PI * 2);
-                impulseNormal = app.random(settings.minFoodImpulse, settings.maxFoodImpulse);
+                impulseNormal = app.random(
+                    this.engine.setting.rockSystem.minFoodImpulse,
+                    this.engine.setting.rockSystem.maxFoodImpulse
+                );
                 impulse = {
                     x: Math.cos(rads) * impulseNormal,
                     y: Math.sin(rads) * impulseNormal
@@ -128,7 +122,7 @@
 
         RockSystem.prototype.postSolve = function (entity, contactee, contact, impulse) {
             if (contactee.SquidComponent !== undefined && entity.HealthComponent !== undefined) {
-                if (impulse.normalImpulses[0] > settings.minImpulseForDamage) {
+                if (impulse.normalImpulses[0] > this.engine.setting.rockSystem.minImpulseForDamage) {
                     entity.HealthComponent.health -= impulse.normalImpulses[0];
                 }
             }

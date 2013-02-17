@@ -63,7 +63,7 @@
             this.updatesToPerform = 1;
             this.lastFrame = 0;
             this.counter = 0;
-            this.enableStats();
+
             return this;
         };
 

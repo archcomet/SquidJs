@@ -44,7 +44,8 @@
                     },
                     PositionComponent: {
                         x: options.x,
-                        y: options.y
+                        y: options.y,
+                        zOrder: 20
                     },
                     ColorComponent: {
                         h: 171,

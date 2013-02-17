@@ -25,10 +25,12 @@
 
             this.entities = {};
             this.componentEntities = {};
-            this.modelLists = {};
             this.systems = {};
             this.eventListeners = {};
+            this.state = {};
+
             this.container = options.container;
+            this.setting = new app.Settings(options.settings);
 
             this.canvas = new app.Canvas({
                 container: this.container,
@@ -50,16 +52,18 @@
                 engine: this
             });
 
-
             $(window).resize(function () {
                 self.triggerEvent('resize');
             });
+
+            this.setting.disableDebug = this.disableDebug.bind(this);
+            this.enableDebug();
 
             return this;
         };
 
         Engine.prototype.deinit = function () {
-            //todo needs clean up
+            this.stop();
             return this;
         };
 
@@ -119,27 +123,6 @@
         Engine.prototype.entitiesForComponent = function (componentName) {
             var entities = this.componentEntities[componentName];
             return (entities === undefined) ? [] : entities;
-        };
-
-        /*** Model Management ***/
-
-        Engine.prototype.createModelList = function (modelName, componentMap) {
-            var modelList = this.modelLists[modelName];
-            if (!modelList) {
-                modelList = new app.ModelList(modelName, componentMap, this);
-                this.modelLists[modelName] = modelList;
-                _.each(this.entities, function (entity) {
-                    modelList.addEntity(entity);
-                });
-            }
-            return modelList;
-        };
-
-        Engine.prototype.destroyModelList = function (modelName) {
-            var modelList = this.modelLists[modelName];
-            delete this.modelLists[modelName];
-            modelList.destory();
-            return this;
         };
 
         /*** System Management ****/
@@ -235,10 +218,12 @@
 
         Engine.prototype.enableDebug = function () {
             this.timer.enableStats();
+            this.setting.enableDebugControl();
         };
 
         Engine.prototype.disableDebug = function () {
             this.timer.disableStats();
+            this.setting.disableDebugControl();
         };
 
         return Engine;

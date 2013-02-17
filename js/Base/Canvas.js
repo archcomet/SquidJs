@@ -138,8 +138,8 @@
 
         /*** Node Management ***/
 
-        Canvas.prototype.addChild = function (child) {
-            this.rootNode.addChild(child);
+        Canvas.prototype.addChild = function (child, zOrder) {
+            this.rootNode.addChild(child, zOrder);
         };
 
         Canvas.prototype.removeChild = function (child) {

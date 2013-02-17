@@ -2,7 +2,7 @@
     'use strict';
 
     global.app = global.app || {};
-    global.app.debug = true;
+    global.app.verbose = true;
 
     var files = {
         debug: [
@@ -11,7 +11,8 @@
             'js/3rdParty/underscore.js',
             'js/3rdParty/Box2dWeb-2.1.a.3.js',
             'js/3rdParty/stats.min.js',
-            'js/Base/App.js',
+            'js/3rdParty/dat.gui.min.js',
+            'js/squid.js',
             'js/Base/Utility.js',
             'js/Base/BaseObj.js',
             'js/Base/Canvas.js',
@@ -20,6 +21,7 @@
             'js/Base/Engine.js',
             'js/Base/Entity.js',
             'js/Base/Factory.js',
+            'js/Base/Settings.js',
             'js/Base/System.js',
             'js/Base/Timer.js',
             'js/Components/ColorComponent.js',
@@ -55,6 +57,7 @@
             'js/3rdParty/jquery.min.js',
             'js/3rdParty/underscore-min.js',
             'js/3rdParty/Box2dWeb-2.1.a.3-min.js',
+            'js/3rdParty/stats.min.js',
             'js/squid-compiled.js'
         ]
     };
@@ -66,7 +69,7 @@
         }
     );
     yepnope({
-        test: app.debug,
+        test: app.verbose,
         yep: files.debug,
         nope: files.compiled,
         complete: function () {

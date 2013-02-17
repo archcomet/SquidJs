@@ -44,7 +44,7 @@
                     PositionComponent: {
                         x: app.random(this.engine.canvas.width, this.engine.canvas.width * 2),
                         y: app.random(this.engine.canvas.height, this.engine.canvas.height * 2),
-                        zOrder: 5
+                        zOrder: options.zOrder
                     },
                     PhysicsComponent: {
                         drag: -0.4,

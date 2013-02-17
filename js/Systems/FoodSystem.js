@@ -17,7 +17,6 @@
 
         app.inherit(app.System, FoodSystem);
 
-
         FoodSystem.prototype.init = function () {
             this.engine.bindEvent('update', this);
             this.engine.bindEvent('entityAdded', this);

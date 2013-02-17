@@ -18,7 +18,17 @@
                     'SquidSystem',
                     'TentaclesSystem',
                     'BackgroundSystem'
-                ]
+                ],
+                settings: {
+                    rockSystem: {
+                        minImpulseForDamage: 4,
+                        minRadiusForFragments: 15,
+                        numberOfFragments: 3,
+                        foodSpawnRate: 0.2,
+                        minFoodImpulse: 1,
+                        maxFoodImpulse: 3
+                    }
+                }
             });
 
         engine.creatureFactory = new app.SquidFactory(engine);
@@ -53,7 +63,8 @@
             velocity: 22,
             force: 600,
             sprint: 2,
-            tentacleCount: 7
+            tentacleCount: 7,
+            zOrder: 10
         });
 
         engine.systems.CameraSystem.setTargetEntity(entity);
@@ -69,7 +80,6 @@
 //todo formalize factory creation in engine
 
 //mvp client systems
-//todo pickup logic
 //todo hostile creature node
 //todo AI behavior system
 //todo health system

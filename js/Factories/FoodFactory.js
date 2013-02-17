@@ -17,7 +17,6 @@
 
         app.inherit(app.Factory, FoodFactory);
 
-
         FoodFactory.prototype.createFood = function (options) {
             var entity, radius;
 

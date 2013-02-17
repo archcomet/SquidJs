@@ -11,6 +11,7 @@
          * @return {SquidControlSystem}
          * @constructor
          */
+
         function SquidControlSystem(engine) {
             return SquidControlSystem.alloc(this, arguments);
         }
