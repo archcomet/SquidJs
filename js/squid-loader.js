@@ -41,6 +41,7 @@
             'js/Factories/FoodFactory.js',
             'js/Factories/RockFactory.js',
             'js/Factories/SquidFactory.js',
+            'js/Factories/SquidletFactory.js',
             'js/Systems/BackgroundSystem.js',
             'js/Systems/CameraSystem.js',
             'js/Systems/FoodSystem.js',

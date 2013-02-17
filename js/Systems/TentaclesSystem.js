@@ -5,12 +5,6 @@
 
     global.app.System.TentaclesSystem = (function () {
 
-        var settings = {
-            friction: 0.01,
-            wind: 0.03,
-            gravity: 0.05
-        };
-
         /**
          * ControlPoint
          * Point data used Tentacle Object
@@ -64,9 +58,10 @@
 
         Tentacle.prototype.update = function () {
             var i, j, n, dx, dy, da, px, py, s, c, controlPoint, prev,
-                segmentLength, friction, radius, step;
+                segmentLength, friction, radius, step, settings;
 
             segmentLength = this.entity.TentaclesComponent.segmentLength;
+            settings = this.entity.engine.setting.tentaclesSystem;
 
             friction = (this.entity.PhysicsComponent.outOfWater) ? 0.99 : (this.entity.TentaclesComponent.friction - this.variance);
             friction *= (1 - settings.friction);

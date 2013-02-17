@@ -3,7 +3,7 @@
 
     global.app = global.app || {};
 
-    global.app.SquidFactory = (function () {
+    global.app.Factory.SquidFactory = (function () {
 
         /**
          * SquidFactory
@@ -17,7 +17,7 @@
 
         app.inherit(app.Factory, SquidFactory);
 
-        SquidFactory.prototype.createSquid = function (options) {
+        SquidFactory.prototype.spawnSquid = function (options) {
             var entity, segmentLength = options.segmentLength,
                 radius = options.radius,
                 thickness = options.thickness,

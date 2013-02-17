@@ -19,6 +19,12 @@
                     'TentaclesSystem',
                     'BackgroundSystem'
                 ],
+                factories: [
+                    'FoodFactory',
+                    'RockFactory',
+                    'SquidFactory',
+                    'SquidletFactory'
+                ],
                 settings: {
                     rockSystem: {
                         minImpulseForDamage: 4,
@@ -27,26 +33,24 @@
                         foodSpawnRate: 0.2,
                         minFoodImpulse: 1,
                         maxFoodImpulse: 3
+                    },
+                    tentaclesSystem: {
+                        friction: 0.01,
+                        wind: 0.03,
+                        gravity: 0.05
                     }
                 }
             });
 
-        engine.creatureFactory = new app.SquidFactory(engine);
-        engine.foodFactory = new app.FoodFactory(engine);
-        engine.rockFactory = new app.RockFactory(engine);
-
         for (i = 0; i < 3; i += 1) {
-            engine.rockFactory.createRock({
+            engine.factories.RockFactory.spawnRock({
                 x: app.random(0, 1500),
-                y: app.random(1000, 1500),
-                vertexCount: 9,
-                minRadius: 40,
-                maxRadius: 90
+                y: app.random(1000, 1500)
             });
         }
 
         for (i = 0; i < 6; i += 1) {
-            engine.creatureFactory.createSquid({
+            engine.factories.SquidFactory.spawnSquid({
                 segmentLength: app.random(12, 16),
                 radius: app.random(10, 19),
                 thickness: app.random(1, 5),
@@ -56,7 +60,7 @@
             });
         }
 
-        entity = engine.creatureFactory.createSquid({
+        entity = engine.factories.SquidFactory.spawnSquid({
             segmentLength: 28,
             radius: 25,
             thickness: 3,
@@ -75,11 +79,8 @@
 
 }(window));
 
-//improvements
-//todo factories to keep handle on their creations
-//todo formalize factory creation in engine
-
 //mvp client systems
+//todo squidlet
 //todo hostile creature node
 //todo AI behavior system
 //todo health system
@@ -99,4 +100,4 @@
 
 //bonus
 //todo particle system
-//todo rock damage texture
+//todo damage indicators

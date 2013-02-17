@@ -3,7 +3,7 @@
 
     global.app = global.app || {};
 
-    global.app.FoodFactory = (function () {
+    global.app.Factory.FoodFactory = (function () {
 
         /**
          * FoodFactory
@@ -17,7 +17,7 @@
 
         app.inherit(app.Factory, FoodFactory);
 
-        FoodFactory.prototype.createFood = function (options) {
+        FoodFactory.prototype.spawnFood = function (options) {
             var entity, radius;
 
             _.defaults(options, {
@@ -46,13 +46,13 @@
                         zOrder: -1
                     },
                     PhysicsComponent: {
-                        drag: -0.5,
+                        drag: -0.8,
                         bodyDef: {
                             type: b2.Body.b2_dynamicBody,
                             linearDampening: 0.1
                         },
                         fixtureDef: {
-                            density: 1,
+                            density: 2,
                             friction: 0.5,
                             restitution: 0.2,
                             shape: b2.makeShape({
@@ -73,7 +73,7 @@
             return entity;
         };
 
-        FoodFactory.prototype.destroyFood = function (entity) {
+        FoodFactory.prototype.despawnFood = function (entity) {
             this.engine.removeEntity(entity);
             entity.destroy();
             return this;

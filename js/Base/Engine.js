@@ -15,23 +15,26 @@
         function Engine(options) {
             return Engine.alloc(this, arguments);
         }
+
         app.inherit(app.BaseObj, Engine);
 
-
         Engine.prototype.init = function (options) {
-            var i, n, self = this;
-
             options = options || {};
 
+            // Lists
             this.entities = {};
             this.componentEntities = {};
-            this.systems = {};
             this.eventListeners = {};
-            this.state = {};
+            this.systems = {};
+            this.factories = {};
+            this.stage = {};
 
+            // State
+            this.canvasDirty = false;
             this.container = options.container;
             this.setting = new app.Settings(options.settings);
 
+            // Entity Canvas
             this.canvas = new app.Canvas({
                 container: this.container,
                 zIndex: 0,
@@ -39,23 +42,20 @@
                 cameraRate: 1
             });
 
-            this.canvasDirty = false;
-            this.bindEvent('draw', this.canvas);
-
-            if (_.isArray(options.systems)) {
-                for (i = 0, n = options.systems.length; i < n; i += 1) {
-                    this.createSystem(options.systems[i], i);
-                }
-            }
-
+            // Main Timer
             this.timer = new app.Timer({
                 engine: this
             });
 
-            $(window).resize(function () {
-                self.triggerEvent('resize');
-            });
+            // Systems & Factories
+            this.createSystems(options.systems);
+            this.createFactories(options.factories);
 
+            // Event Bindings
+            $(window).resize(this.triggerEvent.bind(this, 'resize'));
+            this.bindEvent('draw', this.canvas);
+
+            // Debug
             this.setting.disableDebug = this.disableDebug.bind(this);
             this.enableDebug();
 
@@ -64,6 +64,8 @@
 
         Engine.prototype.deinit = function () {
             this.stop();
+            this.destroyFactories();
+            this.destroySystems();
             return this;
         };
 
@@ -129,7 +131,7 @@
 
         Engine.prototype.createSystem = function (systemName, priority) {
             var system = this.systems[systemName];
-            if (!system) {
+            if (system === undefined) {
                 system = new app.System[systemName](this);
                 system.priority = priority;
                 this.systems[systemName] = system;
@@ -137,13 +139,66 @@
             return system;
         };
 
+        Engine.prototype.createSystems = function (systemNames) {
+            var i, n;
+            for (i = 0, n = systemNames.length; i < n; i += 1) {
+                this.createSystem(systemNames[i], i);
+            }
+            return this;
+        };
+
         Engine.prototype.destroySystem = function (systemName) {
             var system = this.systems[systemName];
-            if (system) {
+            if (system !== undefined) {
                 delete this.systems[systemName];
                 system.destroy();
             }
             return this;
+        };
+
+        Engine.prototype.destroySystems = function () {
+            var key;
+            for (key in this.systems) {
+                if (this.systems.hasOwnProperty(key)) {
+                    this.destroySystem(key);
+                }
+            }
+            return this;
+        };
+
+        /*** Factories ***/
+
+        Engine.prototype.createFactory = function (factoryName) {
+            var factory = this.factories[factoryName];
+            if (factory === undefined) {
+                factory = new app.Factory[factoryName](this);
+                this.factories[factoryName] = factory;
+            }
+            return factory;
+        };
+
+        Engine.prototype.createFactories = function (factoryNames) {
+            var i, n;
+            for (i = 0, n = factoryNames.length; i < n; i += 1) {
+                this.createFactory(factoryNames[i]);
+            }
+        };
+
+        Engine.prototype.destroyFactory = function (factoryName) {
+            var factory = this.factories[factoryName];
+            if (factory !== undefined) {
+                delete this.factories[factoryName];
+                factory.destroy();
+            }
+        };
+
+        Engine.prototype.destroyFactories = function () {
+            var key;
+            for (key in this.factories) {
+                if (this.factories.hasOwnProperty(key)) {
+                    this.destroyFactory(key);
+                }
+            }
         };
 
         /*** Events ***/

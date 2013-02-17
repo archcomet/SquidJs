@@ -3,7 +3,7 @@
 
     global.app = global.app || {};
 
-    global.app.RockFactory = (function () {
+    global.app.Factory.RockFactory = (function () {
 
         /**
          * RockFactory
@@ -17,14 +17,14 @@
 
         app.inherit(app.Factory, RockFactory);
 
-        RockFactory.prototype.createRock = function (options) {
+        RockFactory.prototype.spawnRock = function (options) {
             options = options || {};
 
             _.defaults(options, {
-                minRadius: 60,
-                maxRadius: 75,
+                minRadius: 40,
+                maxRadius: 90,
                 maxHealth: 60,
-                vertexCount: 5,
+                vertexCount: 9,
                 x: 0,
                 y: 0
             });
@@ -81,7 +81,7 @@
             return entity;
         };
 
-        RockFactory.prototype.destroyRock = function (entity) {
+        RockFactory.prototype.despawnRock = function (entity) {
             this.engine.removeEntity(entity);
             entity.destroy();
         };

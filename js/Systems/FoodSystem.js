@@ -51,7 +51,7 @@
             }
 
             for (i = 0, n = foodToRemove.length; i < n; i += 1) {
-                this.engine.foodFactory.destroyFood(foodToRemove[i]);
+                this.engine.factories.FoodFactory.despawnFood(foodToRemove[i]);
             }
         };
 

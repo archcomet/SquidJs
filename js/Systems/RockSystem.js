@@ -55,14 +55,14 @@
             var i, n, fragment, food, rads, step, impulse, impulseNormal, body,
                 minRadius = entity.RockComponent.minRadius,
                 maxRadius = entity.RockComponent.maxRadius,
-                rockFactory = this.engine.rockFactory;
+                rockFactory = this.engine.factories.RockFactory;
 
             if (minRadius > this.engine.setting.rockSystem.minRadiusForFragments) {
                 rads = Math.PI * 2 / 3;
                 step = app.random(0, rads);
 
                 for (i = 0, n = this.engine.setting.rockSystem.numberOfFragments; i < n; i += 1) {
-                    fragment = rockFactory.createRock({
+                    fragment = rockFactory.spawnRock({
                         x: entity.PositionComponent.x,
                         y: entity.PositionComponent.y,
                         maxHealth: entity.HealthComponent.maxHealth / 2,
@@ -84,7 +84,7 @@
             }
 
             if (app.random(0, 1) < this.engine.setting.rockSystem.foodSpawnRate) {
-                food = this.engine.foodFactory.createFood({
+                food = this.engine.factories.FoodFactory.spawnFood({
                     x: entity.PositionComponent.x,
                     y: entity.PositionComponent.y
                 });
@@ -103,7 +103,7 @@
                 body.ApplyImpulse(impulse, body.GetWorldCenter());
             }
 
-            rockFactory.destroyRock(entity);
+            rockFactory.despawnRock(entity);
         };
 
         /*** Entity Events ***/

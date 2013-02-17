@@ -21,6 +21,7 @@
             this.engine.bindEvent('update', this);
             this.targetEntity = undefined;
             this.camera = undefined;
+            this.position = { x: 0, y: 0 };
             return this;
         };
 
@@ -83,7 +84,7 @@
         /*** Update Event ***/
 
         CameraSystem.prototype.update = function () {
-            var position, targetPosition, cameraPosition, cameraSteering;
+            var targetPosition, cameraPosition, cameraSteering;
 
             if (this.targetEntity) {
 
@@ -95,16 +96,16 @@
                 cameraSteering.target.x = targetPosition.dx / 6;
                 cameraSteering.target.y = targetPosition.dy / 6;
 
-                position = {
+                this.position = {
                     x: targetPosition.x + cameraPosition.x,
                     y: targetPosition.y + cameraPosition.y
                 };
 
-                if (position.y < 0) {
-                    position.y = 0;
+                if (this.position.y < 0) {
+                    this.position.y = 0;
                 }
 
-                this.engine.triggerEvent('cameraSet', position);
+                this.engine.triggerEvent('cameraSet', this.position);
             }
         };
 
