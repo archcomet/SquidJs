@@ -7,13 +7,14 @@
 
         /**
          * CameraSystem
-         * @return {*}
+         * @return {CameraSystem}
          * @constructor
          */
 
         function CameraSystem(engine) {
             return CameraSystem.alloc(this, arguments);
         }
+
         app.inherit(app.System, CameraSystem);
 
         CameraSystem.prototype.init = function () {
@@ -31,6 +32,8 @@
             }
             this.targetEntity = undefined;
         };
+
+        /*** Interface ***/
 
         CameraSystem.prototype.setTargetEntity = function (entity) {
             this.targetEntity = entity;
@@ -76,6 +79,8 @@
                 });
             }
         };
+
+        /*** Update Event ***/
 
         CameraSystem.prototype.update = function () {
             var position, targetPosition, cameraPosition, cameraSteering;

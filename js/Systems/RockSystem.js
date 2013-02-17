@@ -11,12 +11,12 @@
             numberOfFragments: 3,
             foodSpawnRate: 0.2,
             minFoodImpulse: 1,
-            maxFoodImpulse: 4
+            maxFoodImpulse: 3
         };
 
         /**
          * RockSystem
-         * @return {*}
+         * @return {RockSystem}
          * @constructor
          */
 
@@ -25,7 +25,6 @@
         }
 
         app.inherit(app.System, RockSystem);
-
 
         RockSystem.prototype.init = function () {
             this.engine.bindEvent('update', this);
@@ -40,6 +39,8 @@
             this.engine.unbindEvent('entityRemoved', this);
             this.destroyModel();
         };
+
+        /*** Update Event ***/
 
         RockSystem.prototype.update = function (dt) {
             var i, n, entity,
@@ -79,7 +80,7 @@
                         maxRadius: maxRadius / 2
                     });
 
-                    impulseNormal = app.random(minRadius, maxRadius);
+                    impulseNormal = app.random(minRadius, maxRadius) / 2;
                     impulse = {
                         x: Math.cos(step) * impulseNormal,
                         y: Math.sin(step) * impulseNormal
@@ -110,6 +111,8 @@
 
             rockFactory.destroyRock(entity);
         };
+
+        /*** Entity Events ***/
 
         RockSystem.prototype.entityAdded = function (entity) {
             if (entity.RockComponent !== undefined) {

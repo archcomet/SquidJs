@@ -8,7 +8,7 @@
         /**
          * SquidSystem
          * @param engine
-         * @return {*}
+         * @return {SquidSystem}
          * @constructor
          */
 
@@ -18,7 +18,6 @@
 
         app.inherit(app.System, SquidSystem);
 
-
         SquidSystem.prototype.init = function () {
             this.engine.bindEvent('update', this);
         };
@@ -26,6 +25,8 @@
         SquidSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
         };
+
+        /*** Update Event ***/
 
         SquidSystem.prototype.update = function () {
             var i, n, entityArray = this.engine.entitiesForComponent('SquidComponent');

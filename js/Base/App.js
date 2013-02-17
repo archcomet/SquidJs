@@ -35,25 +35,25 @@
             });
         }
 
-        for (i = 0; i < 7; i += 1) {
+        for (i = 0; i < 6; i += 1) {
             engine.creatureFactory.createSquid({
-                segmentLength: app.random(5, 11),
+                segmentLength: app.random(12, 16),
                 radius: app.random(10, 19),
                 thickness: app.random(1, 5),
-                velocity: app.random(28, 29),
-                force: app.random(700, 800),
+                velocity: app.random(18, 19),
+                force: app.random(400, 500),
                 sprint: 2
             });
         }
 
         entity = engine.creatureFactory.createSquid({
-            segmentLength: 25,
+            segmentLength: 28,
             radius: 25,
             thickness: 3,
             velocity: 22,
-            force: 500,
+            force: 600,
             sprint: 2,
-            tentacleCount: 5
+            tentacleCount: 7
         });
 
         engine.systems.CameraSystem.setTargetEntity(entity);
@@ -65,10 +65,8 @@
 }(window));
 
 //improvements
-//todo drawNodes to entity creation instead of in systems
 //todo factories to keep handle on their creations
 //todo formalize factory creation in engine
-//todo give drawNodes a namespace
 
 //mvp client systems
 //todo pickup logic

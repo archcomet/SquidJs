@@ -9,7 +9,7 @@
          * SteeringSystem
          * Updates physics bodies based on steering behavior.
          * @param engine
-         * @return {*}
+         * @return {SteeringSystem}
          * @constructor
          */
 
@@ -26,6 +26,8 @@
         SteeringSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
         };
+
+        /*** Update Event ***/
 
         SteeringSystem.prototype.update = function () {
             var i, n, steering, physics,

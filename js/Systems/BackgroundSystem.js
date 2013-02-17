@@ -8,7 +8,7 @@
         /**
          * BackgroundSystem
          * @param engine
-         * @return {*}
+         * @return {BackgroundSystem}
          * @constructor
          */
 
@@ -17,6 +17,8 @@
         }
 
         app.inherit(app.System, BackgroundSystem);
+
+        /*** Init ***/
 
         BackgroundSystem.prototype.init = function () {
             this.position = {
@@ -114,12 +116,16 @@
             this.skyFill.addColorStop(1.0, 'hsl(289, 54%, 12%)');
         };
 
+        /*** Deinit ***/
+
         BackgroundSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
             this.engine.unbindEvent('draw', this);
             this.engine.unbindEvent('cameraSet', this);
             this.engine.unbindEvent('resize', this);
         };
+
+        /*** Update Event ***/
 
         BackgroundSystem.prototype.update = function (dt) {
             this.current += 1;
@@ -135,6 +141,15 @@
                     }
                 }
             }
+        };
+
+        /*** Draw Event ***/
+
+        BackgroundSystem.prototype.draw = function () {
+            this.drawSky();
+            this.drawNoise();
+            this.drawLights();
+            this.drawGradient();
         };
 
         BackgroundSystem.prototype.drawSky = function () {
@@ -246,12 +261,7 @@
             }
         };
 
-        BackgroundSystem.prototype.draw = function () {
-            this.drawSky();
-            this.drawNoise();
-            this.drawLights();
-            this.drawGradient();
-        };
+        /*** Canvas Events ***/
 
         BackgroundSystem.prototype.resize = function () {
             this.noiseLayerDirty = true;
@@ -261,6 +271,8 @@
             this.initWaveBuffer();
             this.initSkyLayer();
         };
+
+        /*** Camera Events ***/
 
         BackgroundSystem.prototype.cameraSet = function (position) {
             var x = position.x,

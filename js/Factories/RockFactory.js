@@ -23,7 +23,7 @@
             _.defaults(options, {
                 minRadius: 60,
                 maxRadius: 75,
-                maxHealth: 70,
+                maxHealth: 60,
                 vertexCount: 5,
                 x: 0,
                 y: 0

@@ -63,6 +63,7 @@
             this.updatesToPerform = 1;
             this.lastFrame = 0;
             this.counter = 0;
+            this.enableStats();
             return this;
         };
 
@@ -85,6 +86,7 @@
             while (this.updatesToPerform > 0) {
                 this.engine.update(this.interval);
                 this.updatesToPerform -= 1;
+                this.counter += 1;
             }
 
             this.engine.draw();
@@ -117,12 +119,9 @@
         };
 
         Timer.prototype.postUpdate = function () {
-            this.counter += 1;
-
             if (this.codeStats !== undefined) {
                 this.codeStats.end();
             }
-
             this.lastFrame = Date.now();
         };
 

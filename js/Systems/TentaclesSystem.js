@@ -117,7 +117,7 @@
 
         /**
          * TentaclesSystem
-         * @return {*}
+         * @return {TentaclesSystem}
          * @constructor
          */
 
@@ -126,7 +126,6 @@
         }
 
         app.inherit(app.System, TentaclesSystem);
-
 
         TentaclesSystem.prototype.init = function () {
             this.engine.bindEvent('entityAdded', this);
@@ -142,6 +141,15 @@
             return this;
         };
 
+        /*** Update Event ***/
+
+        TentaclesSystem.prototype.update = function () {
+            var i, n, entityArray = this.engine.entitiesForComponent('TentaclesComponent');
+            for (i = 0, n = entityArray.length; i < n; i += 1) {
+                this.updateTentacles(entityArray[i]);
+            }
+        };
+
         TentaclesSystem.prototype.entityAdded = function (entity) {
             if (entity.TentaclesComponent !== undefined) {
                 var i, n, tentacles = entity.TentaclesComponent.tentacles = [];
@@ -149,19 +157,6 @@
                 for (i = 0, n = entity.TentaclesComponent.count; i < n; i += 1) {
                     tentacles.push(new Tentacle(entity));
                 }
-            }
-        };
-
-        TentaclesSystem.prototype.entityRemoved = function (entity) {
-            if (entity.TentaclesComponent !== undefined) {
-                entity.TentaclesComponent.tentacles.length = 0;
-            }
-        };
-
-        TentaclesSystem.prototype.update = function () {
-            var i, n, entityArray = this.engine.entitiesForComponent('TentaclesComponent');
-            for (i = 0, n = entityArray.length; i < n; i += 1) {
-                this.updateTentacles(entityArray[i]);
             }
         };
 
@@ -185,6 +180,14 @@
 
                 tentacles[i].move(position.x + px, position.y + py);
                 tentacles[i].update();
+            }
+        };
+
+        /*** Entity Events ***/
+
+        TentaclesSystem.prototype.entityRemoved = function (entity) {
+            if (entity.TentaclesComponent !== undefined) {
+                entity.TentaclesComponent.tentacles.length = 0;
             }
         };
 

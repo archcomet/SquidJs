@@ -20,7 +20,9 @@
 
         FoodComponent.prototype.init = function (options) {
             _.defaults(this, options, {
-                radius: 7
+                radius: 7,
+                duration: 900, // frames
+                collectedBy: undefined
             });
 
             return this;

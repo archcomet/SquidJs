@@ -6,17 +6,16 @@
     global.app.System.SquidControlSystem = (function () {
 
         /**
-         * PlayerControlSystem
+         * SquidControlSystem
          * @param engine
-         * @return {*}
+         * @return {SquidControlSystem}
          * @constructor
          */
         function SquidControlSystem(engine) {
             return SquidControlSystem.alloc(this, arguments);
         }
-        app.inherit(app.System, SquidControlSystem);
 
-        /*** Public Methods ***/
+        app.inherit(app.System, SquidControlSystem);
 
         SquidControlSystem.prototype.init = function () {
             this.mouseData = {};
@@ -32,18 +31,7 @@
             this.engine.unbindEvent('update', this);
         };
 
-        SquidControlSystem.prototype.entityAdded = function (entity) {
-            if (entity.InputComponent !== undefined) {
-                var steering = entity.SteeringComponent,
-                    position = entity.PositionComponent;
-
-                steering.behavior = 'seek';
-                steering.target.x = position.x;
-                steering.target.y = position.y;
-                steering.sprinting = false;
-                steering.drift = true;
-            }
-        };
+        /*** Update Event ***/
 
         SquidControlSystem.prototype.update = function () {
             var i, n, steering, position,
@@ -70,8 +58,25 @@
             }
         };
 
+        /*** Mouse Event ***/
+
         SquidControlSystem.prototype.mouseUpdate = function (mouseData) {
             this.mouseData = mouseData;
+        };
+
+        /*** Entity Event ***/
+
+        SquidControlSystem.prototype.entityAdded = function (entity) {
+            if (entity.InputComponent !== undefined) {
+                var steering = entity.SteeringComponent,
+                    position = entity.PositionComponent;
+
+                steering.behavior = 'seek';
+                steering.target.x = position.x;
+                steering.target.y = position.y;
+                steering.sprinting = false;
+                steering.drift = true;
+            }
         };
 
         return SquidControlSystem;

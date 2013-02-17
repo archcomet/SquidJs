@@ -43,7 +43,8 @@
                     },
                     PositionComponent: {
                         x: app.random(this.engine.canvas.width, this.engine.canvas.width * 2),
-                        y: app.random(this.engine.canvas.height, this.engine.canvas.height * 2)
+                        y: app.random(this.engine.canvas.height, this.engine.canvas.height * 2),
+                        zOrder: 5
                     },
                     PhysicsComponent: {
                         drag: -0.4,
@@ -64,7 +65,7 @@
                     },
                     TentaclesComponent: {
                         count: tentacleCount,
-                        segmentCount: 8,
+                        segmentCount: 6,
                         segmentLength: segmentLength,
                         radius: (radius + thickness - 2) / 2.2,
                         friction: 0.94,

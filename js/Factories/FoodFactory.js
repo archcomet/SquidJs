@@ -25,7 +25,7 @@
                 x: 0,
                 y: 0,
                 minRadius: 5,
-                maxRadius: 20
+                maxRadius: 15
             });
 
             radius = app.random(options.minRadius, options.maxRadius);
@@ -47,7 +47,7 @@
                         zOrder: -1
                     },
                     PhysicsComponent: {
-                        drag: -0.4,
+                        drag: -0.5,
                         bodyDef: {
                             type: b2.Body.b2_dynamicBody,
                             linearDampening: 0.1

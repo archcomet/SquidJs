@@ -69,7 +69,7 @@
             entity.engine = this;
             this.entities[entity.id] = entity;
 
-            var key, entityArray;
+            var zOrder, key, entityArray;
             for (key in entity) {
                 if (entity.hasOwnProperty(key) && entity[key] instanceof app.Component) {
                     entityArray = this.componentEntities[key];
@@ -81,7 +81,10 @@
             }
 
             if (entity.node !== undefined) {
-                this.canvas.addChild(entity.node);
+                if (entity.PositionComponent !== undefined) {
+                    zOrder = entity.PositionComponent.zOrder;
+                }
+                this.canvas.addChild(entity.node, zOrder);
             }
 
             this.triggerEvent('entityAdded', entity);

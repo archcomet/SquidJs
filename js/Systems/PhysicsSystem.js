@@ -8,13 +8,14 @@
         /**
          * PhysicsSystem
          * Wraps Box2DWeb. Manages physics objects and world.
-         * @return {*}
+         * @return {PhysicsSystem}
          * @constructor
          */
 
         function PhysicsSystem() {
             return PhysicsSystem.alloc(this, arguments);
         }
+
         app.inherit(app.System, PhysicsSystem);
 
         PhysicsSystem.prototype.init = function () {
@@ -45,28 +46,7 @@
             return this;
         };
 
-        PhysicsSystem.prototype.entityAdded = function (entity) {
-            var physics = entity.PhysicsComponent,
-                position = entity.PositionComponent || { x: 0, y: 0 };
-
-            if (physics !== undefined) {
-                physics.bodyDef.position.x = b2.toWorld(position.x);
-                physics.bodyDef.position.y = b2.toWorld(position.y);
-                physics.body = this.world.CreateBody(physics.bodyDef);
-                physics.body.SetUserData(entity);
-                physics.fixture = physics.body.CreateFixture(physics.fixtureDef);
-            }
-        };
-
-        PhysicsSystem.prototype.entityRemoved = function (entity) {
-            var physics = entity.PhysicsComponent;
-
-            if (physics !== undefined) {
-                physics.body.DestroyFixture(physics.fixture);
-                physics.body.SetUserData(null);
-                this.world.DestroyBody(physics.body);
-            }
-        };
+        /*** Update Event ***/
 
         PhysicsSystem.prototype.update = function (dt) {
             var i, n, physics, position, pos, vel, torque, force, mass, center,
@@ -124,6 +104,33 @@
                 }
             }
         };
+
+        /*** Entity Events ***/
+
+        PhysicsSystem.prototype.entityAdded = function (entity) {
+            var physics = entity.PhysicsComponent,
+                position = entity.PositionComponent || { x: 0, y: 0 };
+
+            if (physics !== undefined) {
+                physics.bodyDef.position.x = b2.toWorld(position.x);
+                physics.bodyDef.position.y = b2.toWorld(position.y);
+                physics.body = this.world.CreateBody(physics.bodyDef);
+                physics.body.SetUserData(entity);
+                physics.fixture = physics.body.CreateFixture(physics.fixtureDef);
+            }
+        };
+
+        PhysicsSystem.prototype.entityRemoved = function (entity) {
+            var physics = entity.PhysicsComponent;
+
+            if (physics !== undefined) {
+                physics.body.DestroyFixture(physics.fixture);
+                physics.body.SetUserData(null);
+                this.world.DestroyBody(physics.body);
+            }
+        };
+
+        /*** Contact Listener ***/
 
         PhysicsSystem.prototype.beginContact = function (contact) {
             this.triggerContact('beginContact', contact);

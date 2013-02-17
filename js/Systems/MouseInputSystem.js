@@ -9,13 +9,14 @@
          * InputSystem
          * Processes human input
          * @param engine
-         * @return {*}
+         * @return {MouseInputSystem}
          * @constructor
          */
 
         function MouseInputSystem(engine) {
             return MouseInputSystem.alloc(this, arguments);
         }
+
         app.inherit(app.System, MouseInputSystem);
 
         MouseInputSystem.prototype.init = function () {

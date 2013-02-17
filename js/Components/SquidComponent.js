@@ -23,7 +23,8 @@
                 radius: 10.0,
                 thickness: 5.0,
                 eyeRadius: 5.0,
-                irisRadius: 2.0
+                irisRadius: 2.0,
+                foodCollected: 0
             });
             return this;
         };
