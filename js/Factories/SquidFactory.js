@@ -17,11 +17,6 @@
 
         app.inherit(app.Factory, SquidFactory);
 
-        SquidFactory.prototype.init = function () {
-            //this.engine.setting.spawnSquid = this.debugSpawn.bind(this);
-            return this;
-        };
-
         SquidFactory.prototype.spawn = function (options) {
             var entity, segmentLength = options.segmentLength,
                 radius = options.radius,
@@ -31,7 +26,7 @@
                 sprint = options.sprint,
                 tentacleCount = options.tentacleCount || 3;
 
-            entity = new app.Entity({
+            entity = this.createEntity({
                 tag: 'squid_',
                 components: {
                     SquidComponent: {
@@ -42,8 +37,8 @@
                     },
                     InputComponent: {},
                     SteeringComponent: {
-                        maxVelocity: velocity,
-                        maxForce: force,
+                        maxSteeringVelocity: velocity,
+                        maxSteeringForce: force,
                         sprintMultiplier: sprint
                     },
                     PositionComponent: {

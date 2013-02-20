@@ -20,9 +20,9 @@
 
         HealthComponent.prototype.init = function (options) {
             _.defaults(this, options, {
-                health: 100
+                maxHealth: 100
             });
-            this.maxHealth = this.health;
+            this.health = this.maxHealth;
             return this;
         };
 

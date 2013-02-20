@@ -16,6 +16,7 @@
         function DrawNode(entity) {
             return DrawNode.alloc(this, arguments);
         }
+
         app.inherit(app.BaseObj, DrawNode);
 
         DrawNode.prototype.init = function (entity) {

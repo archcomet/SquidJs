@@ -16,21 +16,24 @@
         function SteeringComponent(options) {
             return SteeringComponent.alloc(this, arguments);
         }
+
         app.inherit(app.Component, SteeringComponent);
 
         SteeringComponent.prototype.init = function (options) {
             _.defaults(this, options, {
-                maxVelocity: 7,
-                maxForce: 450,
+                maxForwardVelocity: 0,
+                maxSteeringVelocity: 7,
+                maxAngularVelocity: 0,
+                maxForwardThrust: 0,
+                maxSteeringForce: 450,
+                maxTorque: 0,
                 sprinting: false,
-                sprintMultiplier: 3,
-                floatDistance: 3,
+                sprintMultiplier: 2,
                 behavior: undefined,
                 target: {
                     x: 0,
                     y: 0
-                },
-                targetDistance: 0.5
+                }
             });
             return this;
         };

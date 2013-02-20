@@ -28,7 +28,6 @@
             this.engine.unbindEvent('update', this);
             this.engine.unbindEvent('entityAdded', this);
             this.engine.unbindEvent('entityRemoved', this);
-            this.destroyModel();
         };
 
         /*** Update Event ***/
@@ -55,13 +54,14 @@
             var i, n, fragment, food, rads, step, impulse, impulseNormal, body,
                 minRadius = entity.RockComponent.minRadius,
                 maxRadius = entity.RockComponent.maxRadius,
-                rockFactory = this.engine.factories.RockFactory;
+                rockFactory = this.engine.factories.RockFactory,
+                settings = this.engine.settings.rockSettings;
 
-            if (minRadius > this.engine.setting.rockSystem.minRadiusForFragments) {
+            if (minRadius > settings.fragmentRadiusLimit) {
                 rads = Math.PI * 2 / 3;
                 step = app.random(0, rads);
 
-                for (i = 0, n = this.engine.setting.rockSystem.numberOfFragments; i < n; i += 1) {
+                for (i = 0, n = settings.fragmentCount; i < n; i += 1) {
                     fragment = rockFactory.spawn({
                         x: entity.PositionComponent.x,
                         y: entity.PositionComponent.y,
@@ -71,7 +71,7 @@
                         maxRadius: maxRadius / 2
                     });
 
-                    impulseNormal = app.random(minRadius, maxRadius) / 2;
+                    impulseNormal = app.random(minRadius, maxRadius) * settings.fragmentImpulseMultiplier;
                     impulse = {
                         x: Math.cos(step) * impulseNormal,
                         y: Math.sin(step) * impulseNormal
@@ -83,7 +83,7 @@
                 }
             }
 
-            if (app.random(0, 1) < this.engine.setting.rockSystem.foodSpawnRate) {
+            if (app.random(0, 1) < settings.foodSpawnRate) {
                 food = this.engine.factories.FoodFactory.spawn({
                     x: entity.PositionComponent.x,
                     y: entity.PositionComponent.y
@@ -91,8 +91,8 @@
 
                 rads = app.random(0, Math.PI * 2);
                 impulseNormal = app.random(
-                    this.engine.setting.rockSystem.minFoodImpulse,
-                    this.engine.setting.rockSystem.maxFoodImpulse
+                    settings.minFoodImpulse,
+                    settings.maxFoodImpulse
                 );
                 impulse = {
                     x: Math.cos(rads) * impulseNormal,
@@ -122,7 +122,7 @@
 
         RockSystem.prototype.postSolve = function (entity, contactee, contact, impulse) {
             if (contactee.SquidComponent !== undefined && entity.HealthComponent !== undefined) {
-                if (impulse.normalImpulses[0] > this.engine.setting.rockSystem.minImpulseForDamage) {
+                if (impulse.normalImpulses[0] > this.engine.settings.rockSettings.impulseToDamage) {
                     entity.HealthComponent.health -= impulse.normalImpulses[0];
                 }
             }

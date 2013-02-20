@@ -5,55 +5,61 @@
 
     global.app.start = function start() {
         var engine = new app.Engine({
-                container: $('#container')[0],
-                systems: [
-                    'MouseInputSystem',
-                    'SquidControlSystem',
-                    'SteeringSystem',
-                    'PhysicsSystem',
-                    'CameraSystem',
-                    'RockSystem',
-                    'FoodSystem',
-                    'SquidSystem',
-                    'TentaclesSystem',
-                    'BackgroundSystem'
-                ],
-                factories: [
-                    'FoodFactory',
-                    'RockFactory',
-                    'SquidFactory',
-                    'SquidletFactory'
-                ],
-                settings: {
-                    rockSystem: {
-                        minImpulseForDamage: 4,
-                        minRadiusForFragments: 15,
-                        numberOfFragments: 3,
-                        foodSpawnRate: 0.2,
-                        minFoodImpulse: 1,
-                        maxFoodImpulse: 3
-                    },
-                    tentaclesSystem: {
-                        friction: 0.01,
-                        wind: 0.03,
-                        gravity: 0.05
-                    },
-                    squidletFactory: {
-                        minSegmentLength: 12,
-                        maxSegmentLength: 16,
-                        minRadius: 10,
-                        maxRadius: 19,
-                        minThickness: 1,
-                        maxThickness: 5,
-                        minVelocity: 18,
-                        maxVelocity: 19,
-                        minForce: 400,
-                        maxForce: 500,
-                        sprintMultiplier: 2,
-                        tentacleCount: 3
-                    }
+            container: $('#container')[0],
+            systems: [
+                'MouseInputSystem',
+                'SquidControlSystem',
+                'SteeringSystem',
+                'PhysicsSystem',
+                'CameraSystem',
+                'RockSystem',
+                'FoodSystem',
+                'SquidSystem',
+                'CrabSnakeSystem',
+                'TentaclesSystem',
+                'BackgroundSystem'
+            ],
+            factories: [
+                'CrabSnakeFactory',
+                'FoodFactory',
+                'RockFactory',
+                'SquidFactory',
+                'SquidletFactory'
+            ],
+            settings: {
+                rockSettings: {
+                    minRadius: 50,
+                    maxRadius: 90,
+                    maxHealth: 70,
+                    impulseToDamage: 4,
+                    fragmentRadiusLimit: 15,
+                    fragmentCount: 3,
+                    fragmentImpulseMultiplier: 0.5,
+                    foodSpawnRate: 0.2,
+                    minFoodImpulse: 1,
+                    maxFoodImpulse: 3
+                },
+                tentacleSettings: {
+                    friction: 0.01,
+                    wind: 0.03,
+                    gravity: 0.05
+                },
+                squidletSettings: {
+                    minSegmentLength: 12,
+                    maxSegmentLength: 16,
+                    minRadius: 10,
+                    maxRadius: 19,
+                    minThickness: 1,
+                    maxThickness: 5,
+                    minVelocity: 18,
+                    maxSteeringVelocity: 19,
+                    minForce: 400,
+                    maxSteeringForce: 500,
+                    sprintMultiplier: 2,
+                    tentacleCount: 3
                 }
-            });
+            }
+        });
 
         engine.systems.CameraSystem.setTargetEntity(engine.factories.SquidFactory.spawn({
             segmentLength: 28,
@@ -73,24 +79,29 @@
 
 }(window));
 
-//mvp client systems
-//todo hostile creature node
-//todo AI behavior system
-//todo health system
-//todo environment spawn system
+//todo angular steering system
+//todo angular pursuit
+//todo angular evade
+//todo refactor settings for all factories and systems
+//todo refactor Squid spawner
+//todo create debug despawner
+//todo fixture for CrabSnake shell
+//todo CrabSnake-Rock collision response
+//todo CrabSnake AI
+//todo linear pursuit
+//todo linear evade
+//todo Squidlet AI
+//todo Health system
 //todo scoring system
-//todo game over screen
 //todo start/restart game command
-//todo start menu
-//todo options
+//todo main menu screen
+//todo game over screen
+//todo server side api
+//todo leader board screen
 //todo sign in / authorization
-//todo leader board
+
+//todo environment spawn system
+//todo audio
+//todo music
 //todo achievements
 
-//mvp server systems
-//todo data service
-//todo database
-
-//bonus
-//todo particle system
-//todo damage indicators

@@ -16,6 +16,7 @@
         function Entity(options) {
             return Entity.alloc(this, arguments);
         }
+
         app.inherit(app.BaseObj, Entity);
 
         Entity.prototype.init = function (options) {

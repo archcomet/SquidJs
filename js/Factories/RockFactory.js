@@ -11,32 +11,28 @@
          * @constructor
          */
 
-        function RockFactory() {
+        function RockFactory(engine) {
             return RockFactory.alloc(this, arguments);
         }
 
         app.inherit(app.Factory, RockFactory);
 
-        RockFactory.prototype.init = function () {
-            this.engine.setting.spawnRock = this.debugSpawn.bind(this);
-            return this;
-        };
-
         RockFactory.prototype.spawn = function (options) {
-            options = options || {};
+            var entity, vertices, settings = this.engine.settings.rockSettings;
 
+            options = options || {};
             _.defaults(options, {
-                minRadius: 40,
-                maxRadius: 90,
-                maxHealth: 60,
+                minRadius: settings.minRadius,
+                maxRadius: settings.maxRadius,
+                maxHealth: settings.maxHealth,
                 vertexCount: 9,
                 x: 0,
                 y: 0
             });
 
-            var entity, vertices = app.randomConvexPolygon(options.vertexCount, options.minRadius, options.maxRadius);
+            vertices = app.randomConvexPolygon(options.vertexCount, options.minRadius, options.maxRadius);
 
-            entity = new app.Entity({
+            entity = this.createEntity({
                 tag: 'rock_',
                 components: {
                     RockComponent: {
@@ -45,7 +41,7 @@
                         maxRadius: options.maxRadius
                     },
                     HealthComponent: {
-                        health: options.maxHealth
+                        maxHealth: options.maxHealth
                     },
                     PositionComponent: {
                         x: options.x,

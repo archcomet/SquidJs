@@ -11,16 +11,11 @@
          * @constructor
          */
 
-        function FoodFactory() {
+        function FoodFactory(engine) {
             return FoodFactory.alloc(this, arguments);
         }
 
         app.inherit(app.Factory, FoodFactory);
-
-        FoodFactory.prototype.init = function () {
-            this.engine.setting.spawnFood = this.debugSpawn.bind(this);
-            return this;
-        };
 
         FoodFactory.prototype.spawn = function (options) {
             var entity, radius;
@@ -28,38 +23,38 @@
             _.defaults(options, {
                 x: 0,
                 y: 0,
-                minRadius: 5,
-                maxRadius: 15
+                minRadius: 5, //todo
+                maxRadius: 15 //todo
             });
 
             radius = app.random(options.minRadius, options.maxRadius);
-            entity = new app.Entity({
+            entity = this.createEntity({
                 tag: 'food_',
                 components: {
                     FoodComponent: {
                         radius: radius
                     },
                     ColorComponent: {
-                        h: 27,
-                        s: 100,
-                        v: 90,
+                        h: 27, //todo
+                        s: 100, //todo
+                        v: 90, //todo
                         dark: false
                     },
                     PositionComponent: {
                         x: options.x,
                         y: options.y,
-                        zOrder: -1
+                        zOrder: -1 //todo
                     },
                     PhysicsComponent: {
-                        drag: -0.8,
+                        drag: -0.8, //todo
                         bodyDef: {
                             type: b2.Body.b2_dynamicBody,
-                            linearDampening: 0.1
+                            linearDampening: 0.1 //todo
                         },
                         fixtureDef: {
-                            density: 2,
-                            friction: 0.5,
-                            restitution: 0.2,
+                            density: 2, //todo
+                            friction: 0.5, //todo
+                            restitution: 0.2, //todo
                             shape: b2.makeShape({
                                 type: 'circle',
                                 radius: radius

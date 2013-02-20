@@ -17,6 +17,7 @@
             this.engine = engine;
             return System.alloc(this);
         }
+
         app.inherit(app.BaseObj, System);
 
         return System;

@@ -128,17 +128,19 @@
         /*** Update Event ***/
 
         BackgroundSystem.prototype.update = function (dt) {
+            var i, n, entities;
+
             this.current += 1;
-            if (Math.abs(this.gradientLastY - this.position.y) > 100) {
-                var i, n, entityArray;
+            if (Math.abs(this.gradientLastY - this.position.y) > 150) {
+
                 this.gradientLayerDirty = true;
                 this.gradientModifier = 1 / (this.position.y / 15000 + 1);
+            }
 
-                entityArray = this.engine.entitiesForComponent('ColorComponent');
-                for (i = 0, n = entityArray.length; i < n; i += 1) {
-                    if (entityArray[i].ColorComponent.dark) {
-                        entityArray[i].ColorComponent.setShade(this.gradientModifier);
-                    }
+            entities = this.engine.entitiesForComponent('ColorComponent');
+            for (i = 0, n = entities.length; i < n; i += 1) {
+                if (entities[i].ColorComponent.dark) {
+                    entities[i].ColorComponent.setShade(this.gradientModifier);
                 }
             }
         };

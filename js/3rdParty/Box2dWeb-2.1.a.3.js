@@ -8093,7 +8093,7 @@ Box2D.postDefs = [];
       this.m_angularMass = 0.0;
       this.m_linearImpulse.SetZero();
       this.m_angularImpulse = 0.0;
-      this.m_maxForce = def.maxForce;
+      this.m_maxForce = def.maxSteeringForce;
       this.m_maxTorque = def.maxTorque;
    }
    b2FrictionJoint.prototype.InitVelocityConstraints = function (step) {
@@ -8222,7 +8222,7 @@ Box2D.postDefs = [];
    b2FrictionJointDef.prototype.b2FrictionJointDef = function () {
       this.__super.b2JointDef.call(this);
       this.type = b2Joint.e_frictionJoint;
-      this.maxForce = 0.0;
+      this.maxSteeringForce = 0.0;
       this.maxTorque = 0.0;
    }
    b2FrictionJointDef.prototype.Initialize = function (bA, bB, anchor) {
@@ -9119,7 +9119,7 @@ Box2D.postDefs = [];
       var tMat = this.m_bodyB.m_xf.R;
       this.m_localAnchor.x = (tX * tMat.col1.x + tY * tMat.col1.y);
       this.m_localAnchor.y = (tX * tMat.col2.x + tY * tMat.col2.y);
-      this.m_maxForce = def.maxForce;
+      this.m_maxForce = def.maxSteeringForce;
       this.m_impulse.SetZero();
       this.m_frequencyHz = def.frequencyHz;
       this.m_dampingRatio = def.dampingRatio;
@@ -9208,7 +9208,7 @@ Box2D.postDefs = [];
    b2MouseJointDef.prototype.b2MouseJointDef = function () {
       this.__super.b2JointDef.call(this);
       this.type = b2Joint.e_mouseJoint;
-      this.maxForce = 0.0;
+      this.maxSteeringForce = 0.0;
       this.frequencyHz = 5.0;
       this.dampingRatio = 0.7;
    }

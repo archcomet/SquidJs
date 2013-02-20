@@ -32,7 +32,7 @@
             // State
             this.canvasDirty = false;
             this.container = options.container;
-            this.setting = new app.Settings(options.settings);
+            this.settings = new app.Settings(options.settings);
 
             // Entity Canvas
             this.canvas = new app.Canvas({
@@ -56,8 +56,7 @@
             this.bindEvent('draw', this.canvas);
 
             // Debug
-            this.setting.disableDebug = this.disableDebug.bind(this);
-            this.enableDebug();
+            this.settings.disableDebug = this.disableDebug.bind(this);
 
             return this;
         };
@@ -173,6 +172,11 @@
             if (factory === undefined) {
                 factory = new app.Factory[factoryName](this);
                 this.factories[factoryName] = factory;
+                if (this.settings[factoryName] === undefined) {
+                    this.settings[factoryName] = {};
+                }
+                this.settings[factoryName].spawn = factory.debugSpawn.bind(factory);
+                this.settings[factoryName].despawn = factory.debugDespawn.bind(factory);
             }
             return factory;
         };
@@ -187,6 +191,9 @@
         Engine.prototype.destroyFactory = function (factoryName) {
             var factory = this.factories[factoryName];
             if (factory !== undefined) {
+                delete this.settings[factoryName].spawn;
+                delete this.settings[factoryName].despawn;
+                delete this.settings[factoryName];
                 delete this.factories[factoryName];
                 factory.destroy();
             }
@@ -273,12 +280,12 @@
 
         Engine.prototype.enableDebug = function () {
             this.timer.enableStats();
-            this.setting.enableDebugControl();
+            this.settings.enableDebugControl();
         };
 
         Engine.prototype.disableDebug = function () {
             this.timer.disableStats();
-            this.setting.disableDebugControl();
+            this.settings.disableDebugControl();
         };
 
         return Engine;

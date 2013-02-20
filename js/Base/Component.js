@@ -16,6 +16,7 @@
         function Component(options) {
             return Component.alloc(this, arguments);
         }
+
         app.inherit(app.BaseObj, Component);
 
         return Component;

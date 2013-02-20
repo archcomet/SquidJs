@@ -61,9 +61,10 @@
                 segmentLength, friction, radius, step, settings;
 
             segmentLength = this.entity.TentaclesComponent.segmentLength;
-            settings = this.entity.engine.setting.tentaclesSystem;
+            settings = this.entity.engine.settings.tentacleSettings;
 
-            friction = (this.entity.PhysicsComponent.outOfWater) ? 0.99 : (this.entity.TentaclesComponent.friction - this.variance);
+            friction = (this.entity.PhysicsComponent && this.entity.PhysicsComponent.outOfWater) ?
+                    0.99 : (this.entity.TentaclesComponent.friction - this.variance);
             friction *= (1 - settings.friction);
 
             radius = this.entity.TentaclesComponent.radius;
@@ -156,25 +157,35 @@
         };
 
         TentaclesSystem.prototype.updateTentacles = function (entity) {
-            var i, n, t, theta, px, py, step, radius,
+            var i, n, t, theta, px, py, step,
                 body = entity.SquidComponent,
                 position = entity.PositionComponent,
-                tentacles = entity.TentaclesComponent.tentacles;
+                tentacles = entity.TentaclesComponent.tentacles,
+                radius = entity.TentaclesComponent.radius;
 
-            n = tentacles.length;
-            t = this.engine.timer.counter;
-            theta = 0;
-            step = (Math.PI * 2) / (n + 1);
-            radius = entity.TentaclesComponent.radius;
-            radius *= 0.6 + Math.pow(Math.sin(t / body.radius), 12);
+            if (body !== undefined) {
+                n = tentacles.length;
+                t = this.engine.timer.counter;
+                theta = 0;
+                step = (Math.PI * 2) / (n + 1);
+                radius *= 0.6 + Math.pow(Math.sin(t / body.radius), 12);
 
-            for (i = 0; i < n; i += 1) {
-                theta += step;
-                px = Math.cos(theta) * radius;
-                py = Math.sin(theta) * radius;
-
-                tentacles[i].move(position.x + px, position.y + py);
-                tentacles[i].update();
+                for (i = 0; i < n; i += 1) {
+                    theta += step;
+                    px = Math.cos(theta) * radius;
+                    py = Math.sin(theta) * radius;
+                    tentacles[i].move(position.x + px, position.y + py);
+                    tentacles[i].update();
+                }
+            } else {
+                n = tentacles.length;
+                for (i = 0; i < n; i += 1) {
+                    theta = position.angle + Math.PI;
+                    px = Math.cos(theta) * radius;
+                    py = Math.sin(theta) * radius;
+                    tentacles[i].move(position.x + px, position.y + py);
+                    tentacles[i].update();
+                }
             }
         };
 

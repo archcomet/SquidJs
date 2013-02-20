@@ -42,22 +42,94 @@
 
                 if (steering.behavior) {
                     this[steering.behavior](steering, physics);
+                    this.rotateToTarget(steering, physics);
+                    this.applyForwardThrust(steering, physics);
                 }
+            }
+        };
+
+        /*** Thrust Functions ***/
+
+        SteeringSystem.prototype.applyForwardThrust = function (steering, physics) {
+            var angle, vectorAngle, forwardNormal, linearVelocity, velocity,
+                forwardVelocity, thrustVelocity, thrustVector, force;
+
+            if (steering.maxForwardVelocity > 0) {
+                angle = physics.body.GetAngle();
+                linearVelocity = physics.body.GetLinearVelocity();
+                velocity = linearVelocity.Length();
+                forwardNormal = {
+                    x: Math.cos(angle),
+                    y: Math.sin(angle)
+                };
+
+                vectorAngle = (linearVelocity.x === 0 && linearVelocity.y === 0) ? 0 :
+                        app.vectorAngle(forwardNormal, linearVelocity);
+                forwardVelocity = (vectorAngle < Math.PI) ?
+                        Math.cos(vectorAngle) * velocity :
+                        Math.cos(Math.PI - vectorAngle) * -velocity;
+
+                thrustVelocity = steering.maxForwardVelocity - forwardVelocity;
+                force = thrustVelocity * physics.body.GetMass();
+                if (force > steering.maxForwardThrust) {
+                    force = steering.maxForwardThrust;
+                }
+
+                thrustVector = {
+                    x: forwardNormal.x * force,
+                    y: forwardNormal.y * force
+                };
+
+                physics.body.ApplyForce(thrustVector, physics.body.GetWorldCenter());
+            }
+        };
+
+        /*** Rotation Functions ***/
+
+        SteeringSystem.prototype.applyTorqueForAngularVelocity = function (steering, physics, angularVelocity) {
+            var torque = physics.body.GetInertia() * (angularVelocity / (1 / 60));
+            if (Math.abs(torque) > steering.maxTorque) {
+                torque = (torque > 0) ? steering.maxTorque : -steering.maxTorque;
+            }
+            physics.body.ApplyTorque(torque);
+        };
+
+        SteeringSystem.prototype.rotateToTarget = function (steering, physics) {
+            var targetVector, targetAngle, currentAngle, angularDisplacement,
+                targetAngularVelocity, steeringAngularVelocity;
+
+            if (steering.maxAngularVelocity > 0 && steering.target !== undefined) {
+                targetVector = new b2.Vec2();
+                targetVector.SetV(b2.toWorld(steering.target));
+                targetVector.Subtract(physics.body.GetPosition());
+
+                targetAngle = Math.atan2(targetVector.y, targetVector.x);
+                currentAngle = physics.body.GetAngle();
+                angularDisplacement = targetAngle - currentAngle;
+                while (angularDisplacement < -Math.PI) { angularDisplacement += Math.PI * 2; }
+                while (angularDisplacement >  Math.PI) { angularDisplacement -= Math.PI * 2; }
+
+                targetAngularVelocity = angularDisplacement / (1 / 60);
+                if (Math.abs(targetAngularVelocity) > steering.maxAngularVelocity) {
+                    targetAngularVelocity = (targetAngularVelocity > 0) ?
+                            steering.maxAngularVelocity : -steering.maxAngularVelocity;
+                }
+
+                steeringAngularVelocity = targetAngularVelocity - physics.body.GetAngularVelocity();
+                this.applyTorqueForAngularVelocity(steering, physics, steeringAngularVelocity);
             }
         };
 
         /*** Steering Functions ***/
 
-        SteeringSystem.prototype.applyForceForVelocity = function (steering, physics, velocity) {
-            var force, body = physics.body;
-
-            force = new b2.Vec2();
+        SteeringSystem.prototype.applyForceForSteeringVelocity = function (steering, physics, velocity) {
+            var body = physics.body, force = new b2.Vec2();
             force.SetV(velocity);
             force.Multiply(body.GetMass());
 
-            if (force.Length() > steering.maxForce) {
+            if (force.Length() > steering.maxSteeringForce) {
                 force.Normalize();
-                force.Multiply(steering.maxForce);
+                force.Multiply(steering.maxSteeringForce);
             }
 
             body.ApplyForce(force, body.GetWorldCenter());
@@ -66,7 +138,7 @@
         SteeringSystem.prototype.seek = function (steering, physics) {
             var linearVelocity, targetVelocity, steeringVelocity,
                 body = physics.body,
-                maxVelocity = steering.maxVelocity;
+                maxVelocity = steering.maxSteeringVelocity;
 
             linearVelocity = body.GetLinearVelocity();
             targetVelocity = new b2.Vec2();
@@ -84,13 +156,13 @@
             steeringVelocity.SetV(targetVelocity);
             steeringVelocity.Subtract(linearVelocity);
 
-            this.applyForceForVelocity(steering, physics, steeringVelocity);
+            this.applyForceForSteeringVelocity(steering, physics, steeringVelocity);
         };
 
         SteeringSystem.prototype.approach = function (steering, physics) {
             var linearVelocity, targetVelocity, steeringVelocity,
                 body = physics.body,
-                maxVelocity = steering.maxVelocity;
+                maxVelocity = steering.maxSteeringVelocity;
 
             linearVelocity = body.GetLinearVelocity();
             targetVelocity = new b2.Vec2();
@@ -106,7 +178,7 @@
             steeringVelocity.SetV(targetVelocity);
             steeringVelocity.Subtract(linearVelocity);
 
-            this.applyForceForVelocity(steering, physics, steeringVelocity);
+            this.applyForceForSteeringVelocity(steering, physics, steeringVelocity);
         };
 
         return SteeringSystem;

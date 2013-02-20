@@ -71,6 +71,11 @@
         return vertices;
     };
 
+    global.app.vectorAngle = function (v1, v2) {
+        return Math.acos((v1.x * v2.x + v1.y * v2.y) /
+            Math.sqrt((v1.x * v1.x + v1.y * v1.y) * (v2.x * v2.x + v2.y * v2.y)));
+    };
+
     global.app.maxWidth = 1028;
 
     global.app.maxHeight = 652;

@@ -47,8 +47,8 @@
                     tag: 'camera_',
                     components: {
                         SteeringComponent: {
-                            maxVelocity: 50,
-                            maxForce: 800
+                            maxSteeringVelocity: 50,
+                            maxSteeringForce: 800
                         },
                         PositionComponent: {
                             x: x,

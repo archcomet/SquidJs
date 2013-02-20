@@ -11,25 +11,20 @@
          * @constructor
          */
 
-        function SquidletFactory() {
+        function SquidletFactory(engine) {
             return SquidletFactory.alloc(this, arguments);
         }
 
         app.inherit(app.Factory, SquidletFactory);
 
-        SquidletFactory.prototype.init = function () {
-            this.engine.setting.spawnFriend = this.debugSpawn.bind(this);
-            return this;
-        };
-
         SquidletFactory.prototype.spawn = function (options) {
             options = options || { x: 0, y: 0 };
 
-            var entity, settings = this.engine.setting.squidletFactory,
+            var entity, settings = this.engine.settings.squidletSettings,
                 radius = app.random(settings.minRadius, settings.maxRadius),
                 thickness = app.random(settings.minThickness, settings.maxThickness);
 
-            entity = new app.Entity({
+            entity = this.createEntity({
                 tag: 'squidlet_',
                 components: {
                     SquidComponent: {
@@ -40,8 +35,8 @@
                     },
                     InputComponent: {},
                     SteeringComponent: {
-                        maxVelocity: app.random(settings.minVelocity, settings.maxVelocity),
-                        maxForce: app.random(settings.minForce, settings.maxForce),
+                        maxSteeringVelocity: app.random(settings.minVelocity, settings.maxSteeringVelocity),
+                        maxSteeringForce: app.random(settings.minForce, settings.maxSteeringForce),
                         sprintMultiplier: settings.sprintMultiplier
                     },
                     PositionComponent: {
