@@ -31,10 +31,10 @@
         };
 
         ColorComponent.prototype.setShade = function (shade) {
-            var strokeV = (this.dark) ? this.v + 30 : this.v - 30;
+            var strokeV = (this.dark) ? this.v + 0.3 : this.v - 0.3;
             this.shade = shade;
-            this.hslFill = 'hsl(' + this.h + ', ' + this.s * shade + '%, ' + this.v * shade + '%)';
-            this.hslStroke = 'hsl(' + this.h + ', ' + this.s * shade + '%, ' + strokeV * shade + '%)';
+            this.hslFill = 'hsl(' + this.h + ', ' + 100 * this.s * shade + '%, ' + 100 * this.v * shade + '%)';
+            this.hslStroke = 'hsl(' + this.h + ', ' + 100 * this.s * shade + '%, ' + 100 * strokeV * shade + '%)';
         };
 
         return ColorComponent;

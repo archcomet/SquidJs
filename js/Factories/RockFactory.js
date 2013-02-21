@@ -17,15 +17,33 @@
 
         app.inherit(app.Factory, RockFactory);
 
+        RockFactory.prototype.init = function () {
+            RockFactory.parent.init.call(this);
+            _.defaults(this.settings, {
+                zOrder: 20,
+                minRadius: 50,
+                maxRadius: 90,
+                maxVertexCount: 9,
+                maxHealth: 60,
+                color: { h: 171, s: 0.4, v: 0.2 },
+                drag: -0.4,
+                linearDampening: 0.1,
+                angularDampening: 0.1,
+                density: 3,
+                friction: 0.5,
+                restitution: 0.1
+            });
+        };
+
         RockFactory.prototype.spawn = function (options) {
-            var entity, vertices, settings = this.engine.settings.rockSettings;
+            var entity, vertices;
 
             options = options || {};
             _.defaults(options, {
-                minRadius: settings.minRadius,
-                maxRadius: settings.maxRadius,
-                maxHealth: settings.maxHealth,
-                vertexCount: 9,
+                minRadius: this.settings.minRadius,
+                maxRadius: this.settings.maxRadius,
+                maxHealth: this.settings.maxHealth,
+                vertexCount: this.settings.maxVertexCount,
                 x: 0,
                 y: 0
             });
@@ -46,24 +64,24 @@
                     PositionComponent: {
                         x: options.x,
                         y: options.y,
-                        zOrder: 20
+                        zOrder: this.settings.zOrder
                     },
                     ColorComponent: {
-                        h: 171,
-                        s: 40,
-                        v: 20
+                        h: this.settings.color.h,
+                        s: this.settings.color.s,
+                        v: this.settings.color.v
                     },
                     PhysicsComponent: {
-                        drag: -0.4,
+                        drag: this.settings.drag,
                         bodyDef: {
                             type: b2.Body.b2_dynamicBody,
-                            linearDampening: 0.1,
-                            angularDampening: 0.1
+                            linearDampening: this.settings.linearDampening,
+                            angularDampening: this.settings.angularDampening
                         },
                         fixtureDef: {
-                            density: 3,
-                            friction: 0.5,
-                            restitution: 0.1,
+                            density: this.settings.density,
+                            friction: this.settings.friction,
+                            restitution: this.settings.restitution,
                             shape: b2.makeShape({
                                 type: 'polygon',
                                 vertices: vertices

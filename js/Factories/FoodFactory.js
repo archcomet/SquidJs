@@ -17,14 +17,28 @@
 
         app.inherit(app.Factory, FoodFactory);
 
+        FoodFactory.prototype.init = function () {
+            FoodFactory.parent.init.call(this);
+            _.defaults(this.settings, {
+                minRadius: 5,
+                maxRadius: 15,
+                color: { h: 180, s: 0.6, v: 0.06 },
+                drag: -0.8,
+                linearDampening: 0.1,
+                density: 2,
+                friction: 0.5,
+                restitution: 0.2
+            });
+        };
+
         FoodFactory.prototype.spawn = function (options) {
             var entity, radius;
 
             _.defaults(options, {
                 x: 0,
                 y: 0,
-                minRadius: 5, //todo
-                maxRadius: 15 //todo
+                minRadius: this.settings.minRadius,
+                maxRadius: this.settings.maxRadius
             });
 
             radius = app.random(options.minRadius, options.maxRadius);
@@ -35,26 +49,26 @@
                         radius: radius
                     },
                     ColorComponent: {
-                        h: 27, //todo
-                        s: 100, //todo
-                        v: 90, //todo
+                        h: this.settings.color.h,
+                        s: this.settings.color.s,
+                        v: this.settings.color.v,
                         dark: false
                     },
                     PositionComponent: {
                         x: options.x,
                         y: options.y,
-                        zOrder: -1 //todo
+                        zOrder: -1
                     },
                     PhysicsComponent: {
-                        drag: -0.8, //todo
+                        drag: this.settings.drag,
                         bodyDef: {
                             type: b2.Body.b2_dynamicBody,
-                            linearDampening: 0.1 //todo
+                            linearDampening: this.settings.linearDampening
                         },
                         fixtureDef: {
-                            density: 2, //todo
-                            friction: 0.5, //todo
-                            restitution: 0.2, //todo
+                            density: this.settings.density,
+                            friction: this.settings.friction,
+                            restitution: this.settings.restitution,
                             shape: b2.makeShape({
                                 type: 'circle',
                                 radius: radius

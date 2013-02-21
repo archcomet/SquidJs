@@ -11,7 +11,7 @@
             'js/3rdParty/underscore.js',
             'js/3rdParty/Box2dWeb-2.1.a.3.js',
             'js/3rdParty/stats.min.js',
-            'js/3rdParty/dat.gui.min.js',
+            'js/3rdParty/dat.gui.js',
             'js/squid.js',
             'js/Base/Utility.js',
             'js/Base/BaseObj.js',

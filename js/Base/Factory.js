@@ -20,6 +20,10 @@
 
         Factory.prototype.init = function () {
             this.entities = [];
+            this.settings = {
+                spawn: this.debugSpawn.bind(this),
+                despawn: this.debugDespawn.bind(this)
+            };
         };
 
         Factory.prototype.createEntity = function (options) {

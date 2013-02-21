@@ -86,7 +86,7 @@
         CameraSystem.prototype.update = function () {
             var targetPosition, cameraPosition, cameraSteering;
 
-            if (this.targetEntity) {
+            if (this.targetEntity && this.targetEntity.PositionComponent) {
 
                 targetPosition = this.targetEntity.PositionComponent;
                 cameraPosition = this.camera.PositionComponent;

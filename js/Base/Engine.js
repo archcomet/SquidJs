@@ -57,6 +57,7 @@
 
             // Debug
             this.settings.disableDebug = this.disableDebug.bind(this);
+            this.enableDebug();
 
             return this;
         };
@@ -175,8 +176,7 @@
                 if (this.settings[factoryName] === undefined) {
                     this.settings[factoryName] = {};
                 }
-                this.settings[factoryName].spawn = factory.debugSpawn.bind(factory);
-                this.settings[factoryName].despawn = factory.debugDespawn.bind(factory);
+                this.settings[factoryName] = factory.settings;
             }
             return factory;
         };
@@ -191,8 +191,6 @@
         Engine.prototype.destroyFactory = function (factoryName) {
             var factory = this.factories[factoryName];
             if (factory !== undefined) {
-                delete this.settings[factoryName].spawn;
-                delete this.settings[factoryName].despawn;
                 delete this.settings[factoryName];
                 delete this.factories[factoryName];
                 factory.destroy();

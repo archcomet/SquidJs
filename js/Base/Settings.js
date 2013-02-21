@@ -31,7 +31,7 @@
                     if ($.isPlainObject(this[key])) {
                         this.addFolderToGui(key, gui);
                     } else {
-                        gui.add(this, key);
+                        this.addToGui(gui, this, key);
                     }
                 }
             }
@@ -49,11 +49,18 @@
             var key, f = gui.addFolder(folder);
             for (key in this[folder]) {
                 if (this[folder].hasOwnProperty(key)) {
-                    f.add(this[folder], key);
+                    this.addToGui(f, this[folder], key);
                 }
             }
         };
 
+        Settings.prototype.addToGui = function (gui, object, key) {
+            if (key.indexOf('color') >= 0) {
+                gui.addColor(object, key);
+            } else {
+                gui.add(object, key);
+            }
+        };
         return Settings;
 
     }());

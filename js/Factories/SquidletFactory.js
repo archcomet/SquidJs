@@ -71,8 +71,8 @@
                     },
                     ColorComponent: {
                         h: app.random(0, 360),
-                        s: app.random(50, 100),
-                        v: app.random(30, 50)
+                        s: app.random(0.5, 1),
+                        v: app.random(0.3, 0.5)
                     }
                 },
                 nodes: {
