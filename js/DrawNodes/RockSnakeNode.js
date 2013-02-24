@@ -3,24 +3,24 @@
 
     global.app = global.app || {};
 
-    global.app.DrawNode.CrabSnakeNode = (function () {
+    global.app.Node.RockSnakeNode = (function () {
 
         /**
-         * CrabSnakeNode
+         * RockSnakeNode
          * @param entity
-         * @return {CrabSnakeNode}
+         * @return {RockSnakeNode}
          * @constructor
          */
 
-        function CrabSnakeNode(entity) {
-            return CrabSnakeNode.alloc(this, arguments);
+        function RockSnakeNode(entity) {
+            return RockSnakeNode.alloc(this, arguments);
         }
 
-        app.inherit(app.DrawNode, CrabSnakeNode);
+        app.inherit(app.DrawNode, RockSnakeNode);
 
-        CrabSnakeNode.prototype.draw = function (ctx) {
+        RockSnakeNode.prototype.draw = function (ctx) {
             var t = this.entity.engine.timer.counter,
-                body = this.entity.CrabSnakeComponent,
+                body = this.entity.RockSnakeComponent,
                 color = this.entity.ColorComponent,
                 radius = body.radius;
 
@@ -84,7 +84,7 @@
 
         };
 
-        return CrabSnakeNode;
+        return RockSnakeNode;
 
     }());
 

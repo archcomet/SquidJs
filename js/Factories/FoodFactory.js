@@ -22,7 +22,7 @@
             _.defaults(this.settings, {
                 minRadius: 5,
                 maxRadius: 15,
-                color: { h: 180, s: 0.6, v: 0.06 },
+                color: { h: 45, s: 1, v: 0.9 },
                 drag: -0.8,
                 linearDampening: 0.1,
                 density: 2,

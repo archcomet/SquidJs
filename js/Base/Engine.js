@@ -135,6 +135,10 @@
                 system = new app.System[systemName](this);
                 system.priority = priority;
                 this.systems[systemName] = system;
+
+                if (system.settings !== undefined) {
+                    this.settings[systemName] = system.settings;
+                }
             }
             return system;
         };

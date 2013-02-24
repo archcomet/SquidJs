@@ -3,46 +3,46 @@
 
     global.app = global.app || {};
 
-    global.app.System.CrabSnakeSystem = (function () {
+    global.app.System.RockSnakeSystem = (function () {
 
         /**
-         * CrabSnakeSystem
-         * @return {CrabSnakeSystem}
+         * RockSnakeSystem
+         * @return {RockSnakeSystem}
          * @constructor
          */
 
-        function CrabSnakeSystem(engine) {
-            return CrabSnakeSystem.alloc(this, arguments);
+        function RockSnakeSystem(engine) {
+            return RockSnakeSystem.alloc(this, arguments);
         }
 
-        app.inherit(app.System, CrabSnakeSystem);
+        app.inherit(app.System, RockSnakeSystem);
 
-        CrabSnakeSystem.prototype.init = function () {
+        RockSnakeSystem.prototype.init = function () {
             this.engine.bindEvent('update', this);
             this.engine.bindEvent('entityAdded', this);
             this.engine.bindEvent('entityRemoved', this);
             return this;
         };
 
-        CrabSnakeSystem.prototype.deinit = function () {
+        RockSnakeSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
             this.engine.unbindEvent('entityAdded', this);
             this.engine.unbindEvent('entityRemoved', this);
         };
 
-        CrabSnakeSystem.prototype.update = function (dt) {
+        RockSnakeSystem.prototype.update = function (dt) {
 
         };
 
-        CrabSnakeSystem.prototype.entityAdded = function (entity) {
+        RockSnakeSystem.prototype.entityAdded = function (entity) {
             // do something
         };
 
-        CrabSnakeSystem.prototype.entityRemoved = function (entity) {
+        RockSnakeSystem.prototype.entityRemoved = function (entity) {
             // do something
         };
 
-        return CrabSnakeSystem;
+        return RockSnakeSystem;
 
     }());
 

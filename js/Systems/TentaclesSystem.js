@@ -5,6 +5,12 @@
 
     global.app.System.TentaclesSystem = (function () {
 
+        var settings = {
+            friction: 0.01,
+            wind: 0.03,
+            gravity: 0.05
+        };
+
         /**
          * ControlPoint
          * Point data used Tentacle Object
@@ -28,8 +34,9 @@
          */
 
         function Tentacle(entity) {
-            var i, n, p, variance;
-            variance = entity.TentaclesComponent.variance;
+            var i, n, p,
+                variance = entity.TentaclesComponent.variance,
+                segmentLength = entity.TentaclesComponent.segmentLength;
 
             this.entity = entity;
             this.variance = app.random(-variance, variance);
@@ -38,7 +45,7 @@
             this.inner = [];
 
             for (i = 0, n = entity.TentaclesComponent.segmentCount, p = entity.PositionComponent; i < n; i += 1) {
-                this.controlPoints.push(new ControlPoint(p.x, p.y));
+                this.controlPoints.push(new ControlPoint(p.x - segmentLength * i, p.y));
             }
         }
 
@@ -58,11 +65,9 @@
 
         Tentacle.prototype.update = function () {
             var i, j, n, dx, dy, da, px, py, s, c, controlPoint, prev,
-                segmentLength, friction, radius, step, settings;
+                segmentLength, friction, radius, step;
 
             segmentLength = this.entity.TentaclesComponent.segmentLength;
-            settings = this.entity.engine.settings.tentacleSettings;
-
             friction = (this.entity.PhysicsComponent && this.entity.PhysicsComponent.outOfWater) ?
                     0.99 : (this.entity.TentaclesComponent.friction - this.variance);
             friction *= (1 - settings.friction);
@@ -124,6 +129,8 @@
         app.inherit(app.System, TentaclesSystem);
 
         TentaclesSystem.prototype.init = function () {
+            this.settings = settings;
+
             this.engine.bindEvent('entityAdded', this);
             this.engine.bindEvent('entityRemoved', this);
             this.engine.bindEvent('update', this);

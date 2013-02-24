@@ -33,7 +33,7 @@
             }
 
             this.fixtureDef = new b2.FixtureDef();
-            if (options.fixtureDef) {
+            if ($.isPlainObject(options.fixtureDef)) {
                 for (key in options.fixtureDef) {
                     if (options.fixtureDef.hasOwnProperty(key)) {
                         this.fixtureDef[key] = options.fixtureDef[key];

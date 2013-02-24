@@ -18,6 +18,16 @@
         app.inherit(app.System, RockSystem);
 
         RockSystem.prototype.init = function () {
+            this.settings = {
+                impulseToDamage: 4,
+                fragmentRadiusLimit: 15,
+                fragmentCount: 3,
+                fragmentImpulseMultiplier: 0.5,
+                foodSpawnRate: 0.2,
+                minFoodImpulse: 1,
+                maxFoodImpulse: 3
+            };
+
             this.engine.bindEvent('update', this);
             this.engine.bindEvent('entityAdded', this);
             this.engine.bindEvent('entityRemoved', this);
@@ -54,14 +64,13 @@
             var i, n, fragment, food, rads, step, impulse, impulseNormal, body,
                 minRadius = entity.RockComponent.minRadius,
                 maxRadius = entity.RockComponent.maxRadius,
-                rockFactory = this.engine.factories.RockFactory,
-                settings = this.engine.settings.rockSettings;
+                rockFactory = this.engine.factories.RockFactory;
 
-            if (minRadius > settings.fragmentRadiusLimit) {
+            if (minRadius > this.settings.fragmentRadiusLimit) {
                 rads = Math.PI * 2 / 3;
                 step = app.random(0, rads);
 
-                for (i = 0, n = settings.fragmentCount; i < n; i += 1) {
+                for (i = 0, n = this.settings.fragmentCount; i < n; i += 1) {
                     fragment = rockFactory.spawn({
                         x: entity.PositionComponent.x,
                         y: entity.PositionComponent.y,
@@ -71,7 +80,7 @@
                         maxRadius: maxRadius / 2
                     });
 
-                    impulseNormal = app.random(minRadius, maxRadius) * settings.fragmentImpulseMultiplier;
+                    impulseNormal = app.random(minRadius, maxRadius) * this.settings.fragmentImpulseMultiplier;
                     impulse = {
                         x: Math.cos(step) * impulseNormal,
                         y: Math.sin(step) * impulseNormal
@@ -83,7 +92,7 @@
                 }
             }
 
-            if (app.random(0, 1) < settings.foodSpawnRate) {
+            if (app.random(0, 1) < this.settings.foodSpawnRate) {
                 food = this.engine.factories.FoodFactory.spawn({
                     x: entity.PositionComponent.x,
                     y: entity.PositionComponent.y
@@ -91,8 +100,8 @@
 
                 rads = app.random(0, Math.PI * 2);
                 impulseNormal = app.random(
-                    settings.minFoodImpulse,
-                    settings.maxFoodImpulse
+                    this.settings.minFoodImpulse,
+                    this.settings.maxFoodImpulse
                 );
                 impulse = {
                     x: Math.cos(rads) * impulseNormal,
@@ -122,7 +131,7 @@
 
         RockSystem.prototype.postSolve = function (entity, contactee, contact, impulse) {
             if (contactee.SquidComponent !== undefined && entity.HealthComponent !== undefined) {
-                if (impulse.normalImpulses[0] > this.engine.settings.rockSettings.impulseToDamage) {
+                if (impulse.normalImpulses[0] > this.settings.impulseToDamage) {
                     entity.HealthComponent.health -= impulse.normalImpulses[0];
                 }
             }

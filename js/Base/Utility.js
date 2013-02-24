@@ -78,7 +78,7 @@
 
     global.app.maxWidth = 1028;
 
-    global.app.maxHeight = 652;
+    global.app.maxHeight = 768;
 
     /**
      * b2 Utility

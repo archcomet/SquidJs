@@ -3,22 +3,22 @@
 
     global.app = global.app || {};
 
-    global.app.Factory.CrabSnakeFactory = (function () {
+    global.app.Factory.RockSnakeFactory = (function () {
 
         /**
-         * CrabSnakeFactory
-         * @return {CrabSnakeFactory}
+         * RockSnakeFactory
+         * @return {RockSnakeFactory}
          * @constructor
          */
 
-        function CrabSnakeFactory(engine) {
-            return CrabSnakeFactory.alloc(this, arguments);
+        function RockSnakeFactory(engine) {
+            return RockSnakeFactory.alloc(this, arguments);
         }
 
-        app.inherit(app.Factory, CrabSnakeFactory);
+        app.inherit(app.Factory, RockSnakeFactory);
 
-        CrabSnakeFactory.prototype.init = function () {
-            CrabSnakeFactory.parent.init.call(this);
+        RockSnakeFactory.prototype.init = function () {
+            RockSnakeFactory.parent.init.call(this);
             _.defaults(this.settings, {
                 radius: 40,
                 color: { h: 180, s: 0.6, v: 0.06 },
@@ -41,7 +41,7 @@
             });
         };
 
-        CrabSnakeFactory.prototype.spawn = function (options) {
+        RockSnakeFactory.prototype.spawn = function (options) {
             _.defaults(options, {
                 x: 0,
                 y: 0
@@ -50,7 +50,7 @@
             var entity = this.createEntity({
                 tag: 'entity_',
                 components: {
-                    CrabSnakeComponent: {
+                    RockSnakeComponent: {
                         radius: this.settings.radius
                     },
                     PositionComponent: {
@@ -100,7 +100,7 @@
                     }
                 },
                 nodes: {
-                    CrabSnakeNode: {
+                    RockSnakeNode: {
                         zOrder: 0
                     },
                     TentaclesNode: {
@@ -113,7 +113,7 @@
             return entity;
         };
 
-        return CrabSnakeFactory;
+        return RockSnakeFactory;
 
     }());
 

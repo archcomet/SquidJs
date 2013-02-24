@@ -39,8 +39,8 @@
         CameraSystem.prototype.setTargetEntity = function (entity) {
             this.targetEntity = entity;
             var targetPosition = entity.PositionComponent,
-                x = targetPosition.x * -1,
-                y = targetPosition.y * -1;
+                x = this.position.x - targetPosition.x,
+                y = this.position.y - targetPosition.y;
 
             if (!this.camera) {
                 this.camera = new app.Entity({
@@ -91,11 +91,6 @@
                 targetPosition = this.targetEntity.PositionComponent;
                 cameraPosition = this.camera.PositionComponent;
 
-                cameraSteering = this.camera.SteeringComponent;
-                cameraSteering.behavior = 'approach';
-                cameraSteering.target.x = targetPosition.dx / 6;
-                cameraSteering.target.y = targetPosition.dy / 6;
-
                 this.position = {
                     x: targetPosition.x + cameraPosition.x,
                     y: targetPosition.y + cameraPosition.y
@@ -104,6 +99,11 @@
                 if (this.position.y < 0) {
                     this.position.y = 0;
                 }
+
+                cameraSteering = this.camera.SteeringComponent;
+                cameraSteering.behavior = 'approach';
+                cameraSteering.target.x = targetPosition.dx / 6;
+                cameraSteering.target.y = targetPosition.dy / 6;
 
                 this.engine.triggerEvent('cameraSet', this.position);
             }
