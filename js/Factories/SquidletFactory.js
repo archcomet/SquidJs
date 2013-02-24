@@ -46,7 +46,7 @@
                 maxSteeringVelocity: 19,
                 minSteeringForce: 400,
                 maxSteeringForce: 600,
-                sprintMultiplier: 2,
+                sprintMultiplier: 3,
                 drag: -0.4,
                 linearDampening: 0.1,
                 density: 0.5,
@@ -71,7 +71,8 @@
                         eyeRadius: radius * 0.6,
                         irisRadius: radius * 0.4
                     },
-                    InputComponent: {},
+                    SquidletAIComponent: {
+                    },
                     SteeringComponent: {
                         maxSteeringVelocity: app.random(this.settings.minSteeringVelocity, this.settings.maxSteeringVelocity),
                         maxSteeringForce: app.random(this.settings.minSteeringForce, this.settings.maxSteeringForce),
@@ -96,7 +97,12 @@
                             shape: b2.makeShape({
                                 type: 'circle',
                                 radius: radius + thickness
-                            })
+                            }),
+                            filter: b2.makeFilterData(
+                                app.entityCategory.FRIEND,
+                                app.entityMask.FRIEND,
+                                0
+                            )
                         }
                     },
                     TentaclesComponent: {

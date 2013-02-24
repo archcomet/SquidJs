@@ -85,7 +85,12 @@
                             shape: b2.makeShape({
                                 type: 'polygon',
                                 vertices: vertices
-                            })
+                            }),
+                            filter: b2.makeFilterData(
+                                app.entityCategory.OBJECT,
+                                app.entityMask.OBJECT,
+                                0
+                            )
                         }
                     }
                 },

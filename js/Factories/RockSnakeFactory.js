@@ -72,7 +72,6 @@
                         friction: this.settings.segmentFriction,
                         variance: 0.0
                     },
-                    InputComponent: {},
                     SteeringComponent: {
                         maxForwardVelocity: this.settings.maxForwardVelocity,
                         maxSteeringVelocity: this.settings.maxSteeringVelocity,
@@ -95,7 +94,12 @@
                             shape: b2.makeShape({
                                 type: 'circle',
                                 radius: this.settings.radius
-                            })
+                            }),
+                            filter: b2.makeFilterData(
+                                app.entityCategory.FOE,
+                                app.entityMask.FOE,
+                                0
+                            )
                         }
                     }
                 },

@@ -31,7 +31,6 @@
                     }
                 }
             }
-
             this.fixtureDef = new b2.FixtureDef();
             if ($.isPlainObject(options.fixtureDef)) {
                 for (key in options.fixtureDef) {
@@ -40,6 +39,7 @@
                     }
                 }
             }
+
             return this;
         };
 

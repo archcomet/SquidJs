@@ -76,6 +76,29 @@
             Math.sqrt((v1.x * v1.x + v1.y * v1.y) * (v2.x * v2.x + v2.y * v2.y)));
     };
 
+    global.app.vectorLength = function (v) {
+        return Math.sqrt(v.x * v.x + v.y * v.y);
+    };
+
+    global.app.vectorSquaredLength = function (v) {
+        return v.x * v.x + v.y * v.y;
+    };
+
+    global.app.vectorNorm = function (v) {
+        var invLength, length = global.app.vectorLength(v);
+        if (length < Number.MIN_VALUE) {
+            return {
+                x: 0,
+                y: 0
+            };
+        }
+        invLength = 1.0 / length;
+        return {
+            x: v.x * invLength,
+            y: v.y * invLength
+        };
+    };
+
     global.app.maxWidth = 1028;
 
     global.app.maxHeight = 768;

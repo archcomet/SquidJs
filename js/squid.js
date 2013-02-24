@@ -7,10 +7,11 @@
         var engine = new app.Engine({
             container: $('#container')[0],
             systems: [
+                'PhysicsSystem',
                 'MouseInputSystem',
                 'SquidControlSystem',
+                'SquidletAISystem',
                 'SteeringSystem',
-                'PhysicsSystem',
                 'CameraSystem',
                 'RockSystem',
                 'FoodSystem',
@@ -43,7 +44,6 @@
 // This weekend
 //todo health systems
 //todo CrabSnake-Rock collision response
-//todo Squidlet AI
 //todo CrabSnake AI
 
 // Next week

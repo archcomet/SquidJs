@@ -72,7 +72,12 @@
                             shape: b2.makeShape({
                                 type: 'circle',
                                 radius: radius
-                            })
+                            }),
+                            filter: b2.makeFilterData(
+                                app.entityCategory.ITEM,
+                                app.entityMask.ITEM,
+                                0
+                            )
                         }
                     }
                 },

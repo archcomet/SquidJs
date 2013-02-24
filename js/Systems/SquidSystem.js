@@ -38,26 +38,25 @@
         SquidSystem.prototype.updateSquid = function (entity) {
             var target, vec, maxOffset,
                 position = entity.PositionComponent,
-                steering = entity.SteeringComponent,
-                body = entity.SquidComponent;
+                squid = entity.SquidComponent;
 
-            if (steering.drift) {
-                vec = new b2.Vec2(0, 0);
-            } else {
-                target = steering.target;
-                vec = new b2.Vec2(
-                    target.x - position.x,
-                    target.y - position.y
-                );
+            target = squid.lookAt || {
+                x: 0,
+                y: 0
+            };
 
-                maxOffset = body.irisRadius * 0.45;
-                if (vec.Length() > maxOffset) {
-                    vec.Normalize();
-                    vec.Multiply(maxOffset);
-                }
+            vec = new b2.Vec2(
+                target.x - position.x,
+                target.y - position.y
+            );
+
+            maxOffset = squid.irisRadius * 0.45;
+            if (vec.Length() > maxOffset) {
+                vec.Normalize();
+                vec.Multiply(maxOffset);
             }
 
-            body.irisPosition = {
+            squid.irisPosition = {
                 x: vec.x,
                 y: vec.y
             };

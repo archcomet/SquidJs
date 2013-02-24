@@ -3,7 +3,7 @@
 
     global.app = global.app || {};
 
-    global.app.Node.RockSnakeNode = (function () {
+    global.app.DrawNode.RockSnakeNode = (function () {
 
         /**
          * RockSnakeNode

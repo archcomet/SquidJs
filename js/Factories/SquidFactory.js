@@ -67,7 +67,7 @@
                         eyeRadius: this.settings.radius * 0.6,
                         irisRadius: this.settings.radius * 0.4
                     },
-                    InputComponent: {},
+                    SquidPlayerComponent: {},
                     SteeringComponent: {
                         maxSteeringVelocity: this.settings.maxSteeringVelocity,
                         maxSteeringForce: this.settings.maxSteeringForce,
@@ -92,7 +92,12 @@
                             shape: b2.makeShape({
                                 type: 'circle',
                                 radius: this.settings.radius + this.settings.thickness
-                            })
+                            }),
+                            filter: b2.makeFilterData(
+                                app.entityCategory.PLAYER,
+                                app.entityMask.PLAYER,
+                                0
+                            )
                         }
                     },
                     TentaclesComponent: {
