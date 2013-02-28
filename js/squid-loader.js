@@ -6,13 +6,18 @@
 
     var files = {
         debug: [
+            // Resources
             'resource!images/backgroundNoise.png',
+            // 3rd party
             'js/3rdParty/jquery.js',
             'js/3rdParty/underscore.js',
             'js/3rdParty/Box2dWeb-2.1.a.3.js',
             'js/3rdParty/stats.min.js',
             'js/3rdParty/dat.gui.js',
-            'js/squid.js',
+            // Game
+            'js/Game/Squid.js',
+            'js/Game/CollisionMasks.js',
+            // Engine
             'js/Base/Utility.js',
             'js/Base/BaseObj.js',
             'js/Base/Canvas.js',
@@ -24,7 +29,7 @@
             'js/Base/Settings.js',
             'js/Base/System.js',
             'js/Base/Timer.js',
-            'js/Misc/CollisionMasks.js',
+            // Components
             'js/Components/RockSnakeComponent.js',
             'js/Components/ColorComponent.js',
             'js/Components/FoodComponent.js',
@@ -38,28 +43,34 @@
             'js/Components/SquidletAIComponent.js',
             'js/Components/SteeringComponent.js',
             'js/Components/TentaclesComponent.js',
+            // DrawNodes
             'js/DrawNodes/FoodNode.js',
             'js/DrawNodes/SquidNode.js',
             'js/DrawNodes/RockNode.js',
             'js/DrawNodes/RockSnakeNode.js',
             'js/DrawNodes/TentaclesNode.js',
+            // Factories
             'js/Factories/RockSnakeFactory.js',
             'js/Factories/FoodFactory.js',
             'js/Factories/RockFactory.js',
             'js/Factories/SquidFactory.js',
             'js/Factories/SquidletFactory.js',
+            // Systems
             'js/Systems/BackgroundSystem.js',
             'js/Systems/CameraSystem.js',
-            'js/Systems/HealthSystem.js',
-            'js/Systems/RockSnakeSystem.js',
             'js/Systems/FoodSystem.js',
+            'js/Systems/HealthSystem.js',
+            'js/Systems/MouseInputSystem.js',
+            'js/Systems/ParticleSystem.js',
+            'js/Systems/PhysicsSystem.js',
+            'js/Systems/RockSnakeAISystem.js',
+            'js/Systems/RockSnakeSystem.js',
+            'js/Systems/RockSystem.js',
+            'js/Systems/ScoreSystem.js',
             'js/Systems/SquidControlSystem.js',
             'js/Systems/SquidletAISystem.js',
             'js/Systems/SquidSystem.js',
-            'js/Systems/MouseInputSystem.js',
-            'js/Systems/PhysicsSystem.js',
-            'js/Systems/RockSystem.js',
-            'js/Systems/RockSnakeAISystem.js',
+            'js/Systems/StageSystem.js',
             'js/Systems/SteeringSystem.js',
             'js/Systems/TentaclesSystem.js'
         ],

@@ -7,6 +7,7 @@
         var engine = new app.Engine({
             container: $('#container')[0],
             systems: [
+                'StageSystem',
                 'PhysicsSystem',
                 'HealthSystem',
                 'MouseInputSystem',
@@ -20,7 +21,9 @@
                 'SquidSystem',
                 'RockSnakeSystem',
                 'TentaclesSystem',
-                'BackgroundSystem'
+                'ParticleSystem',
+                'BackgroundSystem',
+                'ScoreSystem'
             ],
             factories: [
                 'FoodFactory',
