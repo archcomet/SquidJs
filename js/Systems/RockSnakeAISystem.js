@@ -20,8 +20,8 @@
         RockSnakeAISystem.prototype.init = function () {
             this.target = undefined;
             this.settings = {
-                hitImpulse: 400,
-                fleeDistance: 700
+                fleeDistance: 700,
+                maxKnockbackImpulse: 700
             };
 
             this.engine.bindEvent('update', this);
@@ -35,17 +35,25 @@
         };
 
         RockSnakeAISystem.prototype.update = function () {
-            var i, n, rockSnake, rockSnakes, rockSnakesToRemove = [];
+            var i, n, impulse, impulseMagnitude, rockSnake, rockSnakes, rockSnakesToRemove = [];
             rockSnakes = this.engine.entitiesForComponent('RockSnakeAIComponent');
 
             for (i = 0, n = rockSnakes.length; i < n; i += 1) {
                 rockSnake = rockSnakes[i];
 
                 if (rockSnake.HealthComponent.lastDamage > 0) {
-                    rockSnake.PhysicsComponent.body.ApplyImpulse({
-                        x: rockSnake.HealthComponent.lastDamageVector.x * this.settings.hitImpulse,
-                        y: rockSnake.HealthComponent.lastDamageVector.y * this.settings.hitImpulse
-                    }, rockSnake.PhysicsComponent.body.GetWorldCenter());
+                    impulseMagnitude = rockSnake.HealthComponent.lastDamage;
+                    impulse = new b2.Vec2();
+                    impulse.SetV({
+                        x: rockSnake.HealthComponent.lastDamageVector.x * impulseMagnitude,
+                        y: rockSnake.HealthComponent.lastDamageVector.y * impulseMagnitude
+                    });
+                    if (impulse.Length() > this.settings.maxKnockbackImpulse) {
+                        impulse.Normalize();
+                        impulse.Multiply(this.settings.maxKnockbackImpulse);
+                    }
+
+                    rockSnake.PhysicsComponent.body.ApplyImpulse(impulse, rockSnake.PhysicsComponent.body.GetWorldCenter());
                     rockSnake.HealthComponent.stunFrames = 120;
                     this.fleeTarget = rockSnake.HealthComponent.lastDamageDealer;
                 }

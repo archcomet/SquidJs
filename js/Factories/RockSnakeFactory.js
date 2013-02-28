@@ -23,8 +23,8 @@
                 radius: 40,
                 color: { h: 180, s: 0.6, v: 0.06 },
                 //health
-                maxHealth: 60,
-                hardness: 2,
+                maxHealth: 1500,
+                hardness: 100,
                 segmentCount: 15,
                 segmentLength: 40,
                 segmentRadius: 20,

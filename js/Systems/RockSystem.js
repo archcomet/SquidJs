@@ -23,7 +23,7 @@
                 impactDistance: 5,
                 fragmentRadiusLimit: 15,
                 fragmentCount: 3,
-                fragmentImpulseMultiplier: 0.5,
+                maxKnockbackImpulse: 50,
                 foodSpawnRate: 0.2,
                 minFoodImpulse: 1,
                 maxFoodImpulse: 3
@@ -59,7 +59,7 @@
         };
 
         RockSystem.prototype.destroyRock = function (entity) {
-            var i, n, fragment, food, rads, step, impulse, impulseNormal, body,
+            var i, n, fragment, food, rads, step, impulse, impulseMagnitude, body,
                 minRadius = entity.RockComponent.minRadius,
                 maxRadius = entity.RockComponent.maxRadius,
                 rockFactory = this.engine.factories.RockFactory;
@@ -78,11 +78,16 @@
                         maxRadius: maxRadius / 2
                     });
 
-                    impulseNormal = entity.HealthComponent.lastDamage * this.settings.fragmentImpulseMultiplier;
-                    impulse = {
-                        x: Math.cos(step) * impulseNormal,
-                        y: Math.sin(step) * impulseNormal
-                    };
+                    impulseMagnitude = entity.HealthComponent.lastDamage;
+                    impulse = new b2.Vec2();
+                    impulse.SetV({
+                        x: Math.cos(step) * impulseMagnitude,
+                        y: Math.sin(step) * impulseMagnitude
+                    });
+                    if (impulse.Length() > this.settings.maxKnockbackImpulse) {
+                        impulse.Normalize();
+                        impulse.Multiply(this.settings.maxKnockbackImpulse);
+                    }
 
                     body = fragment.PhysicsComponent.body;
                     body.ApplyImpulse(impulse, body.GetWorldCenter());
@@ -97,13 +102,13 @@
                 });
 
                 rads = app.random(0, Math.PI * 2);
-                impulseNormal = app.random(
+                impulseMagnitude = app.random(
                     this.settings.minFoodImpulse,
                     this.settings.maxFoodImpulse
                 );
                 impulse = {
-                    x: Math.cos(rads) * impulseNormal,
-                    y: Math.sin(rads) * impulseNormal
+                    x: Math.cos(rads) * impulseMagnitude,
+                    y: Math.sin(rads) * impulseMagnitude
                 };
 
                 body = food.PhysicsComponent.body;

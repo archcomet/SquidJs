@@ -59,16 +59,14 @@
 
         HealthSystem.prototype.handleContact = function (entity, contactData) {
             var damageMask = entity.HealthComponent.damageMask,
-                categoryBits = contactData.contactee.PhysicsComponent.fixtureDef.filter.categoryBits,
-                normalImpulse = contactData.impulse.normalImpulses[0],
-                impact = normalImpulse * contactData.contactee.PhysicsComponent.impactModifier;
+                categoryBits = contactData.contactee.PhysicsComponent.fixtureDef.filter.categoryBits;
 
             /*jslint bitwise:true */
             if ((damageMask & categoryBits) === categoryBits) {
                 /*jslint bitwise:false */
 
-                if (entity.HealthComponent.hardness < impact) {
-                    entity.HealthComponent.lastDamage += impact;
+                if (entity.HealthComponent.hardness < contactData.contacteeKE) {
+                    entity.HealthComponent.lastDamage += contactData.contacteeKE;
 
                     entity.HealthComponent.lastDamageVector = new b2.Vec2();
                     entity.HealthComponent.lastDamageVector.SetV({

@@ -24,10 +24,10 @@
             this.current = new b2.Vec2(0.5, 0.1);
 
             this.contactListener = new b2.ContactListener();
-            this.contactListener.BeginContact = this.beginContact.bind(this);
-            this.contactListener.EndContact = this.endContact.bind(this);
+            //this.contactListener.BeginContact = this.beginContact.bind(this);
+            //this.contactListener.EndContact = this.endContact.bind(this);
             this.contactListener.PreSolve = this.preSolve.bind(this);
-            this.contactListener.PostSolve = this.postSolve.bind(this);
+            //this.contactListener.PostSolve = this.postSolve.bind(this);
             this.world.SetContactListener(this.contactListener);
 
             this.engine.bindEvent('update', this);
@@ -145,24 +145,51 @@
         };
 
         PhysicsSystem.prototype.preSolve = function (contact, oldManifold) {
+            if (contact.IsTouching()) {
+                var kineticEnergyA, kineticEnergyB,
+                    linearVelocityAB, linearVelocityBA,
+                    bodyA = contact.GetFixtureA().GetBody(),
+                    bodyB = contact.GetFixtureB().GetBody(),
+                    entityA = bodyA.GetUserData(),
+                    entityB = bodyB.GetUserData(),
+                    massA = bodyA.GetMass(),
+                    massB = bodyB.GetMass(),
+                    velocityA = bodyA.GetLinearVelocity(),
+                    velocityB = bodyB.GetLinearVelocity(),
+                    vecAB = new b2.Vec2(),
+                    vecBA = new b2.Vec2();
+
+                vecAB.SetV(velocityA);
+                vecAB.Subtract(velocityB);
+                linearVelocityAB = vecAB.Length();
+                kineticEnergyB = 0.5 * massB * linearVelocityAB * linearVelocityAB;
+
+                vecBA.SetV(velocityB);
+                vecBA.Subtract(velocityA);
+                linearVelocityBA = vecBA.Length();
+                kineticEnergyA = 0.5 * massA * linearVelocityBA * linearVelocityBA;
+
+                entityA.PhysicsComponent.contacts.push({
+                    event: 'preSolve',
+                    contactee: entityB,
+                    contact: contact,
+                    oldManifold: oldManifold,
+                    entityKE: kineticEnergyA,
+                    contacteeKE: kineticEnergyB
+                });
+
+                entityB.PhysicsComponent.contacts.push({
+                    event: 'preSolve',
+                    contactee: entityA,
+                    contact: contact,
+                    oldManifold: oldManifold,
+                    entityKE: kineticEnergyB,
+                    contacteeKE: kineticEnergyA
+                });
+            }
         };
 
         PhysicsSystem.prototype.postSolve = function (contact, impulse) {
-            var entityA = contact.GetFixtureA().GetBody().GetUserData(),
-                entityB = contact.GetFixtureB().GetBody().GetUserData();
-
-            entityA.PhysicsComponent.contacts.push({
-                contactee: entityB,
-                contact: contact,
-                impulse: impulse
-            });
-
-            entityB.PhysicsComponent.contacts.push({
-                event: 'beginContact',
-                contactee: entityA,
-                contact: contact,
-                impulse: impulse
-            });
         };
 
         return PhysicsSystem;

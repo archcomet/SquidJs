@@ -21,7 +21,7 @@
         PLAYER: PLAYER + FOE + ITEM + OBJECT,
         FRIEND: FRIEND + FOE + OBJECT,
         FOE: PLAYER + FRIEND + OBJECT,
-        ITEM: PLAYER + OBJECT,
+        ITEM: PLAYER,
         OBJECT: PLAYER + FRIEND + FOE + ITEM + OBJECT
     };
 

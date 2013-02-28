@@ -24,8 +24,8 @@
                 //position
                 zOrder: 5,
                 //health
-                maxHealth: 20,
-                hardness: 2,
+                maxHealth: 400,
+                hardness: 50,
                 invulFrames: 30,
                 //squid
                 minRadius: 10,
@@ -55,7 +55,7 @@
                 maxSteeringVelocity: 13,
                 minSteeringForce: 400,
                 maxSteeringForce: 600,
-                sprintMultiplier: 2,
+                sprintMultiplier: 5,
                 //physics
                 drag: -0.4,
                 linearDampening: 0.1,
