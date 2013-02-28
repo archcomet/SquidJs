@@ -22,13 +22,16 @@
             _.defaults(this.settings, {
                 radius: 40,
                 color: { h: 180, s: 0.6, v: 0.06 },
+                //health
+                maxHealth: 60,
+                hardness: 2,
                 segmentCount: 15,
                 segmentLength: 40,
                 segmentRadius: 20,
                 segmentFriction: 0.92,
-                maxForwardVelocity: 35,
-                maxSteeringVelocity: 10,
-                maxAngularVelocity: 1.3,
+                maxForwardVelocity: 30,
+                maxSteeringVelocity: 25,
+                maxAngularVelocity: 2.5,
                 maxForwardThrust: 400,
                 maxSteeringForce: 200,
                 maxTorque: 200,
@@ -37,7 +40,8 @@
                 linearDampening: 0.1,
                 density: 3,
                 friction: 0.5,
-                restitution: 0.2
+                restitution: 0.2,
+                impactModifier: 4
             });
         };
 
@@ -52,6 +56,13 @@
                 components: {
                     RockSnakeComponent: {
                         radius: this.settings.radius
+                    },
+                    RockSnakeAIComponent: {
+                    },
+                    HealthComponent: {
+                        maxHealth: this.settings.maxHealth,
+                        hardness: this.settings.hardness,
+                        damageMask: app.damageMask.FOE
                     },
                     PositionComponent: {
                         x: options.x,
@@ -83,6 +94,7 @@
                     },
                     PhysicsComponent: {
                         drag: this.settings.drag,
+                        impactModifier: this.settings.impactModifier,
                         bodyDef: {
                             type: b2.Body.b2_dynamicBody,
                             linearDampening: this.settings.linearDampening

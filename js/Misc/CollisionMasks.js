@@ -20,9 +20,17 @@
     global.app.entityMask = {
         PLAYER: PLAYER + FOE + ITEM + OBJECT,
         FRIEND: FRIEND + FOE + OBJECT,
-        FOE: PLAYER + FRIEND + FOE + OBJECT,
+        FOE: PLAYER + FRIEND + OBJECT,
         ITEM: PLAYER + OBJECT,
         OBJECT: PLAYER + FRIEND + FOE + ITEM + OBJECT
+    };
+
+    global.app.damageMask = {
+        PLAYER: 0,
+        FRIEND: FOE,
+        FOE: PLAYER,
+        ITEM: PLAYER,
+        OBJECT: PLAYER + FRIEND + FOE
     };
 
 }(window));

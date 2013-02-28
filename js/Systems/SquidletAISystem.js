@@ -24,7 +24,8 @@
                 relaxDistance: 200,
                 sprintDistance: 400,
                 evadeDistance: 700,
-                fleeDistance: 500
+                fleeDistance: 500,
+                hitImpulse: 10
             };
 
             this.engine.bindEvent('update', this);
@@ -36,16 +37,15 @@
         };
 
         SquidletAISystem.prototype.update = function () {
-
-            this.updateSquidletData();
-            this.updateSquidData();
-            this.updateRockSnakeData();
-            this.updateBehavior();
+            this.updateSquidlets();
+            this.observeSquid();
+            this.observeRockSnake();
+            this.decideBehavior();
             this.applyBehavior();
         };
 
-        SquidletAISystem.prototype.updateSquidletData = function () {
-            var i, n, squidlet;
+        SquidletAISystem.prototype.updateSquidlets = function () {
+            var i, n, remaining, squidlet, squidletsToRemove = [];
 
             this.squidlets = this.engine.entitiesForComponent('SquidletAIComponent');
             this.position = { x: 0, y: 0 };
@@ -54,17 +54,39 @@
                 return;
             }
 
+            remaining = 0;
             for (i = 0, n = this.squidlets.length; i < n; i += 1) {
                 squidlet = this.squidlets[i];
-                this.position.x += squidlet.PositionComponent.x;
-                this.position.y += squidlet.PositionComponent.y;
+
+                if (squidlet.HealthComponent.lastDamage > 0) {
+                    squidlet.PhysicsComponent.body.ApplyImpulse({
+                        x: squidlet.HealthComponent.lastDamageVector.x * this.settings.hitImpulse,
+                        y: squidlet.HealthComponent.lastDamageVector.y * this.settings.hitImpulse
+                    }, squidlet.PhysicsComponent.body.GetWorldCenter());
+                }
+
+                if (squidlet.HealthComponent.health > 0) {
+                    remaining += 1;
+                    this.position.x += squidlet.PositionComponent.x;
+                    this.position.y += squidlet.PositionComponent.y;
+                } else {
+                    squidletsToRemove.push(squidlet);
+                }
             }
 
-            this.position.x /= n;
-            this.position.y /= n;
+            for (i = 0, n = squidletsToRemove.length; i < n; i += 1) {
+                this.engine.factories.SquidletFactory.despawn(squidletsToRemove[i]);
+            }
+
+            if (remaining > 0) {
+                this.position.x /= remaining;
+                this.position.y /= remaining;
+            }
+
+            this.engine.triggerEvent('squidletSystemSet', this.position);
         };
 
-        SquidletAISystem.prototype.updateSquidData = function () {
+        SquidletAISystem.prototype.observeSquid = function () {
             var vec, invDistance, squids = this.engine.entitiesForComponent('SquidPlayerComponent');
             this.squid = squids[squids.length - 1];
             this.squidDistance = -1;
@@ -85,7 +107,7 @@
             }
         };
 
-        SquidletAISystem.prototype.updateRockSnakeData = function () {
+        SquidletAISystem.prototype.observeRockSnake = function () {
             var i, n, len, minI, minLen = Infinity;
 
             this.rockSnakes = this.engine.entitiesForComponent('RockSnakeComponent');
@@ -111,13 +133,15 @@
 
             this.rockSnake = this.rockSnakes[minI];
             this.rockSnakeDistance = Math.sqrt(minLen);
-            this.rockSnakeNormal = {
-                x: (this.rockSnake.PositionComponent.x - this.squid.PositionComponent.x) / this.rockSnakeDistance,
-                y: (this.rockSnake.PositionComponent.y - this.squid.PositionComponent.y) / this.rockSnakeDistance
-            };
+            if (this.rockSnakeDistance < Infinity) {
+                this.rockSnakeNormal = {
+                    x: (this.rockSnake.PositionComponent.x - this.squid.PositionComponent.x) / this.rockSnakeDistance,
+                    y: (this.rockSnake.PositionComponent.y - this.squid.PositionComponent.y) / this.rockSnakeDistance
+                };
+            }
         };
 
-        SquidletAISystem.prototype.updateBehavior = function () {
+        SquidletAISystem.prototype.decideBehavior = function () {
             this.behavior = undefined;
             this.target = undefined;
 
@@ -163,7 +187,11 @@
             var i, n, squidlet;
             for (i = 0, n = this.squidlets.length; i < n; i += 1) {
                 squidlet = this.squidlets[i];
-                squidlet.SteeringComponent.behavior = this.behavior;
+                if (squidlet.HealthComponent.stunFrames === 0) {
+                    squidlet.SteeringComponent.behavior = this.behavior;
+                } else {
+                    squidlet.SteeringComponent.behavior = undefined;
+                }
                 squidlet.SteeringComponent.sprinting = this.sprinting;
                 squidlet.SteeringComponent.target = this.target || {
                     x: squidlet.PositionComponent.x,

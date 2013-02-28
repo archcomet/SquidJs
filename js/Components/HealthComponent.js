@@ -20,9 +20,16 @@
 
         HealthComponent.prototype.init = function (options) {
             _.defaults(this, options, {
-                maxHealth: 100
+                health: undefined,
+                maxHealth: 100,
+                hardness: 5,
+                invulFrames: 0,
+                stunFrames: 0,
+                damageMask: 0x0000
             });
-            this.health = this.maxHealth;
+            if (this.health === undefined) {
+                this.health = this.maxHealth;
+            }
             return this;
         };
 

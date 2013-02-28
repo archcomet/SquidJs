@@ -24,7 +24,9 @@
                 minRadius: 50,
                 maxRadius: 90,
                 maxVertexCount: 9,
-                maxHealth: 60,
+                maxHealth: 30,
+                hardness: 5,
+                invulFrames: 0,
                 color: { h: 171, s: 0.4, v: 0.2 },
                 drag: -0.4,
                 linearDampening: 0.1,
@@ -45,7 +47,8 @@
                 maxHealth: this.settings.maxHealth,
                 vertexCount: this.settings.maxVertexCount,
                 x: 0,
-                y: 0
+                y: 0,
+                invulFrames: this.settings.invulFrames
             });
 
             vertices = app.randomConvexPolygon(options.vertexCount, options.minRadius, options.maxRadius);
@@ -59,7 +62,10 @@
                         maxRadius: options.maxRadius
                     },
                     HealthComponent: {
-                        maxHealth: options.maxHealth
+                        maxHealth: options.maxHealth,
+                        hardness: options.hardness,
+                        invulFrames: options.invulFrames,
+                        damageMask: app.damageMask.OBJECT
                     },
                     PositionComponent: {
                         x: options.x,

@@ -40,6 +40,8 @@
                 }
             }
 
+            this.impactModifier = options.impactModifier || 1;
+            this.contacts = [];
             return this;
         };
 

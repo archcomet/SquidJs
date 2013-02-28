@@ -245,8 +245,12 @@
                 args = Array.prototype.slice.call(arguments);
                 args.splice(0, 1);
                 for (i = 0, n = listeners.length; i < n; i += 1) {
-                    listener = listeners[i];
-                    listener.apply(listener, args);
+                    try {
+                        listener = listeners[i];
+                        listener.apply(listener, args);
+                    } catch (error) {
+                        var k = 0;
+                    }
                 }
             }
             return this;

@@ -51,10 +51,16 @@
         PhysicsSystem.prototype.update = function (dt) {
             var i, n, physics, position, pos, vel, torque, force, mass, center,
                 entityArray;
+
+            entityArray = this.engine.entitiesForComponent('PhysicsComponent');
+
+            for (i = 0, n = entityArray.length; i < n; i += 1) {
+                entityArray[i].PhysicsComponent.contacts.length = 0;
+            }
+
             this.world.Step(dt, b2.VELOCITY_ITERATIONS, b2.POSITION_ITERATIONS);
             this.world.ClearForces();
 
-            entityArray = this.engine.entitiesForComponent('PhysicsComponent');
 
             for (i = 0, n = entityArray.length; i < n; i += 1) {
                 physics = entityArray[i].PhysicsComponent;
@@ -133,29 +139,30 @@
         /*** Contact Listener ***/
 
         PhysicsSystem.prototype.beginContact = function (contact) {
-            this.triggerContact('beginContact', contact);
         };
 
         PhysicsSystem.prototype.endContact = function (contact) {
-            this.triggerContact('endContact', contact);
         };
 
         PhysicsSystem.prototype.preSolve = function (contact, oldManifold) {
-            this.triggerContact('preSolve', contact, oldManifold);
         };
 
         PhysicsSystem.prototype.postSolve = function (contact, impulse) {
-            this.triggerContact('postSolve', contact, impulse);
-        };
-
-        PhysicsSystem.prototype.triggerContact = function () {
-            var args = Array.prototype.slice.call(arguments),
-                event = args[0],
-                contact = args[1],
-                entityA = contact.GetFixtureA().GetBody().GetUserData(),
+            var entityA = contact.GetFixtureA().GetBody().GetUserData(),
                 entityB = contact.GetFixtureB().GetBody().GetUserData();
-            entityA.triggerContactEvent(event, entityA, entityB, contact, args[2]);
-            entityB.triggerContactEvent(event, entityB, entityA, contact, args[2]);
+
+            entityA.PhysicsComponent.contacts.push({
+                contactee: entityB,
+                contact: contact,
+                impulse: impulse
+            });
+
+            entityB.PhysicsComponent.contacts.push({
+                event: 'beginContact',
+                contactee: entityA,
+                contact: contact,
+                impulse: impulse
+            });
         };
 
         return PhysicsSystem;

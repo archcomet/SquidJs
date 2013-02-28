@@ -8,9 +8,11 @@
             container: $('#container')[0],
             systems: [
                 'PhysicsSystem',
+                'HealthSystem',
                 'MouseInputSystem',
                 'SquidControlSystem',
                 'SquidletAISystem',
+                'RockSnakeAISystem',
                 'SteeringSystem',
                 'CameraSystem',
                 'RockSystem',
@@ -41,10 +43,6 @@
 
 }(window));
 
-// This weekend
-//todo health systems
-//todo CrabSnake-Rock collision response
-//todo CrabSnake AI
 
 // Next week
 //todo environment spawn system
@@ -65,3 +63,6 @@
 //todo achievements
 //todo particle system
 //todo damage textures
+
+//future improvements
+//todo centralize death event and onHit event

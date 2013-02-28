@@ -21,11 +21,18 @@
             SquidletFactory.parent.init.call(this);
 
             _.defaults(this.settings, {
+                //position
                 zOrder: 5,
+                //health
+                maxHealth: 20,
+                hardness: 2,
+                invulFrames: 30,
+                //squid
                 minRadius: 10,
                 maxRadius: 19,
                 minThickness: 1,
                 maxThickness: 5,
+                //color
                 colorMin: {
                     h: 0,
                     s: 0.5,
@@ -36,23 +43,25 @@
                     s: 1,
                     v: 0.5
                 },
+                //tentacles
                 tentacleCount: 3,
                 segmentCount: 6,
                 segmentMinLength: 12,
                 segmentMaxLength: 16,
                 segmentFriction: 0.94,
                 segmentVariance: 0.02,
-                minSteeringVelocity: 17,
-                maxSteeringVelocity: 19,
+                //steering
+                minSteeringVelocity: 12,
+                maxSteeringVelocity: 13,
                 minSteeringForce: 400,
                 maxSteeringForce: 600,
-                sprintMultiplier: 3,
+                sprintMultiplier: 2,
+                //physics
                 drag: -0.4,
                 linearDampening: 0.1,
                 density: 0.5,
                 friction: 0.5,
                 restitution: 0.2
-
             });
         };
 
@@ -72,6 +81,12 @@
                         irisRadius: radius * 0.4
                     },
                     SquidletAIComponent: {
+                    },
+                    HealthComponent: {
+                        maxHealth: this.settings.maxHealth,
+                        hardness: this.settings.hardness,
+                        invulFrames: this.settings.invulFrames,
+                        damageMask: app.damageMask.FRIEND
                     },
                     SteeringComponent: {
                         maxSteeringVelocity: app.random(this.settings.minSteeringVelocity, this.settings.maxSteeringVelocity),

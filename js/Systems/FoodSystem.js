@@ -19,62 +19,48 @@
 
         FoodSystem.prototype.init = function () {
             this.engine.bindEvent('update', this);
-            this.engine.bindEvent('entityAdded', this);
-            this.engine.bindEvent('entityRemoved', this);
             return this;
         };
 
         FoodSystem.prototype.deinit = function () {
-            this.engine.unbindEvent('entityAdded', this);
-            this.engine.unbindEvent('entityRemoved', this);
             this.engine.unbindEvent('update', this);
         };
 
         /*** System Update ***/
 
         FoodSystem.prototype.update = function (dt) {
-            var i, n, entity,
+            var i, n, j, m, entity, contact,
                 entities = this.engine.entitiesForComponent('FoodComponent'),
                 foodToRemove = [];
 
             for (i = 0, n = entities.length; i < n; i += 1) {
                 entity = entities[i];
-                if (entity.FoodComponent.collectedBy === undefined) {
-                    entity.FoodComponent.duration -= 1;
-                } else {
-                    entity.FoodComponent.collectedBy.SquidComponent.foodCollected += 1;
-                    entity.FoodComponent.duration = 0;
+                for (j = 0, m = entity.PhysicsComponent.contacts.length; j < m; j += 1) {
+                    contact = entity.PhysicsComponent.contacts[j];
+                    if (contact.contactee.SquidPlayerComponent !== undefined) {
+                        break;
+                    } else {
+                        contact = undefined;
+                    }
                 }
-                if (entity.FoodComponent.duration === 0) {
+
+                if (contact !== undefined) {
+                    this.engine.factories.SquidletFactory.spawn({
+                        x: contact.contactee.PositionComponent.x,
+                        y: contact.contactee.PositionComponent.y
+                    });
                     foodToRemove.push(entity);
+                } else {
+                    entity.FoodComponent.duration -= 1;
+                    if (entity.FoodComponent.duration === 0) {
+                        foodToRemove.push(entity);
+                    }
                 }
+                contact = undefined;
             }
 
             for (i = 0, n = foodToRemove.length; i < n; i += 1) {
                 this.engine.factories.FoodFactory.despawn(foodToRemove[i]);
-            }
-        };
-
-        /*** Entity Events ***/
-
-        FoodSystem.prototype.entityAdded = function (entity) {
-            if (entity.FoodComponent !== undefined) {
-                entity.bindContactEvent('preSolve', this);
-            }
-        };
-
-        FoodSystem.prototype.entityRemoved = function (entity) {
-            if (entity.FoodComponent !== undefined) {
-                entity.unbindContactEvent('preSolve', this);
-            }
-        };
-
-        FoodSystem.prototype.preSolve = function (entity, contactee, contact, oldManifold) {
-            if (entity.FoodComponent.duration < 860 && contactee.SquidComponent !== undefined) {
-                if (entity.FoodComponent.collectBy === undefined) {
-                    entity.FoodComponent.collectedBy = contactee;
-                }
-                contact.SetEnabled(false);
             }
         };
 

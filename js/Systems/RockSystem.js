@@ -19,7 +19,8 @@
 
         RockSystem.prototype.init = function () {
             this.settings = {
-                impulseToDamage: 4,
+                forceToDamage: 5,
+                impactDistance: 5,
                 fragmentRadiusLimit: 15,
                 fragmentCount: 3,
                 fragmentImpulseMultiplier: 0.5,
@@ -29,15 +30,11 @@
             };
 
             this.engine.bindEvent('update', this);
-            this.engine.bindEvent('entityAdded', this);
-            this.engine.bindEvent('entityRemoved', this);
             return this;
         };
 
         RockSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
-            this.engine.unbindEvent('entityAdded', this);
-            this.engine.unbindEvent('entityRemoved', this);
         };
 
         /*** Update Event ***/
@@ -49,7 +46,8 @@
 
             for (i = 0, n = entityArray.length; i < n; i += 1) {
                 entity = entityArray[i];
-                if (entity.HealthComponent !== undefined && entity.HealthComponent.health <= 0) {
+
+                if (entity.HealthComponent.health <= 0) {
                     rocksDestroyed.push(entity.id);
                 }
             }
@@ -80,7 +78,7 @@
                         maxRadius: maxRadius / 2
                     });
 
-                    impulseNormal = app.random(minRadius, maxRadius) * this.settings.fragmentImpulseMultiplier;
+                    impulseNormal = entity.HealthComponent.lastDamage * this.settings.fragmentImpulseMultiplier;
                     impulse = {
                         x: Math.cos(step) * impulseNormal,
                         y: Math.sin(step) * impulseNormal
@@ -113,28 +111,6 @@
             }
 
             rockFactory.despawn(entity);
-        };
-
-        /*** Entity Events ***/
-
-        RockSystem.prototype.entityAdded = function (entity) {
-            if (entity.RockComponent !== undefined) {
-                entity.bindContactEvent('postSolve', this);
-            }
-        };
-
-        RockSystem.prototype.entityRemoved = function (entity) {
-            if (entity.RockComponent !== undefined) {
-                entity.unbindContactEvent('postSolve', this);
-            }
-        };
-
-        RockSystem.prototype.postSolve = function (entity, contactee, contact, impulse) {
-            if (contactee.SquidComponent !== undefined && entity.HealthComponent !== undefined) {
-                if (impulse.normalImpulses[0] > this.settings.impulseToDamage) {
-                    entity.HealthComponent.health -= impulse.normalImpulses[0];
-                }
-            }
         };
 
         return RockSystem;
