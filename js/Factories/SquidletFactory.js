@@ -144,7 +144,7 @@
                 }
             });
 
-            this.engine.addEntity(entity);
+            this.spawnEntity(entity);
             return entity;
         };
 

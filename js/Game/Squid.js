@@ -33,12 +33,12 @@
                 'SquidletFactory'
             ]
         });
-
+/*
         engine.systems.CameraSystem.setTargetEntity(engine.factories.SquidFactory.spawn({
             x: app.random(engine.canvas.width, engine.canvas.width * 2),
             y: app.random(engine.canvas.height, engine.canvas.height * 2)
         }));
-
+*/
         engine.start();
 
         global.myEngine = engine;

@@ -84,6 +84,7 @@
                         x: Math.cos(step) * impulseMagnitude,
                         y: Math.sin(step) * impulseMagnitude
                     });
+
                     if (impulse.Length() > this.settings.maxKnockbackImpulse) {
                         impulse.Normalize();
                         impulse.Multiply(this.settings.maxKnockbackImpulse);

@@ -81,7 +81,7 @@
 
             this.engine.bindEvent('update', this);
             this.engine.bindEvent('draw', this);
-            this.engine.bindEvent('cameraSet', this);
+            this.engine.bindEvent('cameraUpdate', this);
             this.engine.bindEvent('resize', this);
         };
 
@@ -131,10 +131,10 @@
             var i, n, entities;
 
             this.current += 1;
-            if (Math.abs(this.gradientLastY - this.position.y) > 150) {
+            if (Math.abs(this.gradientLastY - this.position.y) > 120) {
 
                 this.gradientLayerDirty = true;
-                this.gradientModifier = 1 / (this.position.y / 15000 + 1);
+                this.gradientModifier = 1 / (this.position.y / 7000 + 1);
             }
 
             entities = this.engine.entitiesForComponent('ColorComponent');
@@ -276,7 +276,7 @@
 
         /*** Camera Events ***/
 
-        BackgroundSystem.prototype.cameraSet = function (position) {
+        BackgroundSystem.prototype.cameraUpdate = function (position) {
             var x = position.x,
                 y = position.y;
 

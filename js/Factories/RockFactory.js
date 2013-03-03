@@ -19,6 +19,8 @@
 
         RockFactory.prototype.init = function () {
             RockFactory.parent.init.call(this);
+            this.spawnEvent = 'rockSpawned';
+            this.despawnEvent = 'rockDespawned';
             _.defaults(this.settings, {
                 zOrder: 20,
                 minRadius: 50,
@@ -107,7 +109,7 @@
                 }
             });
 
-            this.engine.addEntity(entity);
+            this.spawnEntity(entity);
             return entity;
         };
 

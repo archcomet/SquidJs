@@ -96,7 +96,7 @@
             }
 
             if (this.cameraRate !== 0) {
-                this.engine.bindEvent('cameraSet', this);
+                this.engine.bindEvent('cameraUpdate', this);
             }
 
             if (this.container) {
@@ -125,7 +125,7 @@
 
         /*** Camera Position ***/
 
-        Canvas.prototype.cameraSet = function (position) {
+        Canvas.prototype.cameraUpdate = function (position) {
             this.center.x = position.x * this.cameraRate;
             this.center.y = position.y * this.cameraRate;
         };

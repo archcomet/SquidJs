@@ -19,14 +19,24 @@
 
         FoodSystem.prototype.init = function () {
             this.engine.bindEvent('update', this);
+            this.engine.bindEvent('restart', this);
+            this.foodCollected = 0;
+            this.settings = {
+                foodPerSquidlet: 5
+            };
             return this;
         };
 
         FoodSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
+            this.engine.unbindEvent('restart', this);
         };
 
         /*** System Update ***/
+
+        FoodSystem.prototype.restart = function () {
+            this.foodCollected = 0;
+        };
 
         FoodSystem.prototype.update = function (dt) {
             var i, n, j, m, entity, contact,
@@ -45,11 +55,14 @@
                 }
 
                 if (contact !== undefined) {
-                    this.engine.factories.SquidletFactory.spawn({
-                        x: contact.contactee.PositionComponent.x,
-                        y: contact.contactee.PositionComponent.y
-                    });
                     foodToRemove.push(entity);
+                    this.foodCollected += 1;
+                    if ((this.foodCollected % this.settings.foodPerSquidlet) === 0) {
+                        this.engine.factories.SquidletFactory.spawn({
+                            x: contact.contactee.PositionComponent.x,
+                            y: contact.contactee.PositionComponent.y
+                        });
+                    }
                 } else {
                     entity.FoodComponent.duration -= 1;
                     if (entity.FoodComponent.duration === 0) {

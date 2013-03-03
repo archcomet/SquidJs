@@ -55,8 +55,9 @@
             $(window).resize(this.triggerEvent.bind(this, 'resize'));
             this.bindEvent('draw', this.canvas);
 
-            // Debug
+            // Debug functions
             this.settings.disableDebug = this.disableDebug.bind(this);
+            this.settings.restart = this.restart.bind(this);
             this.enableDebug();
 
             return this;
@@ -254,6 +255,12 @@
                 }
             }
             return this;
+        };
+
+        /*** Game Control ***/
+
+        Engine.prototype.restart = function () {
+            this.triggerEvent('restart');
         };
 
         /**** Timer ****/

@@ -21,7 +21,7 @@
             this.target = undefined;
             this.settings = {
                 fleeDistance: 700,
-                maxKnockbackImpulse: 700
+                maxKnockbackImpulse: 300
             };
 
             this.engine.bindEvent('update', this);

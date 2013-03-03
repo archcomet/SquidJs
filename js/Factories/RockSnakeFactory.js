@@ -23,7 +23,7 @@
                 radius: 40,
                 color: { h: 180, s: 0.6, v: 0.06 },
                 //health
-                maxHealth: 1500,
+                maxHealth: 2500,
                 hardness: 100,
                 segmentCount: 15,
                 segmentLength: 40,
@@ -125,7 +125,7 @@
                 }
             });
 
-            this.engine.addEntity(entity);
+            this.spawnEntity(entity);
             return entity;
         };
 

@@ -91,21 +91,19 @@
                 targetPosition = this.targetEntity.PositionComponent;
                 cameraPosition = this.camera.PositionComponent;
 
-                this.position = {
-                    x: targetPosition.x + cameraPosition.x,
-                    y: targetPosition.y + cameraPosition.y
-                };
-
-                if (this.position.y < 0) {
-                    this.position.y = 0;
-                }
-
                 cameraSteering = this.camera.SteeringComponent;
                 cameraSteering.behavior = 'approach';
                 cameraSteering.target.x = targetPosition.dx / 6;
                 cameraSteering.target.y = targetPosition.dy / 6;
 
-                this.engine.triggerEvent('cameraSet', this.position);
+                this.position.x = targetPosition.x + cameraPosition.x;
+                this.position.y = targetPosition.y + cameraPosition.y;
+
+                if (this.position.y < 0) {
+                    this.position.y = 0;
+                }
+
+                this.engine.triggerEvent('cameraUpdate', this.position);
             }
         };
 

@@ -19,6 +19,8 @@
         app.inherit(app.BaseObj, Factory);
 
         Factory.prototype.init = function () {
+            this.spawnEvent = 'entitySpawned';
+            this.despawnEvent = 'entityDespawned';
             this.entities = [];
             this.settings = {
                 spawn: this.debugSpawn.bind(this),
@@ -47,9 +49,25 @@
             return undefined;
         };
 
+        Factory.prototype.spawnEntity = function (entity) {
+            this.engine.addEntity(entity);
+            this.engine.triggerEvent(this.spawnEvent, entity);
+        };
+
         Factory.prototype.despawn = function (entity) {
+            this.engine.triggerEvent(this.despawnEvent, entity);
             this.engine.removeEntity(entity);
             this.destroyEntity(entity);
+        };
+
+        Factory.prototype.despawnAll = function () {
+            var i, n;
+            for (i = 0, n = this.entities.length; i < n; i += 1) {
+                this.engine.triggerEvent(this.despawnEvent, this.entities[i]);
+                this.engine.removeEntity(this.entities[i]);
+                this.entities[i].destroy();
+            }
+            this.entities.length = 0;
         };
 
         Factory.prototype.debugSpawn = function () {
