@@ -33,6 +33,10 @@
                 target: {
                     x: 0,
                     y: 0
+                },
+                targetVector: {
+                    x: 0,
+                    y: 0
                 }
             });
             return this;

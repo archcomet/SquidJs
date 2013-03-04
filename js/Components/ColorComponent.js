@@ -34,6 +34,9 @@
             var strokeV = (this.dark) ? this.v + 0.3 : this.v - 0.3;
             this.shade = shade;
             this.hslFill = 'hsl(' + this.h + ', ' + 100 * this.s * shade + '%, ' + 100 * this.v * shade + '%)';
+            if (shade < 0.4) {
+                shade = 0.4;
+            }
             this.hslStroke = 'hsl(' + this.h + ', ' + 100 * this.s * shade + '%, ' + 100 * strokeV * shade + '%)';
         };
 

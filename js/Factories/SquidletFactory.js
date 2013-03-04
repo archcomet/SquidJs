@@ -19,13 +19,15 @@
 
         SquidletFactory.prototype.init = function () {
             SquidletFactory.parent.init.call(this);
-
+            this.spawnEvent = 'squidletSpawned';
+            this.despawnEvent = 'squidletDespawned';
             _.defaults(this.settings, {
                 //position
                 zOrder: 5,
                 //health
-                maxHealth: 400,
+                maxHealth: 300,
                 hardness: 50,
+                maxDamage: 100,
                 invulFrames: 30,
                 //squid
                 minRadius: 10,
@@ -55,7 +57,8 @@
                 maxSteeringVelocity: 13,
                 minSteeringForce: 400,
                 maxSteeringForce: 600,
-                sprintMultiplier: 5,
+                minSprintMultiplier: 3,
+                maxSprintMultiplier: 5,
                 //physics
                 drag: -0.4,
                 linearDampening: 0.1,
@@ -86,12 +89,13 @@
                         maxHealth: this.settings.maxHealth,
                         hardness: this.settings.hardness,
                         invulFrames: this.settings.invulFrames,
+                        maxDamage: this.settings.maxDamage,
                         damageMask: app.damageMask.FRIEND
                     },
                     SteeringComponent: {
                         maxSteeringVelocity: app.random(this.settings.minSteeringVelocity, this.settings.maxSteeringVelocity),
                         maxSteeringForce: app.random(this.settings.minSteeringForce, this.settings.maxSteeringForce),
-                        sprintMultiplier: this.settings.sprintMultiplier
+                        sprintMultiplier: app.random(this.settings.minSprintMultiplier, this.settings.maxSprintMultiplier)
                     },
                     PositionComponent: {
                         x: options.x,

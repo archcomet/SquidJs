@@ -82,6 +82,7 @@
             }
 
             for (i = 0, n = rockSnakesToRemove.length; i < n; i += 1) {
+                this.engine.triggerEvent('rockSnakeKilled', rockSnakesToRemove[i]);
                 this.engine.factories.RockSnakeFactory.despawn(rockSnakesToRemove[i]);
             }
         };

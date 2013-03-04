@@ -4,7 +4,7 @@
     global.app = global.app || {};
 
     global.app.start = function start() {
-        var engine = new app.Engine({
+        global.engine = new app.Engine({
             container: $('#container')[0],
             systems: [
                 'StageSystem',
@@ -32,24 +32,11 @@
                 'SquidFactory',
                 'SquidletFactory'
             ]
-        });
-/*
-        engine.systems.CameraSystem.setTargetEntity(engine.factories.SquidFactory.spawn({
-            x: app.random(engine.canvas.width, engine.canvas.width * 2),
-            y: app.random(engine.canvas.height, engine.canvas.height * 2)
-        }));
-*/
-        engine.start();
-
-        global.myEngine = engine;
+        }).start();
     };
 
 }(window));
 
-
-// Next week
-//todo environment spawn system
-//todo objective
 //todo scoring system
 //todo game over screen
 //todo main menu screen

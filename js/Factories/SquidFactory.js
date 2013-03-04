@@ -124,7 +124,7 @@
                 }
             });
 
-            this.spawnEntity(entity);
+            this.engine.addEntity(entity);
             this.engine.systems.CameraSystem.setTargetEntity(entity);
             return entity;
         };

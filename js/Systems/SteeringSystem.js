@@ -181,6 +181,30 @@
             this.applyForceForSteeringVelocity(steering, physics, steeringVelocity);
         };
 
+        SteeringSystem.prototype.flee = function (steering, physics) {
+            var linearVelocity, targetVelocity, steeringVelocity,
+                body = physics.body,
+                maxVelocity = steering.maxSteeringVelocity;
+
+            linearVelocity = body.GetLinearVelocity();
+            targetVelocity = new b2.Vec2();
+            targetVelocity.SetV(b2.toWorld(body.GetPosition()));
+            targetVelocity.Subtract(b2.toWorld(steering.target));
+
+            if (steering.sprinting) {
+                maxVelocity *= steering.sprintMultiplier;
+            }
+
+            targetVelocity.Normalize();
+            targetVelocity.Multiply(maxVelocity);
+
+            steeringVelocity = new b2.Vec2();
+            steeringVelocity.SetV(targetVelocity);
+            steeringVelocity.Subtract(linearVelocity);
+
+            this.applyForceForSteeringVelocity(steering, physics, steeringVelocity);
+        };
+
         return SteeringSystem;
 
     }());

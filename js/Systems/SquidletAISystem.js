@@ -40,8 +40,7 @@
             this.updateSquidlets();
             this.observeSquid();
             this.observeRockSnake();
-            this.decideBehavior();
-            this.applyBehavior();
+            this.updateBehavior();
         };
 
         SquidletAISystem.prototype.updateSquidlets = function () {
@@ -141,14 +140,11 @@
             }
         };
 
-        SquidletAISystem.prototype.decideBehavior = function () {
-            this.behavior = undefined;
-            this.target = undefined;
+        SquidletAISystem.prototype.updateBehavior = function () {
 
-            // Determine behavior and target
             if (this.rockSnakeDistance < this.settings.evadeDistance) {
 
-                // Calculate flee target
+                // Squidlet group will move opposite the player from the nearest rockSnake
                 this.behavior = 'seek';
                 this.target = {
                     x: this.squid.PositionComponent.x + this.rockSnakeNormal.x * -this.settings.fleeDistance,
@@ -159,39 +155,45 @@
 
             } else if (this.squidDistance > this.settings.followDistance) {
 
-                // Calculate follow target
+                // Squidlets will follow the player
                 this.behavior = 'seek';
                 this.target = {
                     x: this.squid.PositionComponent.x + this.squidNormal.x * this.settings.followDistance,
                     y: this.squid.PositionComponent.y + this.squidNormal.y * this.settings.followDistance
                 };
 
-                // Determine if sprinting
+                // Squidlets will sprint to catch up if far enough away
                 if (this.squidDistance > this.settings.sprintDistance) {
                     this.sprinting = true;
                 } else if (this.sprinting && this.squidDistance < this.settings.relaxDistance) {
                     this.sprinting = false;
                 }
-            }
 
-            // If no target is set and there is a squid, default target to player
-            if (this.target === undefined && this.squid !== undefined) {
+            } else {
+
+                // Squidlets will wait near the player and look at the player
+                this.behavior = undefined;
                 this.target = {
                     x: this.squid.PositionComponent.x,
                     y: this.squid.PositionComponent.y
                 };
             }
+
+            this.applyGroupBehavior();
         };
 
-        SquidletAISystem.prototype.applyBehavior = function () {
+        SquidletAISystem.prototype.applyGroupBehavior = function () {
             var i, n, squidlet;
             for (i = 0, n = this.squidlets.length; i < n; i += 1) {
                 squidlet = this.squidlets[i];
+
+                //todo move this into the behavior processing
                 if (squidlet.HealthComponent.stunFrames === 0) {
                     squidlet.SteeringComponent.behavior = this.behavior;
                 } else {
                     squidlet.SteeringComponent.behavior = undefined;
                 }
+
                 squidlet.SteeringComponent.sprinting = this.sprinting;
                 squidlet.SteeringComponent.target = this.target || {
                     x: squidlet.PositionComponent.x,

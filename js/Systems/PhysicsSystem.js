@@ -24,10 +24,10 @@
             this.current = new b2.Vec2(0.5, 0.1);
 
             this.contactListener = new b2.ContactListener();
-            //this.contactListener.BeginContact = this.beginContact.bind(this);
-            //this.contactListener.EndContact = this.endContact.bind(this);
+            this.contactListener.BeginContact = this.beginContact.bind(this);
+            this.contactListener.EndContact = this.endContact.bind(this);
             this.contactListener.PreSolve = this.preSolve.bind(this);
-            //this.contactListener.PostSolve = this.postSolve.bind(this);
+            this.contactListener.PostSolve = this.postSolve.bind(this);
             this.world.SetContactListener(this.contactListener);
 
             this.engine.bindEvent('update', this);
@@ -139,9 +139,37 @@
         /*** Contact Listener ***/
 
         PhysicsSystem.prototype.beginContact = function (contact) {
+            var entityA = contact.GetFixtureA().GetBody().GetUserData(),
+                entityB = contact.GetFixtureB().GetBody().GetUserData();
+
+            entityA.PhysicsComponent.contacts.push({
+                event: 'beginContact',
+                contactee: entityB,
+                contact: contact
+            });
+
+            entityB.PhysicsComponent.contacts.push({
+                event: 'beginContact',
+                contactee: entityA,
+                contact: contact
+            });
         };
 
         PhysicsSystem.prototype.endContact = function (contact) {
+            var entityA = contact.GetFixtureA().GetBody().GetUserData(),
+                entityB = contact.GetFixtureB().GetBody().GetUserData();
+
+            entityA.PhysicsComponent.contacts.push({
+                event: 'endContact',
+                contactee: entityB,
+                contact: contact
+            });
+
+            entityB.PhysicsComponent.contacts.push({
+                event: 'endContact',
+                contactee: entityA,
+                contact: contact
+            });
         };
 
         PhysicsSystem.prototype.preSolve = function (contact, oldManifold) {
@@ -190,6 +218,22 @@
         };
 
         PhysicsSystem.prototype.postSolve = function (contact, impulse) {
+            var entityA = contact.GetFixtureA().GetBody().GetUserData(),
+                entityB = contact.GetFixtureB().GetBody().GetUserData();
+
+            entityA.PhysicsComponent.contacts.push({
+                event: 'postSolve',
+                contactee: entityB,
+                contact: contact,
+                impulse: impulse
+            });
+
+            entityB.PhysicsComponent.contacts.push({
+                event: 'postSolve',
+                contactee: entityA,
+                contact: contact,
+                impulse: impulse
+            });
         };
 
         return PhysicsSystem;

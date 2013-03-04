@@ -19,9 +19,13 @@
 
         FoodFactory.prototype.init = function () {
             FoodFactory.parent.init.call(this);
+            this.spawnEvent = 'foodSpawned';
+            this.despawnEvent = 'foodDespawned';
             _.defaults(this.settings, {
                 minRadius: 5,
                 maxRadius: 15,
+                minDuration: 500,
+                maxDuration: 700,
                 color: { h: 45, s: 1, v: 0.9 },
                 drag: -0.8,
                 linearDampening: 0.1,
@@ -46,7 +50,8 @@
                 tag: 'food_',
                 components: {
                     FoodComponent: {
-                        radius: radius
+                        radius: radius,
+                        duration: app.random(this.settings.minDuration, this.settings.maxDuration)
                     },
                     ColorComponent: {
                         h: this.settings.color.h,
@@ -66,6 +71,7 @@
                             linearDampening: this.settings.linearDampening
                         },
                         fixtureDef: {
+                            isSensor: true,
                             density: this.settings.density,
                             friction: this.settings.friction,
                             restitution: this.settings.restitution,

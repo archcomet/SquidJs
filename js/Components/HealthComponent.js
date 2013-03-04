@@ -23,6 +23,7 @@
                 health: undefined,
                 maxHealth: 100,
                 hardness: 5,
+                maxDamage: undefined,
                 invulFrames: 0,
                 stunFrames: 0,
                 damageMask: 0x0000

@@ -49,8 +49,14 @@
                         entity.HealthComponent.health > 0) {
                     for (j = 0, m = entity.PhysicsComponent.contacts.length; j < m; j += 1) {
                         contactData = entity.PhysicsComponent.contacts[j];
-                        this.handleContact(entity, contactData);
+                        if (contactData.event === 'preSolve') {
+                            this.handleContact(entity, contactData);
+                        }
                     }
+                }
+
+                if (entity.HealthComponent.lastDamage > entity.HealthComponent.maxDamage) {
+                    entity.HealthComponent.lastDamage = entity.HealthComponent.maxDamage;
                 }
 
                 entity.HealthComponent.health -= entity.HealthComponent.lastDamage;

@@ -19,23 +19,23 @@
 
         RockSnakeFactory.prototype.init = function () {
             RockSnakeFactory.parent.init.call(this);
+            this.spawnEvent = 'rockSnakeSpawned';
+            this.despawnEvent = 'rockSnakeDespawned';
             _.defaults(this.settings, {
-                radius: 40,
+                minRadius: 25,
+                maxRadius: 40,
                 color: { h: 180, s: 0.6, v: 0.06 },
-                //health
-                maxHealth: 2500,
                 hardness: 100,
                 segmentCount: 15,
                 segmentLength: 40,
-                segmentRadius: 20,
                 segmentFriction: 0.92,
-                maxForwardVelocity: 30,
+                maxForwardVelocity: 25,
                 maxSteeringVelocity: 25,
                 maxAngularVelocity: 2.5,
                 maxForwardThrust: 400,
                 maxSteeringForce: 200,
                 maxTorque: 200,
-                sprintMultiplier: 1,
+                sprintMultiplier: 3,
                 drag: -0.4,
                 linearDampening: 0.1,
                 density: 3,
@@ -48,19 +48,28 @@
         RockSnakeFactory.prototype.spawn = function (options) {
             _.defaults(options, {
                 x: 0,
-                y: 0
+                y: 0,
+                sizeModifier: 1
             });
 
-            var entity = this.createEntity({
+            if (options.sizeModifier < 0.5) {
+                options.sizeModifier = 0.5;
+            } else if (options.sizeModifier > 3) {
+                options.sizeModifier = 3;
+            }
+
+            var entity, radius = app.random(this.settings.minRadius, this.settings.maxRadius) * options.sizeModifier;
+
+            entity = this.createEntity({
                 tag: 'entity_',
                 components: {
                     RockSnakeComponent: {
-                        radius: this.settings.radius
+                        radius: radius
                     },
                     RockSnakeAIComponent: {
                     },
                     HealthComponent: {
-                        maxHealth: this.settings.maxHealth,
+                        maxHealth: radius * 25,
                         hardness: this.settings.hardness,
                         damageMask: app.damageMask.FOE
                     },
@@ -78,17 +87,17 @@
                     TentaclesComponent: {
                         count: 1,
                         segmentCount: this.settings.segmentCount,
-                        segmentLength: this.settings.segmentLength,
-                        radius: this.settings.segmentRadius,
+                        segmentLength: radius,
+                        radius: radius * 0.5,
                         friction: this.settings.segmentFriction,
                         variance: 0.0
                     },
                     SteeringComponent: {
-                        maxForwardVelocity: this.settings.maxForwardVelocity,
-                        maxSteeringVelocity: this.settings.maxSteeringVelocity,
+                        maxForwardVelocity: this.settings.maxForwardVelocity * options.sizeModifier,
+                        maxSteeringVelocity: this.settings.maxSteeringVelocity * options.sizeModifier,
                         maxAngularVelocity: this.settings.maxAngularVelocity,
                         maxForwardThrust: this.settings.maxForwardThrust,
-                        maxSteeringForce: this.settings.maxSteeringForce,
+                        maxSteeringForce: this.settings.maxSteeringForce * options.sizeModifier,
                         maxTorque: this.settings.maxTorque,
                         sprintMultiplier: this.settings.sprintMultiplier
                     },
@@ -105,7 +114,7 @@
                             restitution: this.settings.restitution,
                             shape: b2.makeShape({
                                 type: 'circle',
-                                radius: this.settings.radius
+                                radius: radius
                             }),
                             filter: b2.makeFilterData(
                                 app.entityCategory.FOE,
