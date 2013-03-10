@@ -1,40 +1,120 @@
 (function () {
     'use strict';
+    var app, dbMethods = {},
 
     // Settings
-    var webroot = './', // root directory for static files
         port = process.env.PORT || 8080, // uses environment variable if set, otherwise default to 8080
+        mongodbUrl = process.env.MONGOHQ_URL || 'mongodb://localhost/squidjs',
 
     // Node Modules
-        web = require('node-static'),
-        http = require('http'),
-        util = require('util'),
+        express = require('express'),
+        mongoClient = require('mongodb').MongoClient,
+        url = require('url');
 
-    // Create a static file server using node-static module
-        file = new (web.Server)(webroot, {
-            cache: 600,
-            headers: { 'X-Powered-By': 'node-static' }
-        });
+    app = express();
 
-    // Create a http server using http module
-    http.createServer(function (request, response) {
-        // Add event listener for request 'end'
-        request.addListener('end', function () {
-            // Serve requested file
-            file.serve(request, response, function (err, result) {
-                if (err) {
-                    // Super basic error handling
-                    console.error('Error serving %s - %s', request.url, err.message);
-                    response.writeHead(err.status, err.headers);
-                    response.end();
-                } else {
-                    // Log served file for debugging
-                    console.log('%s', request.url);
+    app.configure(function () {
+        app.use(express.bodyParser());
+        app.use(express['static'](__dirname));
+    });
+
+    app.configure('development', function () {
+        app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+    });
+
+    app.configure('production', function () {
+        app.use(express.errorHandler());
+    });
+
+    app.listen(port, function () {
+        console.log('Express server listening on port %d in %s mode', port, app.settings.env);
+    });
+
+    mongoClient.connect(mongodbUrl, function (error, db) {
+        if (error) {
+            console.log('MongoClient.connect: Could not connect to database: ');
+            console.log(error);
+            return;
+        }
+
+        console.log('MongoClient.connect: Connected to our mongodb database.');
+
+        db.collection('scores', function (error, collection) {
+            dbMethods.saveScore = function (score, callback) {
+                var key;
+                if (score.userName === undefined) {
+                    score.userName = 'anonymous';
                 }
-            });
+
+                for (key in score) {
+                    if (score.hasOwnProperty(key) && key !== 'userName') {
+                        score[key] = parseInt(score[key], 10);
+                    }
+                }
+
+                collection.insert(score, function (error, results) {
+                    if (error) {
+                        callback(false);
+                    }
+                    callback(results);
+                });
+            };
+
+            dbMethods.getTopTen = function (key, order, callback) {
+                var sort = {};
+                sort[key] = parseInt(order, 10);
+
+                collection.find().sort(sort).limit(10).toArray(function (error, results) {
+                    var i, n, item, output = [];
+                    if (error) {
+                        callback(false);
+                    }
+
+                    for (i = 0, n = results.length; i < n; i += 1) {
+                        if (results[i][key]) {
+                            item = {
+                                userName: results[i].userName,
+                                rank: i + 1
+                            };
+                            item[key] = results[i][key];
+                            output.push(item);
+                        }
+                    }
+                    callback(output);
+                });
+            };
+
+            dbMethods.clear = function (callback) {
+                collection.drop(callback);
+            };
         });
-    }).listen(port);
+    });
 
-    console.log('node-static running on port %d', port);
+    app.post('/saveScore', function (request, response) {
+        dbMethods.saveScore(request.body.score, function (results) {
+            if (results === false) {
+                response.send(500, 'Internal error');
+            }
+            response.send(request.body);
+        });
+    });
 
+    app.get('/topTen', function (request, response) {
+        var parts = url.parse(request.url, true);
+        dbMethods.getTopTen(parts.query.key, parts.query.order, function (results) {
+            if (results === false) {
+                response.send(500, 'Internal error');
+            }
+            response.json({ topTen: results });
+        });
+    });
+
+    app.post('/clearScores', function (request, response) {
+        dbMethods.clear(function (results) {
+            if (results === false) {
+                response.send(500, 'Internal error');
+            }
+            response.send(request.body);
+        });
+    });
 }());

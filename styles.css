@@ -4,19 +4,67 @@ body {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    font-size: 25px;
+    font-family: Lucida Sans Unicode, Lucida Grande, sans-serif;
+    color: #FFFFFF;
 }
+
+canvas {
+     position: absolute;
+}
+
+h1 {
+    padding-bottom: 1.7em;
+    text-shadow: 0.1em 0.1em 0.2em #000000;
+    font-size: 4em;
+}
+
+.ui {
+    position: absolute;
+    width: 1028px;
+    height: 768px;
+    left: -514px;
+    top: -384px;
+    z-index: 100;
+}
+
+.continue {
+    font-family: 'oswaldlight',sans-serif;
+}
+
 #horizon {
     position: absolute;
     top: 50%;
     width: 100%;
     height: 1px;
 }
+
 #container {
     position: relative;
     width: 1px;
     height: 1px;
     margin: auto;
 }
-canvas {
-    position: absolute;
+
+#canvasContainer {
+    display: none;
+}
+
+#title {
+    margin-top: 5em;
+    text-align: center;
+}
+
+#title .continue {
+    display: none;
+}
+
+#gameOver {
+    display: none;
+    margin-top: 5em;
+    text-align: center;
+}
+
+#gameOver h1 {
+    font-size: 5em;
 }
