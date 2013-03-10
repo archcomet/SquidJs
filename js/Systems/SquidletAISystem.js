@@ -74,6 +74,7 @@
             }
 
             for (i = 0, n = squidletsToRemove.length; i < n; i += 1) {
+                this.engine.triggerEvent('squidletKilled', squidletsToRemove[i]);
                 this.engine.factories.SquidletFactory.despawn(squidletsToRemove[i]);
             }
 
@@ -187,7 +188,6 @@
             for (i = 0, n = this.squidlets.length; i < n; i += 1) {
                 squidlet = this.squidlets[i];
 
-                //todo move this into the behavior processing
                 if (squidlet.HealthComponent.stunFrames === 0) {
                     squidlet.SteeringComponent.behavior = this.behavior;
                 } else {

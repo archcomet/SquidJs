@@ -72,7 +72,8 @@
             'js/Systems/SquidSystem.js',
             'js/Systems/StageSystem.js',
             'js/Systems/SteeringSystem.js',
-            'js/Systems/TentaclesSystem.js'
+            'js/Systems/TentaclesSystem.js',
+            'js/Systems/UiSystem.js'
         ],
         compiled: [
             'resource!images/background.png',

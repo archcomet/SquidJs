@@ -100,7 +100,6 @@
     };
 
     global.app.maxWidth = 1028;
-
     global.app.maxHeight = 768;
 
     /**

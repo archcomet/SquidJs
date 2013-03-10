@@ -32,6 +32,7 @@
             // State
             this.canvasDirty = false;
             this.container = options.container;
+            this.inputContainer = options.inputContainer;
             this.settings = new app.Settings(options.settings);
 
             // Entity Canvas
@@ -57,8 +58,6 @@
 
             // Debug functions
             this.settings.disableDebug = this.disableDebug.bind(this);
-            this.settings.restart = this.restart.bind(this);
-            this.enableDebug();
 
             return this;
         };
@@ -246,21 +245,11 @@
                 args = Array.prototype.slice.call(arguments);
                 args.splice(0, 1);
                 for (i = 0, n = listeners.length; i < n; i += 1) {
-                    try {
-                        listener = listeners[i];
-                        listener.apply(listener, args);
-                    } catch (error) {
-                        var k = 0;
-                    }
+                    listener = listeners[i];
+                    listener.apply(listener, args);
                 }
             }
             return this;
-        };
-
-        /*** Game Control ***/
-
-        Engine.prototype.restart = function () {
-            this.triggerEvent('restart');
         };
 
         /**** Timer ****/

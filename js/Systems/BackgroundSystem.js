@@ -83,6 +83,7 @@
             this.engine.bindEvent('draw', this);
             this.engine.bindEvent('cameraUpdate', this);
             this.engine.bindEvent('resize', this);
+            this.engine.triggerEvent('backgroundReady', this);
         };
 
         BackgroundSystem.prototype.initNoiseLayer = function () {

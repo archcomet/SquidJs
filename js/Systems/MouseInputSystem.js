@@ -20,7 +20,7 @@
         app.inherit(app.System, MouseInputSystem);
 
         MouseInputSystem.prototype.init = function () {
-            var self = this, container = this.engine.container;
+            var self = this, container = this.engine.inputContainer;
 
             this.mousedata = {
                 leftDown: false,
@@ -35,22 +35,26 @@
                 self.mousedata.leftDown = true;
                 self.mousedata.active = true;
                 self.engine.triggerEvent('mouseUpdate', self.mousedata);
+                return false;
             });
 
             $(container).mouseup(function () {
                 self.mousedata.leftDown = false;
                 self.engine.triggerEvent('mouseUpdate', self.mousedata);
+                return false;
             });
 
             $(container).mouseenter(function () {
                 self.mousedata.active = true;
                 self.engine.triggerEvent('mouseUpdate', self.mousedata);
+                return false;
             });
 
             $(container).mouseleave(function () {
                 self.mousedata.active = false;
                 self.mousedata.leftDown = false;
                 self.engine.triggerEvent('mouseUpdate', self.mousedata);
+                return false;
             });
 
             $(container).mousemove(function (event) {
@@ -58,6 +62,7 @@
                 self.mousedata.position.x = event.offsetX;
                 self.mousedata.position.y = event.offsetY;
                 self.engine.triggerEvent('mouseUpdate', self.mousedata);
+                return false;
             });
 
             container.oncontextmenu = function () {

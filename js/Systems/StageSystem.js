@@ -7,6 +7,7 @@
     global.app.System.StageSystem = (function () {
 
         var states = {
+            setup: 0,
             preGame: 1,
             midGame: 2,
             postGame: 3
@@ -50,7 +51,6 @@
             this.initStageRects(this.position.x, this.position.y);
 
             this.player = undefined;
-            this.state = states.preGame;
             this.rocks = {};
             this.rockCount = 0;
             this.rockSnakeCount = 0;
@@ -59,7 +59,6 @@
             this.depth = 0;
 
             this.engine.bindEvent('update', this);
-            this.engine.bindEvent('restart', this);
             this.engine.bindEvent('cameraUpdate', this);
             this.engine.bindEvent('rockSpawned', this);
             this.engine.bindEvent('rockDespawned', this);
@@ -67,6 +66,10 @@
             this.engine.bindEvent('rockSnakeDespawned', this);
             this.engine.bindEvent('squidletSpawned', this);
             this.engine.bindEvent('squidletDespawned', this);
+            this.engine.bindEvent('setupStage', this);
+            this.engine.bindEvent('startStage', this);
+
+            this.setupStage();
             return this;
         };
 
@@ -94,7 +97,6 @@
 
         StageSystem.prototype.deinit = function () {
             this.engine.unbindEvent('update', this);
-            this.engine.unbindEvent('restart', this);
             this.engine.unbindEvent('cameraUpdate', this);
             this.engine.unbindEvent('rockSpawned', this);
             this.engine.unbindEvent('rockDespawned', this);
@@ -102,13 +104,20 @@
             this.engine.unbindEvent('rockSnakeDespawned', this);
             this.engine.unbindEvent('squidletSpawned', this);
             this.engine.unbindEvent('squidletDespawned', this);
+            this.engine.unbindEvent('setupStage', this);
+            this.engine.unbindEvent('startStage', this);
             return this;
         };
 
         /*** Event Handlers ***/
 
-        StageSystem.prototype.restart = function () {
-            this.state = states.preGame;
+        StageSystem.prototype.setupStage = function (autostart) {
+            this.state = states.setup;
+            this.ready = (autostart) ? true : false;
+        };
+
+        StageSystem.prototype.startStage = function () {
+            this.ready = true;
         };
 
         StageSystem.prototype.cameraUpdate = function (position) {
@@ -280,19 +289,22 @@
 
         StageSystem.prototype.update = function (dt) {
             switch (this.state) {
+            case states.setup:
+                this.setupUpdate();
+                break;
             case states.preGame:
-                this.updatePreGame();
+                this.preGameUpdate();
                 break;
             case states.midGame:
-                this.updateMidGame();
+                this.midGameUpdate();
                 break;
             case states.postGame:
-                this.updatePostGame();
+                this.postGameUpdate();
                 break;
             }
         };
 
-        StageSystem.prototype.updatePreGame = function () {
+        StageSystem.prototype.setupUpdate = function () {
             var i, key, factory;
 
             // Delete exiting rocks for restart rocks
@@ -324,7 +336,7 @@
             // Create a player
             this.player = this.engine.factories.SquidFactory.spawn({
                 x: app.random(app.maxWidth, app.maxWidth * 2),
-                y: app.random(app.maxHeight, app.maxHeight * 2)
+                y: b2.WATERLEVEL * b2.PTM + 450
             });
 
             // Set starting camera position
@@ -335,63 +347,63 @@
 
             // Change state
             this.depth = this.player.PositionComponent.y - b2.WATERLEVEL * b2.PTM;
-            this.state = states.midGame;
+            this.state = states.preGame;
         };
 
-        StageSystem.prototype.updateMidGame = function () {
+        StageSystem.prototype.preGameUpdate = function () {
+            if (this.ready === true) {
+                this.state = states.midGame;
+                this.engine.triggerEvent('stageStart');
+            }
+        };
+
+        StageSystem.prototype.midGameUpdate = function () {
 
             this.depth = this.player.PositionComponent.y - b2.WATERLEVEL * b2.PTM;
 
             // Spawn horizontal
             if (this.position.x > this.spawnRect.maxX) {
                 this.spawnEnvironmentRight();
-                console.log('spawn right');
             } else if (this.position.x < this.spawnRect.minX) {
                 this.spawnEnvironmentLeft();
-                console.log('spawn left');
             }
 
             // Spawn vertical
             if (this.position.y > this.spawnRect.maxY) {
                 this.spawnEnvironmentDown();
-                console.log('spawn down');
             } else if (this.position.y < this.spawnRect.minY) {
                 this.spawnEnvironmentUp();
-                console.log('spawn up');
             }
 
             // Despawn horizontal
             if (this.position.x > this.despawnRect.maxX) {
                 this.despawnEnvironmentLeft();
-                console.log('despawn left');
             } else if (this.position.x < this.despawnRect.minX) {
                 this.despawnEnvironmentRight();
-                console.log('despawn right');
             }
 
             // Despawn vertical
             if (this.position.y > this.despawnRect.maxY) {
                 this.despawnEnvironmentUp();
-                console.log('despawn up');
             } else if (this.position.y < this.despawnRect.minY) {
                 this.despawnEnvironmentDown();
-                console.log('despawn down');
             }
 
             this.spawnRockSnake();
 
             // Check for game over condition
             if (this.squidletCount <= 0) {
-                this.engine.triggerEvent('gameOver');
+                this.engine.triggerEvent('stageEnd');
                 this.state = states.postGame;
             }
         };
 
-        StageSystem.prototype.updatePostGame = function () {
-
+        StageSystem.prototype.postGameUpdate = function () {
+            this.ready = false;
         };
 
         return StageSystem;
 
     }());
+
 }(window));

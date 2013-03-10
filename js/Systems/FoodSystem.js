@@ -84,6 +84,7 @@
                 if (contact !== undefined) {
                     foodToRemove.push(entity);
                     this.foodCollected += 1;
+                    this.engine.triggerEvent('foodCollected', contact.contactee);
                     if ((this.foodCollected % this.settings.foodPerSquidlet) === 0) {
                         this.engine.factories.SquidletFactory.spawn({
                             x: contact.contactee.PositionComponent.x,

@@ -20,28 +20,28 @@
 
         SquidControlSystem.prototype.init = function () {
             this.mouseData = {};
-            this.allowControl = true;
+            this.allowControl = false;
             this.engine.bindEvent('update', this);
             this.engine.bindEvent('mouseUpdate', this);
-            this.engine.bindEvent('restart', this);
-            this.engine.bindEvent('gameOver', this);
+            this.engine.bindEvent('stageStart', this);
+            this.engine.bindEvent('stageEnd', this);
             return this;
         };
 
         SquidControlSystem.prototype.deinit = function () {
             this.engine.unbindEvent('mouseUpdate', this);
             this.engine.unbindEvent('update', this);
-            this.engine.unbindEvent('restart', this);
-            this.engine.unbindEvent('gameOver', this);
+            this.engine.unbindEvent('stageStart', this);
+            this.engine.unbindEvent('stageEnd', this);
         };
 
         /*** Events ***/
 
-        SquidControlSystem.prototype.restart = function () {
+        SquidControlSystem.prototype.stageStart = function () {
             this.allowControl = true;
         };
 
-        SquidControlSystem.prototype.gameOver = function () {
+        SquidControlSystem.prototype.stageEnd = function () {
             this.allowControl = false;
         };
 
