@@ -22,6 +22,7 @@
         MouseInputSystem.prototype.init = function () {
             var self = this, container = this.engine.inputContainer;
 
+            this.allowInput = true;
             this.mousedata = {
                 leftDown: false,
                 active: false,
@@ -31,53 +32,81 @@
                 }
             };
 
-            $(container).mousedown(function () {
-                self.mousedata.leftDown = true;
-                self.mousedata.active = true;
-                self.engine.triggerEvent('mouseUpdate', self.mousedata);
-                return false;
-            });
-
-            $(container).mouseup(function () {
-                self.mousedata.leftDown = false;
-                self.engine.triggerEvent('mouseUpdate', self.mousedata);
-                return false;
-            });
-
-            $(container).mouseenter(function () {
-                self.mousedata.active = true;
-                self.engine.triggerEvent('mouseUpdate', self.mousedata);
-                return false;
-            });
-
-            $(container).mouseleave(function () {
-                self.mousedata.active = false;
-                self.mousedata.leftDown = false;
-                self.engine.triggerEvent('mouseUpdate', self.mousedata);
-                return false;
-            });
-
-            $(container).mousemove(function (event) {
-                self.mousedata.active = true;
-                self.mousedata.position.x = event.offsetX;
-                self.mousedata.position.y = event.offsetY;
-                self.engine.triggerEvent('mouseUpdate', self.mousedata);
-                return false;
-            });
+            $(container).mousedown(this.mousedown.bind(this));
+            $(container).mouseup(this.mouseup.bind(this));
+            $(container).mouseenter(this.mouseenter.bind(this));
+            $(container).mouseleave(this.mouseleave.bind(this));
+            $(container).mousemove(this.mousemove.bind(this));
 
             container.oncontextmenu = function () {
                 return false;
             };
 
+            this.engine.bindEvent('stageStart', this);
+            this.engine.bindEvent('stageEnd', this);
             return this;
         };
 
         MouseInputSystem.prototype.deinit = function () {
-            $(this.engine.container).mousedown(undefined);
-            $(this.engine.container).mouseup(undefined);
-            $(this.engine.container).mouseenter(undefined);
-            $(this.engine.container).mouseleave(undefined);
-            $(this.engine.container).mousemove(undefined);
+            this.engine.unbindEvent('stageStart', this);
+            this.engine.unbindEvent('stageEnd', this);
+        };
+
+        MouseInputSystem.prototype.stageStart = function () {
+            this.allowInput = true;
+        };
+
+        MouseInputSystem.prototype.stageEnd = function () {
+            this.allowInput = false;
+        };
+
+        MouseInputSystem.prototype.mousedown = function (event) {
+            if (this.allowInput) {
+                this.mousedata.leftDown = true;
+                this.mousedata.active = true;
+                this.engine.triggerEvent('mouseUpdate', this.mousedata);
+                return false;
+            }
+            return true;
+        };
+
+        MouseInputSystem.prototype.mouseup = function (event) {
+            if (this.allowInput) {
+                this.mousedata.leftDown = false;
+                this.engine.triggerEvent('mouseUpdate', this.mousedata);
+                return false;
+            }
+            return true;
+        };
+
+        MouseInputSystem.prototype.mouseenter = function (event) {
+            if (this.allowInput) {
+                this.mousedata.active = true;
+                this.engine.triggerEvent('mouseUpdate', this.mousedata);
+                return false;
+            }
+            return true;
+        };
+
+        MouseInputSystem.prototype.mouseleave = function (event) {
+            if (this.allowInput) {
+                this.mousedata.active = false;
+                this.mousedata.leftDown = false;
+                this.engine.triggerEvent('mouseUpdate', this.mousedata);
+                return false;
+            }
+            return true;
+        };
+
+        MouseInputSystem.prototype.mousemove = function (event) {
+            if (this.allowInput) {
+                this.mousedata.active = true;
+                this.mousedata.position.x = event.offsetX;
+                this.mousedata.position.y = event.offsetY;
+                this.engine.triggerEvent('mouseUpdate', this.mousedata);
+                return false;
+            }
+            return true;
         };
 
         return MouseInputSystem;

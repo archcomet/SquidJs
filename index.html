@@ -5,22 +5,69 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-    <div id='horizon'>
-        <div id='container'>
-            <div id='title' class='ui'>
+    <div id="horizon">
+        <div id="container">
+
+            <div id="title" class="screen">
                 <h1>Squids</h1>
-                <span id='loading'>loading...</span>
-                <span class='continue'>[click to continue]</span>
+                <span id="loading">loading...</span>
+                <span id="continue" class="hidden">[click to continue]</span>
             </div>
-            <div id='gameOver' class='ui'>
+
+            <div id="gameOver" class="screen hidden">
                 <h1>Game Over</h1>
-                <span class='continue'>[click to continue]</span>
+
+                <div id="score">
+                    <table>
+                        <tr>
+                            <th>Time</th>
+                            <th>Food</th>
+                            <th>Kills</th>
+                            <th>Depth</th>
+                        </tr>
+                        <tr>
+                            <td id="timeScore"></td>
+                            <td id="foodScore"></td>
+                            <td id="killScore"></td>
+                            <td id="depthScore"></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div id="top10scores" class="hidden">
+                    <span>Top 10 Scores</span>
+                    <table class="outerTable">
+                        <tr>
+                            <th>Time</th>
+                            <th>Food</th>
+                            <th>Kills</th>
+                            <th>Depth</th>
+                        </tr>
+                        <tr>
+                            <td><table id="top10times" class="innerTable"></table></td>
+                            <td><table id="top10food" class="innerTable"></table></td>
+                            <td><table id="top10kills" class="innerTable"></table></td>
+                            <td><table id="top10depths" class="innerTable"></table></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div id="spacer">
+                    <div id="postScore" class="hidden">
+                        <span>You got a high score!</span><br/>
+                        <label for="name">Name: </label>
+                        <input type="text" id="name">
+                        <button type="button" id="submitScore">Post Score</button>
+                    </div>
+                </div>
+
+                <button type="button" id="newGame">New Game</button>
             </div>
-            <div id='leaderBoard' class='ui'></div>
-            <div id='canvasContainer'></div>
+
+            <div id="canvasContainer" class="hidden"></div>
         </div>
     </div>
-    <script src='js/3rdParty/yepnope.1.5.4-min.js' ></script>
-    <script src='js/squid-loader.js'></script>
+    <script src="js/3rdParty/yepnope.1.5.4-min.js" ></script>
+    <script src="js/squid-loader.js"></script>
 </body>
 </html>

@@ -1,70 +1,117 @@
+/* Elements */
 body {
     margin:0;
-    background-color: rgb(13, 31, 42);
     width: 100%;
     height: 100%;
     overflow: hidden;
     font-size: 25px;
     font-family: Lucida Sans Unicode, Lucida Grande, sans-serif;
     color: #FFFFFF;
+    background: rgb(13, 31, 42);
 }
-
 canvas {
-     position: absolute;
+    position: absolute;
 }
-
 h1 {
-    padding-bottom: 1.7em;
     text-shadow: 0.1em 0.1em 0.2em #000000;
-    font-size: 4em;
+}
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+tbody {
+    vertical-align: top;
+}
+td {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+th {
+    padding-left: 1em;
+    padding-right: 1em;
 }
 
-.ui {
+/* Classes */
+.hidden {
+    display: none;
+}
+.screen {
     position: absolute;
     width: 1028px;
     height: 768px;
     left: -514px;
     top: -384px;
-    z-index: 100;
 }
 
-.continue {
-    font-family: 'oswaldlight',sans-serif;
-}
-
-#horizon {
-    position: absolute;
-    top: 50%;
-    width: 100%;
-    height: 1px;
-}
-
+/* IDs */
 #container {
     position: relative;
     width: 1px;
     height: 1px;
     margin: auto;
 }
-
-#canvasContainer {
-    display: none;
+#continue {
+    font-size: 1.2em;
 }
-
-#title {
-    margin-top: 5em;
-    text-align: center;
-}
-
-#title .continue {
-    display: none;
-}
-
 #gameOver {
-    display: none;
-    margin-top: 5em;
     text-align: center;
+    z-index: 150;
+    background: rgba(0, 0, 0, 0.7);
 }
-
+#gameOver button {
+    font-size: 0.7em;
+}
 #gameOver h1 {
-    font-size: 5em;
+    font-size: 2em;
+}
+#horizon {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+}
+#postScore {
+    padding-top: 1em;
+}
+#postScore br {
+    font-size: 2em;
+}
+#postScore input {
+    font-size: 0.7em;
+}
+#postScore span {
+    padding-bottom: 1em;
+}
+#score td {
+    font-size: 0.8em;
+}
+#score th {
+    font-size: 1em;
+}
+#spacer {
+    height: 6em;
+}
+#title {
+    text-align: center;
+    z-index: 100;
+}
+#title h1 {
+    font-size: 6em;
+    padding: 0.5em;
+}
+#top10scores {
+    padding-top: 1.5em;
+}
+#top10scores span {
+    font-size: 1.2em;
+    text-shadow: 0.1em 0.1em 0.2em #000000;
+}
+#top10scores .outerTable {
+    padding-top: 1em;
+}
+#top10scores .outerTable th {
+    font-size: 0.75em;
+}
+#top10scores .innerTable td {
+    font-size: 0.5em;
 }

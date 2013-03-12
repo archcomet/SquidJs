@@ -43,6 +43,7 @@
                 if (score.userName === undefined) {
                     score.userName = 'anonymous';
                 }
+                score.userName = encodeURI(score.userName);
 
                 for (key in score) {
                     if (score.hasOwnProperty(key) && key !== 'userName') {
@@ -88,7 +89,7 @@
         });
     });
 
-    app.post('/saveScore', function (request, response) {
+    app.post('/postScore', function (request, response) {
         dbMethods.saveScore(request.body.score, function (results) {
             if (results === false) {
                 response.send(500, 'Internal error');

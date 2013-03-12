@@ -59,7 +59,7 @@
 
         ScoreSystem.prototype.stageEnd = function () {
             this.running = false;
-            console.log(this.score);
+            this.engine.triggerEvent('finalScoreSet', this.score);
         };
 
         ScoreSystem.prototype.update = function (dt) {
@@ -70,7 +70,7 @@
                     this.player = this.engine.entitiesForComponent('SquidPlayerComponent')[0];
                 }
 
-                this.score.depth = this.player.PositionComponent.y + b2.PTM * b2.WATERLEVEL;
+                this.score.depth = b2.toWorld(this.player.PositionComponent.y) + b2.WATERLEVEL;
                 if (this.score.depthMax < this.score.depth) {
                     this.score.depthMax = this.score.depth;
                 }
@@ -90,9 +90,6 @@
 
         ScoreSystem.prototype.foodCollected = function () {
             this.score.foodCollected += 1;
-        };
-
-        ScoreSystem.prototype.postScore = function () {
         };
 
         return ScoreSystem;
