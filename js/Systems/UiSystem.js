@@ -137,6 +137,10 @@
                 table.append(row);
             }
 
+            if (n === 0) {
+                this.newHighScore = true;
+            }
+
             this.showTopTen();
         };
 
