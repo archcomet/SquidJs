@@ -34,7 +34,9 @@
                 maxRockCount: 35,
                 minFoodDensity: 0,
                 maxFoodDensity: 1.5,
-                rockSnakeWaitFrames: 2500
+                rockSnakeWaitFrames: 2500,
+                minRockSnakeModifier: 0.65,
+                maxRockSnakeModifier: 5
             };
 
             this.position = {
@@ -57,6 +59,7 @@
             this.rockSnakeWaitFrames = this.settings.rockSnakeWaitFrames;
             this.squidletCount = 0;
             this.depth = 0;
+            this.duration = 0;
 
             this.engine.bindEvent('update', this);
             this.engine.bindEvent('cameraUpdate', this);
@@ -154,9 +157,10 @@
         /*** Spawn Environment Functions ***/
 
         StageSystem.prototype.spawnEnvironment = function (minX, maxX, minY, maxY) {
-            var i, n, waterLevel = b2.WATERLEVEL * b2.PTM + 200;
-            if (minY < waterLevel) {
-                minY = waterLevel;
+            var i, n;
+
+            if (this.center.y === 0) {
+                return;
             }
 
             // Rocks
@@ -271,7 +275,15 @@
         /*** Spawn Rock Snake ***/
 
         StageSystem.prototype.spawnRockSnake = function () {
-            var mod = (this.depth / 15000);
+            var mod = ((this.depth / 25000) + ((this.squidletCount - 3) / 3) + (this.duration / 1200)) * 0.15;
+
+            if (mod < this.settings.minRockSnakeModifier) {
+                mod = this.settings.minRockSnakeModifier;
+            }
+            if (mod > this.settings.maxRockSnakeModifier) {
+                mod = this.settings.maxRockSnakeModifier;
+            }
+
             this.rockSnakeWaitFrames -= this.squidletCount;
             this.maxRockSnakes = 1 + mod;
 
@@ -313,6 +325,8 @@
                     delete this.rocks[key];
                 }
             }
+
+            this.duration = 0;
             this.rockCount = 0;
             this.rockSnakeSpawnRate = 0;
             // Clear all entities out of the engine
@@ -360,6 +374,7 @@
         StageSystem.prototype.midGameUpdate = function () {
 
             this.depth = this.player.PositionComponent.y - b2.WATERLEVEL * b2.PTM;
+            this.duration += 1;
 
             // Spawn horizontal
             if (this.position.x > this.spawnRect.maxX) {

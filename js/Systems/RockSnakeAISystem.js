@@ -21,7 +21,8 @@
             this.target = undefined;
             this.settings = {
                 fleeDistance: 700,
-                maxKnockbackImpulse: 300
+                maxKnockbackImpulse: 200,
+                despawnDistance: 5000
             };
 
             this.engine.bindEvent('update', this);
@@ -35,11 +36,22 @@
         };
 
         RockSnakeAISystem.prototype.update = function () {
-            var i, n, impulse, impulseMagnitude, rockSnake, rockSnakes, rockSnakesToRemove = [];
+            var i, n, vector, sqrDistance, impulse, impulseMagnitude, rockSnake, rockSnakes, rockSnakesToRemove = [];
             rockSnakes = this.engine.entitiesForComponent('RockSnakeAIComponent');
 
             for (i = 0, n = rockSnakes.length; i < n; i += 1) {
                 rockSnake = rockSnakes[i];
+
+                if (this.target.x !== 0 && this.target.y !== 0) {
+                    vector = new b2.Vec2();
+                    vector.SetV({
+                        x: rockSnake.PositionComponent.x - this.target.x,
+                        y: rockSnake.PositionComponent.y - this.target.y
+                    });
+                    if (vector.LengthSquared() > this.settings.despawnDistance * this.settings.despawnDistance) {
+                        rockSnakesToRemove.push(rockSnake);
+                    }
+                }
 
                 if (rockSnake.HealthComponent.lastDamage > 0) {
                     impulseMagnitude = rockSnake.HealthComponent.lastDamage;

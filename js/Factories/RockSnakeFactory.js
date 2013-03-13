@@ -29,8 +29,8 @@
                 segmentCount: 15,
                 segmentLength: 40,
                 segmentFriction: 0.92,
-                maxForwardVelocity: 25,
-                maxSteeringVelocity: 25,
+                maxForwardVelocity: 20,
+                maxSteeringVelocity: 20,
                 maxAngularVelocity: 2.5,
                 maxForwardThrust: 400,
                 maxSteeringForce: 200,
@@ -52,10 +52,11 @@
                 sizeModifier: 1
             });
 
-            if (options.sizeModifier < 0.5) {
-                options.sizeModifier = 0.5;
-            } else if (options.sizeModifier > 3) {
-                options.sizeModifier = 3;
+            if (options.sizeModifier < 0.7) {
+                options.sizeModifier = 0.7;
+            }
+            if (options.sizeModifier > 2.1) {
+                options.sizeModifier = 2.1;
             }
 
             var entity, radius = app.random(this.settings.minRadius, this.settings.maxRadius) * options.sizeModifier;
@@ -96,9 +97,9 @@
                         maxForwardVelocity: this.settings.maxForwardVelocity * options.sizeModifier,
                         maxSteeringVelocity: this.settings.maxSteeringVelocity * options.sizeModifier,
                         maxAngularVelocity: this.settings.maxAngularVelocity,
-                        maxForwardThrust: this.settings.maxForwardThrust,
-                        maxSteeringForce: this.settings.maxSteeringForce * options.sizeModifier,
-                        maxTorque: this.settings.maxTorque,
+                        maxForwardThrust: this.settings.maxForwardThrust * options.sizeModifier,
+                        maxSteeringForce: this.settings.maxSteeringForce * options.sizeModifier * options.sizeModifier,
+                        maxTorque: this.settings.maxTorque * options.sizeModifier * options.sizeModifier,
                         sprintMultiplier: this.settings.sprintMultiplier
                     },
                     PhysicsComponent: {
